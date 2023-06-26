@@ -7559,6 +7559,422 @@
 						"description": "Create ProductType"
 					},
 					"response": []
+				},
+				{
+					"name": "06 Create Customer Custom Type",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+									"var data = JSON.parse(responseBody);",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"type-id\", data.results[0].id); ",
+									"    pm.environment.set(\"type-version\", data.results[0].version);",
+									"}",
+									"if(data.results && data.results[0] && data.results[0].key){",
+									"    pm.environment.set(\"type-key\", data.results[0].key); ",
+									"}",
+									"if(data.version){",
+									"    pm.environment.set(\"type-version\", data.version);",
+									"}",
+									"if(data.id){",
+									"    pm.environment.set(\"type-id\", data.id); ",
+									"}",
+									"if(data.key){",
+									"    pm.environment.set(\"type-key\", data.key);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{ctp_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \n    \"key\": \"customer-stats\",\n    \"name\": {\n        \"de\": \"Customer Health Stats\",\n        \"en\": \"Customer Health Stats\"\n    },\n    \"resourceTypeIds\": [\n        \"customer\"\n    ],\n    \"fieldDefinitions\": [\n    {\n        \"name\": \"height_in_inches\",\n        \"label\": {\n            \"de\": \"Height in inches\",\n            \"en\": \"Height in inches\"\n        },\n        \"required\": false,\n        \"type\": {\n        \"name\": \"Number\"\n        }\n    },\n    {\n        \"name\": \"weight_in_pounds\",\n        \"label\": {\n        \"de\": \"Weight in pounds\",\n        \"en\": \"Weight in pounds\"\n        },\n        \"required\": false,\n        \"type\": {\n        \"name\": \"Number\"\n        }\n    }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/types",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"types"
+							],
+							"query": [
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "06 Create Purchased State",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+									"var data = JSON.parse(responseBody);",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"purchased-state-id\", data.results[0].id); ",
+									"    pm.environment.set(\"purchased-state-version\", data.results[0].version);",
+									"}",
+									"if(data.results && data.results[0] && data.results[0].key){",
+									"    pm.environment.set(\"purchased-state-key\", data.results[0].key); ",
+									"}",
+									"if(data.version){",
+									"    pm.environment.set(\"purchased-state-version\", data.version);",
+									"}",
+									"if(data.id){",
+									"    pm.environment.set(\"purchased-state-id\", data.id); ",
+									"}",
+									"if(data.key){",
+									"    pm.environment.set(\"purchased-state-key\", data.key);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{ctp_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\" : {\n    \"de\": \"Purchased State\",\n    \"en\": \"Purchased State\"\n   },\n  \"key\" : \"purchased-state\",\n  \"type\" : \"OrderState\",\n  \"roles\" : [ ],\n  \"initial\" : true\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/states",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"states"
+							],
+							"query": [
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "06.1 Create Expired State",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+									"var data = JSON.parse(responseBody);",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"expired-state-id\", data.results[0].id); ",
+									"    pm.environment.set(\"expired-state-version\", data.results[0].version);",
+									"}",
+									"if(data.results && data.results[0] && data.results[0].key){",
+									"    pm.environment.set(\"expired-state-key\", data.results[0].key); ",
+									"}",
+									"if(data.version){",
+									"    pm.environment.set(\"expired-state-version\", data.version);",
+									"}",
+									"if(data.id){",
+									"    pm.environment.set(\"expired-state-id\", data.id); ",
+									"}",
+									"if(data.key){",
+									"    pm.environment.set(\"purchased-state-key\", data.key);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{ctp_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\" : {\n    \"de\": \"Expired State\",\n    \"en\": \"Expired State\"\n   },\n  \"key\" : \"expired-state\",\n  \"type\" : \"OrderState\",\n  \"roles\" : [ ],\n  \"transitions\" : [],\n  \"initial\" : false\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/states",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"states"
+							],
+							"query": [
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "06.2 Create Redeemed State",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+									"var data = JSON.parse(responseBody);",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"redeemed-state-id\", data.results[0].id); ",
+									"    pm.environment.set(\"redeemed-state-version\", data.results[0].version);",
+									"}",
+									"if(data.results && data.results[0] && data.results[0].key){",
+									"    pm.environment.set(\"redeemed-state-key\", data.results[0].key); ",
+									"}",
+									"if(data.version){",
+									"    pm.environment.set(\"redeemed-state-version\", data.version);",
+									"}",
+									"if(data.id){",
+									"    pm.environment.set(\"redeemed-state-id\", data.id); ",
+									"}",
+									"if(data.key){",
+									"    pm.environment.set(\"redeemed-state-key\", data.key);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{ctp_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\" : {\n    \"de\": \"Redeemed State\",\n    \"en\": \"Redeemed State\"\n   },\n  \"key\" : \"redeemed-state\",\n  \"type\" : \"OrderState\",\n  \"roles\" : [ ],\n  \"transitions\" : [],\n  \"initial\" : false\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/states",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"states"
+							],
+							"query": [
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "06.3 Set Purchased State Transitions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+									"var data = JSON.parse(responseBody);",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"purchased-state-id\", data.results[0].id); ",
+									"    pm.environment.set(\"purchased-state-version\", data.results[0].version);",
+									"}",
+									"if(data.results && data.results[0] && data.results[0].key){",
+									"    pm.environment.set(\"purchased-state-key\", data.results[0].key); ",
+									"}",
+									"if(data.version){",
+									"    pm.environment.set(\"purchased-state-version\", data.version);",
+									"}",
+									"if(data.id){",
+									"    pm.environment.set(\"purchased-state-id\", data.id); ",
+									"}",
+									"if(data.key){",
+									"    pm.environment.set(\"purchased-state-key\", data.key);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{ctp_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"version\": {{purchased-state-version}},\n    \"actions\": [\n        {\n            \"action\" : \"setTransitions\",\n            \"transitions\" : [ {\n              \"typeId\" : \"state\",\n              \"id\" : \"{{expired-state-id}}\"\n            }, {\n              \"typeId\" : \"state\",\n              \"id\" : \"{{redeemed-state-id}}\"\n            } ]\n          }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/states/{{purchased-state-id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"states",
+								"{{purchased-state-id}}"
+							],
+							"query": [
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
