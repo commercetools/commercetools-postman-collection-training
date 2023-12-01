@@ -6501,63 +6501,6 @@
 					"name": "Case 03 - Guest user -> anonymous user -> create account",
 					"item": [
 						{
-							"name": "[Script] Obtain fake customer data",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"tests[\"Status code is 200\"] = responseCode.code === 200;",
-											"var data = JSON.parse(responseBody);",
-											"if(data) {",
-											"    const randomLetters = pm.globals.get(\"randomLetters\");",
-											"    const randomFirstName = data.first_name;",
-											"    const randomLastName = data.last_name;",
-											"    const randomEmail = data.email;",
-											"    const randomPassword = data.password;",
-											"    const randomKey = \"customer-\" + randomLetters;",
-											"    pm.environment.set(\"spa-new-customer-firstname\", randomFirstName);",
-											"    pm.environment.set(\"spa-new-customer-lastname\", randomLastName);",
-											"    pm.environment.set(\"spa-new-customer-email\", randomEmail);",
-											"    pm.environment.set(\"spa-new-customer-password\", randomPassword);",
-											"    pm.environment.set(\"spa-new-customer-key\", randomKey);",
-											"    console.log({randomFirstName, randomLastName, randomEmail, randomPassword, randomKey})",
-											"}"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "https://random-data-api.com/api/v2/users?size=1&response_type=json",
-									"protocol": "https",
-									"host": [
-										"random-data-api",
-										"com"
-									],
-									"path": [
-										"api",
-										"v2",
-										"users"
-									],
-									"query": [
-										{
-											"key": "size",
-											"value": "1"
-										},
-										{
-											"key": "response_type",
-											"value": "json"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "[SPA] Obtain access token | client credentials",
 							"event": [
 								{
@@ -6820,6 +6763,41 @@
 										],
 										"type": "text/javascript"
 									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const firstNames = [\"John\", \"Jane\", \"Sam\", \"Sue\", \"Alex\"];",
+											"const lastNames = [\"Smith\", \"Doe\", \"Johnson\", \"Brown\", \"Davis\"];",
+											"const domains = [\"example.com\", \"test.com\", \"sample.com\", \"trial.com\"];",
+											"const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';",
+											"const password = pm.environment.get(\"customer-01-password\");",
+											"",
+											"function generateRandomLetters() {",
+											"  const randomLetters = Array.from({ length: 2 }, () => alphabet.charAt(Math.floor(Math.random() * alphabet.length)));",
+											"  return randomLetters.join('');",
+											"}",
+											"",
+											"function generateUser() {",
+											"    let firstName = firstNames[Math.floor(Math.random() * firstNames.length)];",
+											"    let lastName = lastNames[Math.floor(Math.random() * lastNames.length)];",
+											"    let email = `${firstName}.${lastName}@${domains[Math.floor(Math.random() * domains.length)]}`;",
+											"    let customerKey = \"customer-\" + generateRandomLetters();",
+											"",
+											"    return { firstName, lastName, email, password, customerKey };",
+											"}",
+											"",
+											"const user = generateUser();",
+											"",
+											"pm.environment.set(\"spa-new-customer-firstname\", user.firstName);",
+											"pm.environment.set(\"spa-new-customer-lastname\", user.lastName);",
+											"pm.environment.set(\"spa-new-customer-email\", user.email);",
+											"pm.environment.set(\"spa-new-customer-password\", user.password);",
+											"pm.environment.set(\"spa-new-customer-key\", user.customerKey);"
+										],
+										"type": "text/javascript"
+									}
 								}
 							],
 							"request": {
@@ -7030,6 +7008,26 @@
 								}
 							},
 							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
 						}
 					]
 				},
@@ -7685,19 +7683,6 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"// Global Script",
-					"const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';",
-					"",
-					"function generateRandomLetters() {",
-					"  const randomLetter1 = alphabet.charAt(Math.floor(Math.random() * alphabet.length));",
-					"  const randomLetter2 = alphabet.charAt(Math.floor(Math.random() * alphabet.length));",
-					"",
-					"  const randomTwoLetters = randomLetter1 + randomLetter2;",
-					"  return randomTwoLetters;",
-					"}",
-					"",
-					"// Set global variables",
-					"pm.globals.set('randomLetters', generateRandomLetters());",
 					""
 				]
 			}
