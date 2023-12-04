@@ -1,0 +1,1046 @@
+{
+	"info": {
+		"_postman_id": "2ef89ef6-b7ec-413e-abfb-750fc94bc7fb",
+		"name": "Dev_Java_JS_Training",
+		"description": "## How-to Use\n\nTo be used for quick data creation in the trainings.\nBefore sending any request, please make sure that you have a valid token.\n\n- Import the environment file from https://github.com/commercetools/commercetools-postman-collection/blob/master/api/template.json into postman. \n- Create an api client (use admin template) for your project in the Merchant Center.\n- Set the `client_id` and `client_secret` in the `Commercetools template` environment from top-right (eye icon).\n- Send the request `Obtain access token`.\n- Send the request Get TaxCategory",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11897687"
+	},
+	"item": [
+		{
+			"name": "Obtain access token Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"var data = JSON.parse(responseBody);",
+							"if(data.access_token){",
+							"    pm.environment.set(\"ctp_access_token\", data.access_token);",
+							"}",
+							"if (data.scope) {",
+							"    parts = data.scope.split(\" \");",
+							"    parts = parts.filter(scope => scope.includes(\":\")).map(scope => scope.split(\":\"))",
+							"    if (parts.length > 0) {",
+							"        scopeParts = parts[0];",
+							"        pm.environment.set(\"project-key\", scopeParts[1]);",
+							"        parts = parts.filter(scope => scope.length >= 3)",
+							"        if (parts.length > 0) {",
+							"            scopeParts = parts[0];",
+							"            pm.environment.set(\"store-key\", scopeParts[2]);",
+							"        }",
+							"    }",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{client_id}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{client_secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{auth_url}}/oauth/token?grant_type=client_credentials",
+					"host": [
+						"{{auth_url}}"
+					],
+					"path": [
+						"oauth",
+						"token"
+					],
+					"query": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials"
+						}
+					]
+				},
+				"description": "Use this request to obtain an access token for your commercetools platform project via Client Credentials Flow. As a prerequisite you must have filled out environment variables in Postman for projectKey, client_id and client_secret to use this."
+			},
+			"response": []
+		},
+		{
+			"name": "Get TaxCategory",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+							"var data = JSON.parse(responseBody);",
+							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+							"    pm.environment.set(\"tax-category-id\", data.results[0].id); ",
+							"    pm.environment.set(\"tax-category-version\", data.results[0].version);",
+							"}",
+							"if(data.results && data.results[0] && data.results[0].key){",
+							"    pm.environment.set(\"tax-category-key\", data.results[0].key); ",
+							"}",
+							"if(data.version){",
+							"    pm.environment.set(\"tax-category-version\", data.version);",
+							"}",
+							"if(data.id){",
+							"    pm.environment.set(\"tax-category-id\", data.id); ",
+							"}",
+							"if(data.key){",
+							"    pm.environment.set(\"tax-category-key\", data.key);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "{{ctp_access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "Bearer",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/{{project-key}}/tax-categories",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{project-key}}",
+						"tax-categories"
+					],
+					"query": [
+						{
+							"key": "expand",
+							"value": "",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Get TaxCategory by key"
+			},
+			"response": []
+		},
+		{
+			"name": "00 Create Category - seeds",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+							"var data = JSON.parse(responseBody);",
+							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+							"    pm.environment.set(\"category-id-seeds\", data.results[0].id); ",
+							"    pm.environment.set(\"category-version-seeds\", data.results[0].version);",
+							"}",
+							"if(data.results && data.results[0] && data.results[0].key){",
+							"    pm.environment.set(\"category-key-seeds\", data.results[0].key); ",
+							"}",
+							"if(data.version){",
+							"    pm.environment.set(\"category-version-seeds\", data.version);",
+							"}",
+							"if(data.id){",
+							"    pm.environment.set(\"category-id-seeds\", data.id); ",
+							"}",
+							"if(data.key){",
+							"    pm.environment.set(\"category-key-seeds\", data.key);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "{{ctp_access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "Bearer",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"key\":\"plant-seeds\",\n    \"name\" : {\n        \"en\" : \"Seeds\",\n        \"de\" : \"Seeds\"\n    },\n    \"slug\" : {\n        \"en\" : \"plant-seeds\",\n        \"de\" : \"plant-seeds\"\n    },\n    \"orderHint\" : \"0.1\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/{{project-key}}/categories",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{project-key}}",
+						"categories"
+					],
+					"query": [
+						{
+							"key": "expand",
+							"value": "",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Creating a category produces the CategoryCreated message."
+			},
+			"response": []
+		},
+		{
+			"name": "00 Create Category - veg seeds",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+							"var data = JSON.parse(responseBody);",
+							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+							"    pm.environment.set(\"category-id-veg-seeds\", data.results[0].id); ",
+							"    pm.environment.set(\"category-version-veg-seeds\", data.results[0].version);",
+							"}",
+							"if(data.results && data.results[0] && data.results[0].key){",
+							"    pm.environment.set(\"category-key-veg-seeds\", data.results[0].key); ",
+							"}",
+							"if(data.version){",
+							"    pm.environment.set(\"category-version-veg-seeds\", data.version);",
+							"}",
+							"if(data.id){",
+							"    pm.environment.set(\"category-id-veg-seeds\", data.id); ",
+							"}",
+							"if(data.key){",
+							"    pm.environment.set(\"category-key-veg-seeds\", data.key);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "{{ctp_access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "Bearer",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"key\":\"veg-seeds\",\n    \"name\" : {\n        \"en\" : \"Vegetable Seeds\",\n        \"de\" : \"Vegetable Seeds\"\n    },\n    \"slug\" : {\n        \"en\" : \"vegetable-seeds\",\n        \"de\" : \"vegetable-seeds\"\n    },\n    \"orderHint\" : \"0.2\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/{{project-key}}/categories",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{project-key}}",
+						"categories"
+					],
+					"query": [
+						{
+							"key": "expand",
+							"value": "",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Creating a category produces the CategoryCreated message."
+			},
+			"response": []
+		},
+		{
+			"name": "01 Create ProductType - flower seeds",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+							"var data = JSON.parse(responseBody);",
+							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+							"    pm.environment.set(\"product-type-id-flower\", data.results[0].id); ",
+							"    pm.environment.set(\"product-type-version-flower\", data.results[0].version);",
+							"}",
+							"if(data.results && data.results[0] && data.results[0].key){",
+							"    pm.environment.set(\"product-type-key-flower\", data.results[0].key); ",
+							"}",
+							"if(data.version){",
+							"    pm.environment.set(\"product-type-version-flower\", data.version);",
+							"}",
+							"if(data.id){",
+							"    pm.environment.set(\"product-type-id-flower\", data.id); ",
+							"}",
+							"if(data.key){",
+							"    pm.environment.set(\"product-type-key-flower\", data.key);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "{{ctp_access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "Bearer",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Flower seeds\",\n  \"description\": \"Flower seeds\",\n  \"key\": \"flower-seeds-producttype\",\n  \"attributes\": [\n    {\n      \"name\": \"size\",\n      \"label\": {\n        \"de\": \"Size\",\n        \"en\": \"Size\"\n      },\n      \"type\": {\n        \"name\": \"text\"\n      },\n      \"attributeConstraint\": \"CombinationUnique\",\n      \"isRequired\": true,\n      \"isSearchable\": true,\n      \"inputTip\": {\n        \"en\": \"\",\n        \"de\": \"\"\n      },\n      \"inputHint\": \"SingleLine\"\n    },\n    {\n      \"name\": \"weight_in_kg\",\n      \"label\": {\n        \"de\": \"Weight in Kg\",\n        \"en\": \"Weight in Kg\"\n      },\n      \"type\": {\n        \"name\": \"number\"\n      },\n      \"attributeConstraint\": \"CombinationUnique\",\n      \"isRequired\": true,\n      \"isSearchable\": true,\n      \"inputTip\": {\n        \"en\": \"\",\n        \"de\": \"\"\n      }\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "{{host}}/{{project-key}}/product-types",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{project-key}}",
+						"product-types"
+					],
+					"query": [
+						{
+							"key": "expand",
+							"value": "",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Create ProductType"
+			},
+			"response": []
+		},
+		{
+			"name": "02 Create ProductType - veg seeds",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+							"var data = JSON.parse(responseBody);",
+							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+							"    pm.environment.set(\"product-type-id-veg\", data.results[0].id); ",
+							"    pm.environment.set(\"product-type-version-veg\", data.results[0].version);",
+							"}",
+							"if(data.results && data.results[0] && data.results[0].key){",
+							"    pm.environment.set(\"product-type-key-veg\", data.results[0].key); ",
+							"}",
+							"if(data.version){",
+							"    pm.environment.set(\"product-type-version-veg\", data.version);",
+							"}",
+							"if(data.id){",
+							"    pm.environment.set(\"product-type-id-veg\", data.id); ",
+							"}",
+							"if(data.key){",
+							"    pm.environment.set(\"product-type-key-veg\", data.key);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "{{ctp_access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "Bearer",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Vegetable seeds\",\n  \"description\": \"Vegetable seeds\",\n  \"key\": \"veg-seeds-producttype\",\n  \"attributes\": [\n    {\n      \"name\": \"size\",\n      \"label\": {\n        \"de\": \"Size\",\n        \"en\": \"Size\"\n      },\n      \"type\": {\n        \"name\": \"text\"\n      },\n      \"attributeConstraint\": \"CombinationUnique\",\n      \"isRequired\": true,\n      \"isSearchable\": true,\n      \"inputTip\": {\n        \"en\": \"\",\n        \"de\": \"\"\n      },\n      \"inputHint\": \"SingleLine\"\n    },\n    {\n      \"name\": \"weight_in_kg\",\n      \"label\": {\n        \"de\": \"Weight in Kg\",\n        \"en\": \"Weight in Kg\"\n      },\n      \"type\": {\n        \"name\": \"number\"\n      },\n      \"attributeConstraint\": \"CombinationUnique\",\n      \"isRequired\": true,\n      \"isSearchable\": true,\n      \"inputTip\": {\n        \"en\": \"\",\n        \"de\": \"\"\n      }\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "{{host}}/{{project-key}}/product-types",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{project-key}}",
+						"product-types"
+					],
+					"query": [
+						{
+							"key": "expand",
+							"value": "",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Create ProductType"
+			},
+			"response": []
+		},
+		{
+			"name": "03 Create ProductType - herbs seeds",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+							"var data = JSON.parse(responseBody);",
+							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+							"    pm.environment.set(\"product-type-id-herb\", data.results[0].id); ",
+							"    pm.environment.set(\"product-type-version-herb\", data.results[0].version);",
+							"}",
+							"if(data.results && data.results[0] && data.results[0].key){",
+							"    pm.environment.set(\"product-type-key-herb\", data.results[0].key); ",
+							"}",
+							"if(data.version){",
+							"    pm.environment.set(\"product-type-version-herb\", data.version);",
+							"}",
+							"if(data.id){",
+							"    pm.environment.set(\"product-type-id-herb\", data.id); ",
+							"}",
+							"if(data.key){",
+							"    pm.environment.set(\"product-type-key-herb\", data.key);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "{{ctp_access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "Bearer",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Herb seeds\",\n  \"description\": \"Herb seeds\",\n  \"key\": \"herb-seeds-producttype\",\n  \"attributes\": [\n    {\n      \"name\": \"size\",\n      \"label\": {\n        \"de\": \"Size\",\n        \"en\": \"Size\"\n      },\n      \"type\": {\n        \"name\": \"text\"\n      },\n      \"attributeConstraint\": \"CombinationUnique\",\n      \"isRequired\": true,\n      \"isSearchable\": true,\n      \"inputTip\": {\n        \"en\": \"\",\n        \"de\": \"\"\n      },\n      \"inputHint\": \"SingleLine\"\n    },\n    {\n      \"name\": \"weight_in_kg\",\n      \"label\": {\n        \"de\": \"Weight in Kg\",\n        \"en\": \"Weight in Kg\"\n      },\n      \"type\": {\n        \"name\": \"number\"\n      },\n      \"attributeConstraint\": \"CombinationUnique\",\n      \"isRequired\": true,\n      \"isSearchable\": true,\n      \"inputTip\": {\n        \"en\": \"\",\n        \"de\": \"\"\n      }\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "{{host}}/{{project-key}}/product-types",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{project-key}}",
+						"product-types"
+					],
+					"query": [
+						{
+							"key": "expand",
+							"value": "",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Create ProductType"
+			},
+			"response": []
+		},
+		{
+			"name": "04 Create Product - tulip",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+							"var data = JSON.parse(responseBody);",
+							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+							"    pm.environment.set(\"product-id\", data.results[0].id); ",
+							"    pm.environment.set(\"product-version\", data.results[0].version);",
+							"}",
+							"if(data.results && data.results[0] && data.results[0].key){",
+							"    pm.environment.set(\"product-key\", data.results[0].key); ",
+							"}",
+							"if(data.version){",
+							"    pm.environment.set(\"product-version\", data.version);",
+							"}",
+							"if(data.id){",
+							"    pm.environment.set(\"product-id\", data.id); ",
+							"}",
+							"if(data.key){",
+							"    pm.environment.set(\"product-key\", data.key);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "{{ctp_access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "Bearer",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{product-type-id-flower}}\"\n    },\n    \"name\":{\n        \"en\":\"Tulip seeds\",\n        \"de\":\"Tulip seeds\"\n    },\n    \"description\":{\n        \"en\":\"Tulip seeds\"\n    },\n    \"categories\":[\n        {\n            \"typeId\":\"category\",\n            \"id\":\"{{category-id-seeds}}\"\n        }\n    ],\n    \"categoryOrderHints\":{\n        \n    },\n    \"slug\":{\n        \"en\":\"tulip-seeds\",\n        \"de\":\"tulip-seed\"\n    },\n    \"metaDescription\":{\n        \"en\":\"Tulip seeds\",\n        \"de\":\"Tulip seeds\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"TULIPSEED01\",\n        \"key\":\"TULIPSEED01\",\n        \"prices\":[\n            {\n            \"key\":\"TulipSeed01Price01\",\n            \"value\":{\n                \"type\":\"centPrecision\",\n                \"currencyCode\":\"EUR\",\n                \"centAmount\":2710,\n                \"fractionDigits\":2\n            },\n            \"country\":\"DE\"\n            },\n            {\n           \"key\":\"TulipSeed01Price02\",\n            \"value\":{\n                \"type\":\"centPrecision\",\n                \"currencyCode\":\"EUR\",\n                \"centAmount\":5900,\n                \"fractionDigits\":2\n            }\n            }\n        ],\n        \"images\":[\n            \n        ],\n        \"attributes\":[\n            {\n            \"name\":\"size\",\n            \"value\":\"package\"\n            },\n            {\n            \"name\":\"weight_in_kg\",\n            \"value\":0.5\n            }\n        ],\n        \"assets\":[\n            \n        ],\n        \"availability\":{\n            \"isOnStock\":true,\n            \"restockableInDays\":4,\n            \"availableQuantity\":10\n            }\n        },\n    \"variants\":[\n        {\n            \"id\":2,\n            \"sku\":\"TULIPSEED02\",\n            \"key\":\"TULIPSEED02\",\n            \"prices\":[\n            {\n                \"key\":\"TulipSeed02Price01\",\n               \"value\":{\n                    \"type\":\"centPrecision\",\n                    \"currencyCode\":\"EUR\",\n                    \"centAmount\":3000,\n                    \"fractionDigits\":2\n                },\n                \"country\":\"DE\"\n            }\n            ],\n            \"images\":[\n            \n            ],\n            \"attributes\":[\n            {\n                \"name\":\"size\",\n                \"value\":\"box\"\n            },\n            {\n                \"name\":\"weight_in_kg\",\n                \"value\":1.5\n            }\n            ],\n            \"assets\":[\n            \n            ],\n            \"availability\":{\n            \"isOnStock\":true,\n            \"restockableInDays\":2,\n            \"availableQuantity\":10\n            }\n        },\n        {\n            \"id\":3,\n            \"sku\":\"TULIPSEED03\",\n            \"key\":\"TULIPSEED03\",\n            \"prices\":[\n            {\n                \"key\":\"TulipSeed03Price01\",\n                \"value\":{\n                    \"type\":\"centPrecision\",\n                    \"currencyCode\":\"EUR\",\n                    \"centAmount\":1337,\n                    \"fractionDigits\":2\n                },\n                \"country\":\"DE\"\n            }\n            ],\n            \"images\":[\n            \n            ],\n            \"attributes\":[\n            {\n                \"name\":\"size\",\n                \"value\":\"sack\"\n            },\n            {\n                \"name\":\"weight_in_kg\",\n                \"value\":10\n            }\n            ],\n            \"assets\":[\n            \n            ]\n        }\n    ],\n    \"searchKeywords\":{\n        \"en\":[\n            {\n            \"text\":\"tulip\"\n            },\n            {\n            \"text\":\"flower\"\n            },\n            {\n            \"text\":\"seeds\"\n            }\n        ]\n    },\n    \"hasStagedChanges\":false,\n    \"published\":true,\n    \"key\":\"tulip-seed-product\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}\n"
+				},
+				"url": {
+					"raw": "{{host}}/{{project-key}}/products",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{project-key}}",
+						"products"
+					],
+					"query": [
+						{
+							"key": "priceCurrency",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "priceCountry",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "priceCustomerGroup",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "priceChannel",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "localeProjection",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "storeProjection",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "expand",
+							"value": "",
+							"disabled": true
+						}
+					]
+				},
+				"description": "To create a new product, send a representation that is going to become the initial staged representation\nof the new product in the master catalog. If price selection query parameters are provided,\nthe selected prices will be added to the response.\n"
+			},
+			"response": []
+		},
+		{
+			"name": "04 Create Product - basil",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+							"var data = JSON.parse(responseBody);",
+							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+							"    pm.environment.set(\"product-id\", data.results[0].id); ",
+							"    pm.environment.set(\"product-version\", data.results[0].version);",
+							"}",
+							"if(data.results && data.results[0] && data.results[0].key){",
+							"    pm.environment.set(\"product-key\", data.results[0].key); ",
+							"}",
+							"if(data.version){",
+							"    pm.environment.set(\"product-version\", data.version);",
+							"}",
+							"if(data.id){",
+							"    pm.environment.set(\"product-id\", data.id); ",
+							"}",
+							"if(data.key){",
+							"    pm.environment.set(\"product-key\", data.key);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "{{ctp_access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "Bearer",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{product-type-id-herb}}\"    },\n    \"name\":{\n        \"en\":\"Basil seeds\",\n        \"de\":\"Basil seeds\"\n    },\n    \"description\":{\n        \"en\":\"Basil seeds\",\n        \"de\":\"Basil seeds\"\n    },\n    \"categories\":[\n        {\n            \"typeId\":\"category\",\n            \"id\":\"{{category-id-seeds}}\"\n        }\n    ],\n    \"categoryOrderHints\":{\n        \n    },\n    \"slug\":{\n        \"en\":\"basil-seeds\",\n        \"de\":\"basil-seed\"\n    },\n    \"metaDescription\":{\n        \"en\":\"Basil seeds\",\n        \"de\":\"Basil seeds\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"BASILSEED01\",\n        \"key\":\"BASILSEED01\",\n        \"prices\":[\n            {\n           \"key\":\"BasilSeed01Price01\",\n           \"value\":{\n                \"type\":\"centPrecision\",\n                \"currencyCode\":\"EUR\",\n                \"centAmount\":2088,\n                \"fractionDigits\":2\n            },\n            \"country\":\"DE\"\n            }\n        ],\n        \"images\":[\n            \n        ],\n        \"attributes\":[\n            {\n            \"name\":\"size\",\n            \"value\":\"package\"\n            },\n            {\n            \"name\":\"weight_in_kg\",\n            \"value\":1\n            }\n        ],\n        \"assets\":[\n            \n        ]\n    },\n    \"variants\":[\n        {\n            \"id\":2,\n            \"sku\":\"BASILSEED02\",\n            \"key\":\"BASILSEED02\",\n            \"prices\":[\n            {\n                \"key\":\"BasilSeed02Price01\",\n                \"value\":{\n                    \"type\":\"centPrecision\",\n                    \"currencyCode\":\"EUR\",\n                    \"centAmount\":18000,\n                    \"fractionDigits\":2\n                },\n                \"country\":\"DE\"\n            }\n            ],\n            \"images\":[\n            \n            ],\n            \"attributes\":[\n            {\n                \"name\":\"size\",\n                \"value\":\"box\"\n            },\n            {\n                \"name\":\"weight_in_kg\",\n                \"value\":10\n            }\n            ],\n            \"assets\":[\n            \n            ]\n        }\n    ],\n    \"searchKeywords\":{\n        \"de\":[\n            \n        ],\n        \"en\":[\n            {\n            \"text\":\"basil\"\n            },\n            {\n            \"text\":\"seeds\"\n            },\n            {\n            \"text\":\"herbs\"\n            }\n        ]\n    },\n    \"hasStagedChanges\":false,\n    \"published\":true,\n    \"key\":\"basil-seed-product\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
+				},
+				"url": {
+					"raw": "{{host}}/{{project-key}}/products",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{project-key}}",
+						"products"
+					],
+					"query": [
+						{
+							"key": "priceCurrency",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "priceCountry",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "priceCustomerGroup",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "priceChannel",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "localeProjection",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "storeProjection",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "expand",
+							"value": "",
+							"disabled": true
+						}
+					]
+				},
+				"description": "To create a new product, send a representation that is going to become the initial staged representation\nof the new product in the master catalog. If price selection query parameters are provided,\nthe selected prices will be added to the response.\n"
+			},
+			"response": []
+		},
+		{
+			"name": "04 Create Product - carrot",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+							"var data = JSON.parse(responseBody);",
+							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+							"    pm.environment.set(\"product-id\", data.results[0].id); ",
+							"    pm.environment.set(\"product-version\", data.results[0].version);",
+							"}",
+							"if(data.results && data.results[0] && data.results[0].key){",
+							"    pm.environment.set(\"product-key\", data.results[0].key); ",
+							"}",
+							"if(data.version){",
+							"    pm.environment.set(\"product-version\", data.version);",
+							"}",
+							"if(data.id){",
+							"    pm.environment.set(\"product-id\", data.id); ",
+							"}",
+							"if(data.key){",
+							"    pm.environment.set(\"product-key\", data.key);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "{{ctp_access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "Bearer",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\":\"caba3bb9-5a59-4a8d-85b2-80bb763b29da\",\n    \"version\":11,\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{product-type-id-veg}}\"\n    },\n    \"name\":{\n        \"en\":\"Carrot seeds\",\n        \"de\":\"Carrot seeds\"\n    },\n    \"description\":{\n        \"en\":\"Carrot seeds\",\n        \"de\":\"Carrot seeds\"\n    },\n    \"categories\":[\n        {\n            \"typeId\":\"category\",\n            \"id\":\"{{category-id-seeds}}\"\n        },\n        {\n            \"typeId\":\"category\",\n            \"id\":\"{{category-id-veg-seeds}}\"\n        }\n    ],\n    \"categoryOrderHints\":{\n        \n    },\n    \"slug\":{\n        \"en\":\"carrot-seeds\",\n        \"de\":\"carrot-seed\"\n    },\n    \"metaDescription\":{\n        \"en\":\"Carrot seeds\",\n        \"de\":\"Carrot seeds\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"CARROTSEEDS01\",\n        \"key\":\"CARROTSEEDS01\",\n        \"prices\":[\n            {\n            \"key\":\"CarrotSeed01Price01\",\n            \"value\":{\n                \"type\":\"centPrecision\",\n                \"currencyCode\":\"EUR\",\n                \"centAmount\":3200,\n                \"fractionDigits\":2\n            },\n            \"country\":\"DE\"\n            }\n        ],\n        \"images\":[\n            \n        ],\n        \"attributes\":[\n            {\n            \"name\":\"size\",\n            \"value\":\"package\"\n            },\n            {\n            \"name\":\"weight_in_kg\",\n            \"value\":1.5\n            }\n        ],\n        \"assets\":[\n            \n        ]\n    },\n    \"variants\":[\n        {\n            \"id\":2,\n            \"sku\":\"CARROTSEEDS02\",\n            \"key\":\"CARROTSEEDS02\",\n            \"prices\":[\n            {\n                \"key\":\"CarrotSeed02Price01\",\n                \"value\":{\n                    \"type\":\"centPrecision\",\n                    \"currencyCode\":\"EUR\",\n                    \"centAmount\":10000,\n                    \"fractionDigits\":2\n                },\n                \"country\":\"DE\"\n            }\n            ],\n            \"images\":[\n            \n            ],\n            \"attributes\":[\n            {\n                \"name\":\"size\",\n                \"value\":\"sack\"\n            },\n            {\n                \"name\":\"weight_in_kg\",\n                \"value\":5\n            }\n            ],\n            \"assets\":[\n            \n            ]\n        }\n    ],\n    \"searchKeywords\":{\n        \"en\":[\n            {\n            \"text\":\"seeds\"\n            },\n            {\n            \"text\":\"carrot\"\n            },\n            {\n            \"text\":\"vegetable\"\n            }\n        ]\n    },\n    \"hasStagedChanges\":false,\n    \"published\":true,\n    \"key\":\"carrot-seed-product\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
+				},
+				"url": {
+					"raw": "{{host}}/{{project-key}}/products",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{project-key}}",
+						"products"
+					],
+					"query": [
+						{
+							"key": "priceCurrency",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "priceCountry",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "priceCustomerGroup",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "priceChannel",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "localeProjection",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "storeProjection",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "expand",
+							"value": "",
+							"disabled": true
+						}
+					]
+				},
+				"description": "To create a new product, send a representation that is going to become the initial staged representation\nof the new product in the master catalog. If price selection query parameters are provided,\nthe selected prices will be added to the response.\n"
+			},
+			"response": []
+		},
+		{
+			"name": "04 Create Product - celery",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+							"var data = JSON.parse(responseBody);",
+							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+							"    pm.environment.set(\"product-id\", data.results[0].id); ",
+							"    pm.environment.set(\"product-version\", data.results[0].version);",
+							"}",
+							"if(data.results && data.results[0] && data.results[0].key){",
+							"    pm.environment.set(\"product-key\", data.results[0].key); ",
+							"}",
+							"if(data.version){",
+							"    pm.environment.set(\"product-version\", data.version);",
+							"}",
+							"if(data.id){",
+							"    pm.environment.set(\"product-id\", data.id); ",
+							"}",
+							"if(data.key){",
+							"    pm.environment.set(\"product-key\", data.key);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "{{ctp_access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "Bearer",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{product-type-id-veg}}\"\n    },\n    \"name\":{\n        \"en\":\"Celery seeds\",\n        \"de\":\"Celery seeds\"\n    },\n    \"description\":{\n        \"en\":\"Celery seeds\",\n        \"de\":\"Celery seeds\"\n    },\n    \"categories\":[\n        {\n            \"typeId\":\"category\",\n            \"id\":\"{{category-id-seeds}}\"\n        },\n        {\n            \"typeId\":\"category\",\n            \"id\":\"{{category-id-veg-seeds}}\"\n        }\n    ],\n    \"categoryOrderHints\":{\n        \n    },\n    \"slug\":{\n        \"en\":\"celery-seeds\"\n    },\n    \"metaDescription\":{\n        \"en\":\"Celery seeds\",\n        \"de\":\"Celery seeds\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"CELERYSEEDS01\",\n        \"key\":\"CELERYSEEDS01\",\n        \"prices\":[\n            {\n            \"key\":\"CelerySeed01Price01\",\n            \"value\":{\n                \"type\":\"centPrecision\",\n                \"currencyCode\":\"EUR\",\n                \"centAmount\":2800,\n                \"fractionDigits\":2\n            },\n            \"country\":\"DE\"\n            }\n        ],\n        \"images\":[\n            \n        ],\n        \"attributes\":[\n            {\n            \"name\":\"size\",\n            \"value\":\"box\"\n            },\n            {\n            \"name\":\"weight_in_kg\",\n            \"value\":3\n            }\n        ],\n        \"assets\":[\n            \n        ]\n    },\n    \"variants\":[\n        \n    ],\n    \"searchKeywords\":{\n        \"en\":[\n            {\n            \"text\":\"seeds\"\n            },\n            {\n            \"text\":\"celery\"\n            },\n            {\n            \"text\":\"vegetable\"\n            }\n        ]\n    },\n    \"hasStagedChanges\":false,\n    \"published\":true,\n    \"key\":\"celery-seed-product\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
+				},
+				"url": {
+					"raw": "{{host}}/{{project-key}}/products",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{project-key}}",
+						"products"
+					],
+					"query": [
+						{
+							"key": "priceCurrency",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "priceCountry",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "priceCustomerGroup",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "priceChannel",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "localeProjection",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "storeProjection",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "expand",
+							"value": "",
+							"disabled": true
+						}
+					]
+				},
+				"description": "To create a new product, send a representation that is going to become the initial staged representation\nof the new product in the master catalog. If price selection query parameters are provided,\nthe selected prices will be added to the response.\n"
+			},
+			"response": []
+		}
+	]
+}
