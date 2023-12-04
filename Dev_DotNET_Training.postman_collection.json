@@ -1,0 +1,254 @@
+{
+	"info": {
+		"_postman_id": "6c320829-5e83-49b6-bcd8-75e50e5c7ecb",
+		"name": "Dev_DotNET_Training",
+		"description": "## How-to Use\n\nTo be used for quick data creation in the trainings.\nBefore sending any request, please make sure that you have a valid token.\n\n- Import the environment file from https://github.com/commercetools/commercetools-postman-collection/blob/master/api/template.json into postman. \n- Create an api client (use admin template) for your project in the Merchant Center.\n- Set the `client_id` and `client_secret` in the `Commercetools template` environment from top-right (eye icon).\n- Send the request `Obtain access token`.\n- Send the request Get TaxCategory",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11897687"
+	},
+	"item": [
+		{
+			"name": "Get TaxCategory",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+							"var data = JSON.parse(responseBody);",
+							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+							"    pm.environment.set(\"tax-category-id\", data.results[0].id); ",
+							"    pm.environment.set(\"tax-category-version\", data.results[0].version);",
+							"}",
+							"if(data.results && data.results[0] && data.results[0].key){",
+							"    pm.environment.set(\"tax-category-key\", data.results[0].key); ",
+							"}",
+							"if(data.version){",
+							"    pm.environment.set(\"tax-category-version\", data.version);",
+							"}",
+							"if(data.id){",
+							"    pm.environment.set(\"tax-category-id\", data.id); ",
+							"}",
+							"if(data.key){",
+							"    pm.environment.set(\"tax-category-key\", data.key);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "{{ctp_access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "Bearer",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/{{project-key}}/tax-categories",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{project-key}}",
+						"tax-categories"
+					],
+					"query": [
+						{
+							"key": "expand",
+							"value": "",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Get TaxCategory by key"
+			},
+			"response": []
+		},
+		{
+			"name": "Obtain access token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"var data = JSON.parse(responseBody);",
+							"if(data.access_token){",
+							"    pm.environment.set(\"ctp_access_token\", data.access_token);",
+							"}",
+							"if (data.scope) {",
+							"    parts = data.scope.split(\" \");",
+							"    parts = parts.filter(scope => scope.includes(\":\")).map(scope => scope.split(\":\"))",
+							"    if (parts.length > 0) {",
+							"        scopeParts = parts[0];",
+							"        pm.environment.set(\"project-key\", scopeParts[1]);",
+							"        parts = parts.filter(scope => scope.length >= 3)",
+							"        if (parts.length > 0) {",
+							"            scopeParts = parts[0];",
+							"            pm.environment.set(\"store-key\", scopeParts[2]);",
+							"        }",
+							"    }",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{client_id}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{client_secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{auth_url}}/oauth/token?grant_type=client_credentials",
+					"host": [
+						"{{auth_url}}"
+					],
+					"path": [
+						"oauth",
+						"token"
+					],
+					"query": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials"
+						}
+					]
+				},
+				"description": "Use this request to obtain an access token for your commercetools platform project via Client Credentials Flow. As a prerequisite you must have filled out environment variables in Postman for projectKey, client_id and client_secret to use this."
+			},
+			"response": []
+		},
+		{
+			"name": "01 Create ProductType - phone",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+							"var data = JSON.parse(responseBody);",
+							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+							"    pm.environment.set(\"product-type-id-clothing\", data.results[0].id); ",
+							"    pm.environment.set(\"product-type-version-clothing\", data.results[0].version);",
+							"}",
+							"if(data.results && data.results[0] && data.results[0].key){",
+							"    pm.environment.set(\"product-type-key-clothing\", data.results[0].key); ",
+							"}",
+							"if(data.version){",
+							"    pm.environment.set(\"product-type-version-clothing\", data.version);",
+							"}",
+							"if(data.id){",
+							"    pm.environment.set(\"product-type-id-clothing\", data.id); ",
+							"}",
+							"if(data.key){",
+							"    pm.environment.set(\"product-type-key-clothing\", data.key);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "{{ctp_access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "Bearer",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\" : \"PhonePT\",\n  \"description\" : \"Phone product type for .NET class\",\n  \"key\" : \"PhonePT\",\n  \"attributes\" : [ {\n    \"type\" : {\n      \"name\" : \"text\"\n    },\n    \"isSearchable\" : true,\n    \"inputHint\" : \"SingleLine\",\n    \"name\" : \"phonecolor\",\n    \"label\" : {\n      \"en\" : \"Color\",\n      \"de\" : \"Color\"\n    },\n    \"isRequired\" : true,\n    \"attributeConstraint\" : \"Unique\"\n  },\n  {\n    \"type\" : {\n      \"name\" : \"number\"\n    },\n    \"isSearchable\" : false,\n    \"name\" : \"phoneweight\",\n    \"label\" : {\n      \"en\" : \"Weight\",\n      \"de\" : \"Weight\"\n    },\n    \"isRequired\" : true,\n    \"attributeConstraint\" : \"Unique\"\n  } ]\n}"
+				},
+				"url": {
+					"raw": "{{host}}/{{project-key}}/product-types",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"{{project-key}}",
+						"product-types"
+					],
+					"query": [
+						{
+							"key": "expand",
+							"value": "",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Create ProductType"
+			},
+			"response": []
+		}
+	]
+}
