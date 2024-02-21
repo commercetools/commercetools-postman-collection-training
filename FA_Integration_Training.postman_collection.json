@@ -7698,6 +7698,1019 @@
 					}
 				}
 			]
+		},
+		{
+			"name": "Product Search",
+			"item": [
+				{
+					"name": "Case 00 - Setup",
+					"item": [
+						{
+							"name": "[Backend] Obtain access token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"pm.environment.set(\"import-host\", \"https://import.europe-west1.gcp.commercetools.com\");",
+											"var data = JSON.parse(responseBody);",
+											"if(data.access_token){",
+											"    pm.environment.set(\"ctp_access_token\", data.access_token);",
+											"}",
+											"if (data.scope) {",
+											"    parts = data.scope.split(\" \");",
+											"    parts = parts.filter(scope => scope.includes(\":\")).map(scope => scope.split(\":\"))",
+											"    if (parts.length > 0) {",
+											"        scopeParts = parts[0];",
+											"        pm.environment.set(\"project-key\", scopeParts[1]);",
+											"        parts = parts.filter(scope => scope.length >= 3)",
+											"        if (parts.length > 0) {",
+											"            scopeParts = parts[0];",
+											"            pm.environment.set(\"store-key\", scopeParts[2]);",
+											"        }",
+											"    }",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{client_secret}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{client_id}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{auth_url}}/oauth/token?grant_type=client_credentials",
+									"host": [
+										"{{auth_url}}"
+									],
+									"path": [
+										"oauth",
+										"token"
+									],
+									"query": [
+										{
+											"key": "grant_type",
+											"value": "client_credentials"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Backend] Create Product Type Copy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+											"var data = JSON.parse(responseBody);",
+											"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+											"    pm.environment.set(\"tablet-product-type-id\", data.results[0].id); ",
+											"    pm.environment.set(\"tablet-product-type-version\", data.results[0].version);",
+											"}",
+											"if(data.results && data.results[0] && data.results[0].key){",
+											"    pm.environment.set(\"tablet-product-type-key\", data.results[0].key); ",
+											"}",
+											"if(data.version){",
+											"    pm.environment.set(\"tablet-product-type-version\", data.version);",
+											"}",
+											"if(data.id){",
+											"    pm.environment.set(\"tablet-product-type-id\", data.id); ",
+											"}",
+											"if(data.key){",
+											"    pm.environment.set(\"tablet-product-type-key\", data.key);",
+											"}",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ctp_access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Tablet\",\n    \"description\": \"A wireless, portable personal computer with a touchscreen interface. The tablet form factor is typically smaller than a notebook computer, but larger than a smartphone.\",\n    \"classifier\": \"Complex\",\n    \"attributes\": [\n        {\n            \"name\": \"tablet-operating-system\",\n            \"label\": {\n                \"en\": \"Operating System\"\n            },\n            \"isRequired\": true,\n            \"type\": {\n                \"name\": \"enum\",\n                \"values\": [\n                    {\n                        \"key\": \"os-ipados\",\n                        \"label\": \"Apple iPadOS\"\n                    },\n                    {\n                        \"key\": \"os-android\",\n                        \"label\": \"Android\"\n                    },\n                    {\n                        \"key\": \"os-windows\",\n                        \"label\": \"Windows\"\n                    },\n                    {\n                        \"key\": \"os-fireos\",\n                        \"label\": \"Fire OS\"\n                    },\n                    {\n                        \"key\": \"os-proprietary\",\n                        \"label\": \"Proprietary\"\n                    }\n                ]\n            },\n            \"attributeConstraint\": \"None\",\n            \"isSearchable\": true,\n            \"inputHint\": \"SingleLine\",\n            \"displayGroup\": \"Other\"\n        },\n        {\n            \"name\": \"tablet-brand\",\n            \"label\": {\n                \"en\": \"Brand\"\n            },\n            \"isRequired\": true,\n            \"type\": {\n                \"name\": \"text\"\n            },\n            \"attributeConstraint\": \"SameForAll\",\n            \"isSearchable\": true,\n            \"inputHint\": \"SingleLine\",\n            \"displayGroup\": \"Other\"\n        },\n        {\n            \"name\": \"tablet-screen-size\",\n            \"label\": {\n                \"en\": \"Screen size (in)\"\n            },\n            \"isRequired\": true,\n            \"type\": {\n                \"name\": \"number\"\n            },\n            \"attributeConstraint\": \"None\",\n            \"isSearchable\": true,\n            \"inputHint\": \"SingleLine\",\n            \"displayGroup\": \"Other\"\n        },\n        {\n            \"name\": \"tablet-internal-storage\",\n            \"label\": {\n                \"en\": \"Internal storage (GB)\"\n            },\n            \"isRequired\": true,\n            \"type\": {\n                \"name\": \"number\"\n            },\n            \"attributeConstraint\": \"None\",\n            \"isSearchable\": true,\n            \"inputHint\": \"SingleLine\",\n            \"displayGroup\": \"Other\"\n        },\n        {\n            \"name\": \"tablet-wireless-conectivity\",\n            \"label\": {\n                \"en\": \"Wireless connectivity\"\n            },\n            \"isRequired\": false,\n            \"type\": {\n                \"name\": \"set\",\n                \"elementType\": {\n                    \"name\": \"enum\",\n                    \"values\": [\n                        {\n                            \"key\": \"tablet-wifi\",\n                            \"label\": \"Wi-Fi\"\n                        },\n                        {\n                            \"key\": \"tablet-bt\",\n                            \"label\": \"Bluetooth\"\n                        },\n                        {\n                            \"key\": \"tablet-cell\",\n                            \"label\": \"Cellular\"\n                        },\n                        {\n                            \"key\": \"tablet-none\",\n                            \"label\": \"None\"\n                        }\n                    ]\n                }\n            },\n            \"attributeConstraint\": \"None\",\n            \"isSearchable\": true,\n            \"inputHint\": \"SingleLine\",\n            \"displayGroup\": \"Other\"\n        },\n        {\n            \"name\": \"tablet-stylus-support\",\n            \"label\": {\n                \"en\": \"Stylus suport\"\n            },\n            \"isRequired\": true,\n            \"type\": {\n                \"name\": \"boolean\"\n            },\n            \"attributeConstraint\": \"None\",\n            \"isSearchable\": true,\n            \"inputHint\": \"SingleLine\",\n            \"displayGroup\": \"Other\"\n        },\n        {\n            \"name\": \"tablet-charging-interface\",\n            \"label\": {\n                \"en\": \"Charging interface\"\n            },\n            \"isRequired\": true,\n            \"type\": {\n                \"name\": \"enum\",\n                \"values\": [\n                    {\n                        \"key\": \"tablet-charging-usbc\",\n                        \"label\": \"USB Type C\"\n                    },\n                    {\n                        \"key\": \"tablet-charging-microusb\",\n                        \"label\": \"Micro USB\"\n                    },\n                    {\n                        \"key\": \"tablet-charging-lightning\",\n                        \"label\": \"Lightning\"\n                    },\n                    {\n                        \"key\": \"tablet-charging-dc\",\n                        \"label\": \"DC jack (2,5mm)\"\n                    }\n                ]\n            },\n            \"attributeConstraint\": \"None\",\n            \"isSearchable\": true,\n            \"inputHint\": \"SingleLine\",\n            \"displayGroup\": \"Other\"\n        }\n    ],\n    \"key\": \"tablet-product-type\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/product-types",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"product-types"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Backend] Create \"On Sale\" category",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+											"var data = JSON.parse(responseBody);",
+											"if(data.version){",
+											"    pm.environment.set(\"sale-category-version\", data.version);",
+											"}",
+											"if(data.id){",
+											"    pm.environment.set(\"sale-category-id\", data.id); ",
+											"}",
+											"if(data.key){",
+											"    pm.environment.set(\"sale-category-key\", data.key);",
+											"}",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ctp_access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"key\" : \"on-sale-category\",\n    \"name\" : {\n        \"en\" : \"On Sale\"\n    },\n    \"slug\" : {\n        \"en\" : \"on-sale\"\n    },\n    \"description\" : {\n        \"en\" : \"Items in this category are discounted by 15%\"\n    },\n    \"orderHint\" : \"0.1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/categories",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Backend] Create Product Discount",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+											"var data = JSON.parse(responseBody);",
+											"if(data.version){",
+											"    pm.environment.set(\"sale-category-type-version\", data.version);",
+											"}",
+											"if(data.id){",
+											"    pm.environment.set(\"sale-category-type-id\", data.id); ",
+											"}",
+											"if(data.key){",
+											"    pm.environment.set(\"sale-category-type-key\", data.key);",
+											"}",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ctp_access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"key\": \"15-off-sale-products\",\n    \"name\": {\n        \"en\": \"Products on sale 15% off\"\n    },\n    \"description\": {\n        \"en\": \"Items in this category are discounted by 15%\"\n    },\n    \"sortOrder\": \"0.9\",\n    \"isActive\": true,\n    \"predicate\": \"categories.id = (\\\"{{sale-category-id}}\\\")\",\n    \"value\" : {\n        \"type\" : \"relative\",\n        \"permyriad\" : 1500\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/product-discounts",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"product-discounts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Backend] Create product import container",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+											"var data = JSON.parse(responseBody);",
+											"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+											"    pm.environment.set(\"ps-product-container-id\", data.results[0].id); ",
+											"    pm.environment.set(\"ps-product-container-version\", data.results[0].version);",
+											"}",
+											"if(data.results && data.results[0] && data.results[0].key){",
+											"    pm.environment.set(\"ps-product-container-key\", data.results[0].key); ",
+											"}",
+											"if(data.version){",
+											"    pm.environment.set(\"ps-product-container-version\", data.version);",
+											"}",
+											"if(data.id){",
+											"    pm.environment.set(\"ps-product-container-id\", data.id); ",
+											"}",
+											"if(data.key){",
+											"    pm.environment.set(\"ps-product-container-key\", data.key);",
+											"}",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ctp_access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"key\": \"ps-product-import-container-01\",\n    \"resourceType\": \"product-draft\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{import-host}}/{{project-key}}/import-containers",
+									"host": [
+										"{{import-host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"import-containers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Backend] Import Products",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ctp_access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"type\": \"product-draft\",\n    \"resources\": [\n        {\n            \"productType\": {\n                \"typeId\": \"product-type\",\n                \"key\": \"tablet-product-type\"\n            },\n            \"key\": \"tablet-samesong-galactic-tab-s9\",\n            \"priceMode\": \"Standalone\",\n            \"publish\": true,\n            \"name\": {\n                \"en\": \"Samesong Galactic Tab S9 Tablet\"\n            },\n            \"description\": {\n                \"en\": \"Why not make the everyday a little more extraordinary? Galactic Tab S9 pushes the boundaries of what you expect from a tablet. Supported by a mighty processor and a powerful battery, you can seamlessly switch between accomplishing priorities and enjoying your favorite pastimes. You’ll have plenty of room on the vibrant and surprisingly portable 11\\\" screen to make the day uniquely yours — tackle your to-do list, create your next masterpiece, catch up on the latest shows or level up in your favorite game. Whether you're working, streaming or gaming, the 120Hz refresh rate makes every experience super smooth. Feel the fire!\"\n            },\n            \"slug\": {\n                \"en\": \"tablet-samesong-galactic-tab-s9\"\n            },\n            \"masterVariant\": {\n                \"sku\": \"SM-X710NZAAXAR\",\n                \"key\": \"SM-X710NZAAXAR\",\n                \"attributes\": [\n                    {\n                        \"name\": \"tablet-brand\",\n                        \"value\": \"Samesong\"\n                    },\n                    {\n                        \"name\": \"tablet-operating-system\",\n                        \"value\": {\n                            \"key\": \"os-android\",\n                            \"label\": \"Android\"\n                        }\n                    },\n                    {\n                        \"name\": \"tablet-screen-size\",\n                        \"value\": 11\n                    },\n                    {\n                        \"name\": \"tablet-internal-storage\",\n                        \"value\": 128\n                    },\n                    {\n                        \"name\": \"tablet-wireless-conectivity\",\n                        \"value\": [\n                            {\n                                \"key\": \"tablet-bt\",\n                                \"label\": \"Bluetooth\"\n                            },\n                            {\n                                \"key\": \"tablet-wifi\",\n                                \"label\": \"Wi-Fi\"\n                            }\n                        ]\n                    },\n                    {\n                        \"name\": \"tablet-stylus-support\",\n                        \"value\": true\n                    },\n                    {\n                        \"name\": \"tablet-charging-interface\",\n                        \"value\": {\n                            \"key\": \"tablet-charging-usbc\",\n                            \"label\": \"USB Type C\"\n                        }\n                    }\n                ]\n            },\n            \"variants\": [\n                {\n                    \"sku\": \"SM-X710NZAEXAR\",\n                    \"key\": \"SM-X710NZAEXAR\",\n                    \"attributes\": [\n                        {\n                            \"name\": \"tablet-brand\",\n                            \"value\": \"Samesong\"\n                        },\n                        {\n                            \"name\": \"tablet-operating-system\",\n                            \"value\": {\n                                \"key\": \"os-android\",\n                                \"label\": \"Android\"\n                            }\n                        },\n                        {\n                            \"name\": \"tablet-screen-size\",\n                            \"value\": 11\n                        },\n                        {\n                            \"name\": \"tablet-internal-storage\",\n                            \"value\": 256\n                        },\n                        {\n                            \"name\": \"tablet-wireless-conectivity\",\n                            \"value\": [\n                                {\n                                    \"key\": \"tablet-bt\",\n                                    \"label\": \"Bluetooth\"\n                                },\n                                {\n                                    \"key\": \"tablet-wifi\",\n                                    \"label\": \"Wi-Fi\"\n                                }\n                            ]\n                        },\n                        {\n                            \"name\": \"tablet-stylus-support\",\n                            \"value\": true\n                        },\n                        {\n                            \"name\": \"tablet-charging-interface\",\n                            \"value\": {\n                                \"key\": \"tablet-charging-usbc\",\n                                \"label\": \"USB Type C\"\n                            }\n                        }\n                    ]\n                },\n                {\n                    \"sku\": \"SM-X710NZAOXAR\",\n                    \"key\": \"SM-X710NZAOXAR\",\n                    \"attributes\": [\n                        {\n                            \"name\": \"tablet-brand\",\n                            \"value\": \"Samesong\"\n                        },\n                        {\n                            \"name\": \"tablet-operating-system\",\n                            \"value\": {\n                                \"key\": \"os-android\",\n                                \"label\": \"Android\"\n                            }\n                        },\n                        {\n                            \"name\": \"tablet-screen-size\",\n                            \"value\": 11\n                        },\n                        {\n                            \"name\": \"tablet-internal-storage\",\n                            \"value\": 512\n                        },\n                        {\n                            \"name\": \"tablet-wireless-conectivity\",\n                            \"value\": [\n                                {\n                                    \"key\": \"tablet-cell\",\n                                    \"label\": \"Cellular\"\n                                },\n                                {\n                                    \"key\": \"tablet-bt\",\n                                    \"label\": \"Bluetooth\"\n                                },\n                                {\n                                    \"key\": \"tablet-wifi\",\n                                    \"label\": \"Wi-Fi\"\n                                }\n                            ]\n                        },\n                        {\n                            \"name\": \"tablet-stylus-support\",\n                            \"value\": true\n                        },\n                        {\n                            \"name\": \"tablet-charging-interface\",\n                            \"value\": {\n                                \"key\": \"tablet-charging-usbc\",\n                                \"label\": \"USB Type C\"\n                            }\n                        }\n                    ]\n                }\n            ]\n        },\n        {\n            \"productType\": {\n                \"typeId\": \"product-type\",\n                \"key\": \"tablet-product-type\"\n            },\n            \"key\": \"tablet-sureface-pro-9\",\n            \"priceMode\": \"Standalone\",\n            \"publish\": true,\n            \"name\": {\n                \"en\": \"Sureface Pro 9 Tablet\"\n            },\n            \"description\": {\n                \"en\": \"Sureface Pro 9 gives you the tablet flexibility you want and the laptop performance and battery life¹ you need to move through your day — all in one ultra-portable device. Now with powerful new processors, and choice of vibrant colors. \"\n            },\n            \"slug\": {\n                \"en\": \"tablet-sureface-pro-9\"\n            },\n            \"masterVariant\": {\n                \"sku\": \"QCB-00001\",\n                \"key\": \"QCB-00001\",\n                \"attributes\": [\n                    {\n                        \"name\": \"tablet-brand\",\n                        \"value\": \"Micronsoft\"\n                    },\n                    {\n                        \"name\": \"tablet-operating-system\",\n                        \"value\": {\n                            \"key\": \"os-windows\",\n                            \"label\": \"Windows\"\n                        }\n                    },\n                    {\n                        \"name\": \"tablet-screen-size\",\n                        \"value\": 13\n                    },\n                    {\n                        \"name\": \"tablet-internal-storage\",\n                        \"value\": 128\n                    },\n                    {\n                        \"name\": \"tablet-wireless-conectivity\",\n                        \"value\": [\n                            {\n                                \"key\": \"tablet-bt\",\n                                \"label\": \"Bluetooth\"\n                            },\n                            {\n                                \"key\": \"tablet-wifi\",\n                                \"label\": \"Wi-Fi\"\n                            }\n                        ]\n                    },\n                    {\n                        \"name\": \"tablet-stylus-support\",\n                        \"value\": true\n                    },\n                    {\n                        \"name\": \"tablet-charging-interface\",\n                        \"value\": {\n                            \"key\": \"tablet-charging-usbc\",\n                            \"label\": \"USB Type C\"\n                        }\n                    }\n                ]\n            },\n            \"variants\": [\n                {\n                    \"sku\": \"QEZ-00001\",\n                    \"key\": \"QEZ-00001\",\n                    \"attributes\": [\n                        {\n                            \"name\": \"tablet-brand\",\n                            \"value\": \"Micronsoft\"\n                        },\n                        {\n                            \"name\": \"tablet-operating-system\",\n                            \"value\": {\n                                \"key\": \"os-windows\",\n                                \"label\": \"Windows\"\n                            }\n                        },\n                        {\n                            \"name\": \"tablet-screen-size\",\n                            \"value\": 13\n                        },\n                        {\n                            \"name\": \"tablet-internal-storage\",\n                            \"value\": 256\n                        },\n                        {\n                            \"name\": \"tablet-wireless-conectivity\",\n                            \"value\": [\n                                {\n                                    \"key\": \"tablet-bt\",\n                                    \"label\": \"Bluetooth\"\n                                },\n                                {\n                                    \"key\": \"tablet-wifi\",\n                                    \"label\": \"Wi-Fi\"\n                                }\n                            ]\n                        },\n                        {\n                            \"name\": \"tablet-stylus-support\",\n                            \"value\": true\n                        },\n                        {\n                            \"name\": \"tablet-charging-interface\",\n                            \"value\": {\n                                \"key\": \"tablet-charging-usbc\",\n                                \"label\": \"USB Type C\"\n                            }\n                        }\n                    ]\n                },\n                {\n                    \"sku\": \"QKI-00001\",\n                    \"key\": \"QKI-00001\",\n                    \"attributes\": [\n                        {\n                            \"name\": \"tablet-brand\",\n                            \"value\": \"Micronsoft\"\n                        },\n                        {\n                            \"name\": \"tablet-operating-system\",\n                            \"value\": {\n                                \"key\": \"os-windows\",\n                                \"label\": \"Windows\"\n                            }\n                        },\n                        {\n                            \"name\": \"tablet-screen-size\",\n                            \"value\": 13\n                        },\n                        {\n                            \"name\": \"tablet-internal-storage\",\n                            \"value\": 1024\n                        },\n                        {\n                            \"name\": \"tablet-wireless-conectivity\",\n                            \"value\": [\n                                {\n                                    \"key\": \"tablet-bt\",\n                                    \"label\": \"Bluetooth\"\n                                },\n                                {\n                                    \"key\": \"tablet-wifi\",\n                                    \"label\": \"Wi-Fi\"\n                                }\n                            ]\n                        },\n                        {\n                            \"name\": \"tablet-stylus-support\",\n                            \"value\": true\n                        },\n                        {\n                            \"name\": \"tablet-charging-interface\",\n                            \"value\": {\n                                \"key\": \"tablet-charging-usbc\",\n                                \"label\": \"USB Type C\"\n                            }\n                        }\n                    ]\n                }\n            ]\n        },\n        {\n            \"productType\": {\n                \"typeId\": \"product-type\",\n                \"key\": \"tablet-product-type\"\n            },\n            \"key\": \"tablet-amazing-fire-pro\",\n            \"priceMode\": \"Standalone\",\n            \"publish\": true,\n            \"name\": {\n                \"en\": \"Amazing Fire Pro Tablet\"\n            },\n            \"description\": {\n                \"en\": \"Do what you love, uninterrupted — 25% faster performance than the previous generation and 3 GB RAM are ideal for seamless streaming, reading, and gaming.\"\n            },\n            \"slug\": {\n                \"en\": \"tablet-amazing-fire-pro\"\n            },\n            \"masterVariant\": {\n                \"sku\": \"B0BHZT5S12\",\n                \"key\": \"B0BHZT5S12\",\n                \"attributes\": [\n                    {\n                        \"name\": \"tablet-brand\",\n                        \"value\": \"Amazing\"\n                    },\n                    {\n                        \"name\": \"tablet-operating-system\",\n                        \"value\": {\n                            \"key\": \"os-fireos\",\n                            \"label\": \"Fire OS\"\n                        }\n                    },\n                    {\n                        \"name\": \"tablet-screen-size\",\n                        \"value\": 10.1\n                    },\n                    {\n                        \"name\": \"tablet-internal-storage\",\n                        \"value\": 32\n                    },\n                    {\n                        \"name\": \"tablet-wireless-conectivity\",\n                        \"value\": [\n                            {\n                                \"key\": \"tablet-bt\",\n                                \"label\": \"Bluetooth\"\n                            },\n                            {\n                                \"key\": \"tablet-wifi\",\n                                \"label\": \"Wi-Fi\"\n                            }\n                        ]\n                    },\n                    {\n                        \"name\": \"tablet-stylus-support\",\n                        \"value\": false\n                    },\n                    {\n                        \"name\": \"tablet-charging-interface\",\n                        \"value\": {\n                            \"key\": \"tablet-charging-usbc\",\n                            \"label\": \"USB Type C\"\n                        }\n                    }\n                ]\n            },\n            \"variants\": [\n                {\n                    \"sku\": \"B0BL5PYD69\",\n                    \"key\": \"B0BL5PYD69\",\n                    \"attributes\": [\n                        {\n                            \"name\": \"tablet-brand\",\n                            \"value\": \"Amazing\"\n                        },\n                        {\n                            \"name\": \"tablet-operating-system\",\n                            \"value\": {\n                                \"key\": \"os-fireos\",\n                                \"label\": \"Fire OS\"\n                            }\n                        },\n                        {\n                            \"name\": \"tablet-screen-size\",\n                            \"value\": 10.1\n                        },\n                        {\n                            \"name\": \"tablet-internal-storage\",\n                            \"value\": 64\n                        },\n                        {\n                            \"name\": \"tablet-wireless-conectivity\",\n                            \"value\": [\n                                {\n                                    \"key\": \"tablet-bt\",\n                                    \"label\": \"Bluetooth\"\n                                },\n                                {\n                                    \"key\": \"tablet-wifi\",\n                                    \"label\": \"Wi-Fi\"\n                                }\n                            ]\n                        },\n                        {\n                            \"name\": \"tablet-stylus-support\",\n                            \"value\": false\n                        },\n                        {\n                            \"name\": \"tablet-charging-interface\",\n                            \"value\": {\n                                \"key\": \"tablet-charging-usbc\",\n                                \"label\": \"USB Type C\"\n                            }\n                        }\n                    ]\n                }\n            ]\n        },\n        {\n            \"productType\": {\n                \"typeId\": \"product-type\",\n                \"key\": \"tablet-product-type\"\n            },\n            \"key\": \"tablet-appeal-ipad-9\",\n            \"priceMode\": \"Standalone\",\n            \"publish\": true,\n            \"name\": {\n                \"en\": \"Appeal iPad 9th generation Tablet\"\n            },\n            \"description\": {\n                \"en\": \"The iPad is a touchscreen tablet PC made by Appeal. The original iPad debuted in 2010. Appeal has four iPad product lines: iPad, iPad mini, iPad Air and iPad Pro. All models are available in a variety of colors.\"\n            },\n            \"slug\": {\n                \"en\": \"tablet-appeal-ipad-9\"\n            },\n            \"masterVariant\": {\n                \"sku\": \"MK2K3LLA\",\n                \"key\": \"MK2K3LLA\",\n                \"attributes\": [\n                    {\n                        \"name\": \"tablet-brand\",\n                        \"value\": \"Appeal\"\n                    },\n                    {\n                        \"name\": \"tablet-operating-system\",\n                        \"value\": {\n                            \"key\": \"os-ipados\",\n                            \"label\": \"Apple iPadOS\"\n                        }\n                    },\n                    {\n                        \"name\": \"tablet-screen-size\",\n                        \"value\": 10.1\n                    },\n                    {\n                        \"name\": \"tablet-internal-storage\",\n                        \"value\": 64\n                    },\n                    {\n                        \"name\": \"tablet-wireless-conectivity\",\n                        \"value\": [\n                            {\n                                \"key\": \"tablet-bt\",\n                                \"label\": \"Bluetooth\"\n                            },\n                            {\n                                \"key\": \"tablet-wifi\",\n                                \"label\": \"Wi-Fi\"\n                            }\n                        ]\n                    },\n                    {\n                        \"name\": \"tablet-stylus-support\",\n                        \"value\": true\n                    },\n                    {\n                        \"name\": \"tablet-charging-interface\",\n                        \"value\": {\n                            \"key\": \"tablet-charging-lightning\",\n                            \"label\": \"Lightning\"\n                        }\n                    }\n                ]\n            },\n            \"variants\": [\n                {\n                    \"sku\": \"MK2N3LLA\",\n                    \"key\": \"MK2N3LLA\",\n                    \"attributes\": [\n                        {\n                            \"name\": \"tablet-brand\",\n                            \"value\": \"Appeal\"\n                        },\n                        {\n                            \"name\": \"tablet-operating-system\",\n                            \"value\": {\n                                \"key\": \"os-ipados\",\n                                \"label\": \"Apple iPadOS\"\n                            }\n                        },\n                        {\n                            \"name\": \"tablet-screen-size\",\n                            \"value\": 10.1\n                        },\n                        {\n                            \"name\": \"tablet-internal-storage\",\n                            \"value\": 256\n                        },\n                        {\n                            \"name\": \"tablet-wireless-conectivity\",\n                            \"value\": [\n                                {\n                                    \"key\": \"tablet-bt\",\n                                    \"label\": \"Bluetooth\"\n                                },\n                                {\n                                    \"key\": \"tablet-wifi\",\n                                    \"label\": \"Wi-Fi\"\n                                }\n                            ]\n                        },\n                        {\n                            \"name\": \"tablet-stylus-support\",\n                            \"value\": true\n                        },\n                        {\n                            \"name\": \"tablet-charging-interface\",\n                            \"value\": {\n                                \"key\": \"tablet-charging-lightning\",\n                                \"label\": \"Lightning\"\n                            }\n                        }\n                    ]\n                },\n                {\n                    \"sku\": \"MK2I3LLA\",\n                    \"key\": \"MK2I3LLA\",\n                    \"attributes\": [\n                        {\n                            \"name\": \"tablet-brand\",\n                            \"value\": \"Appeal\"\n                        },\n                        {\n                            \"name\": \"tablet-operating-system\",\n                            \"value\": {\n                                \"key\": \"os-ipados\",\n                                \"label\": \"Apple iPadOS\"\n                            }\n                        },\n                        {\n                            \"name\": \"tablet-screen-size\",\n                            \"value\": 10.1\n                        },\n                        {\n                            \"name\": \"tablet-internal-storage\",\n                            \"value\": 512\n                        },\n                        {\n                            \"name\": \"tablet-wireless-conectivity\",\n                            \"value\": [\n                                {\n                                    \"key\": \"tablet-cell\",\n                                    \"label\": \"Cellular\"\n                                },\n                                {\n                                    \"key\": \"tablet-bt\",\n                                    \"label\": \"Bluetooth\"\n                                },\n                                {\n                                    \"key\": \"tablet-wifi\",\n                                    \"label\": \"Wi-Fi\"\n                                }\n                            ]\n                        },\n                        {\n                            \"name\": \"tablet-stylus-support\",\n                            \"value\": true\n                        },\n                        {\n                            \"name\": \"tablet-charging-interface\",\n                            \"value\": {\n                                \"key\": \"tablet-charging-lightning\",\n                                \"label\": \"Lightning\"\n                            }\n                        }\n                    ]\n                }\n            ]\n        },\n        {\n            \"productType\": {\n                \"typeId\": \"product-type\",\n                \"key\": \"tablet-product-type\"\n            },\n            \"key\": \"tablet-samesong-galactic-tab-s9-plus\",\n            \"priceMode\": \"Standalone\",\n            \"publish\": true,\n            \"name\": {\n                \"en\": \"Samesong Galactic Tab S9 plus Tablet\"\n            },\n            \"description\": {\n                \"en\": \"Discover a world of endless possibilities with Galactic Tab S9+. Strengthened by our mightiest processor, you’ll have the power to unlock and inspire greatness. And with Wi-Fi connectivity, you can work toward your goals and stay close to what matters most from almost anywhere. Plus, our enhanced durability lets you confidently forge ahead with protection from bumps, water, fire and dust. \"\n            },\n            \"slug\": {\n                \"en\": \"tablet-samesong-galactic-tab-s9-plus\"\n            },\n            \"masterVariant\": {\n                \"sku\": \"SM-X810NZAAXAR\",\n                \"key\": \"SM-X810NZAAXAR\",\n                \"attributes\": [\n                    {\n                        \"name\": \"tablet-brand\",\n                        \"value\": \"Samesong\"\n                    },\n                    {\n                        \"name\": \"tablet-operating-system\",\n                        \"value\": {\n                            \"key\": \"os-android\",\n                            \"label\": \"Android\"\n                        }\n                    },\n                    {\n                        \"name\": \"tablet-screen-size\",\n                        \"value\": 12.4\n                    },\n                    {\n                        \"name\": \"tablet-internal-storage\",\n                        \"value\": 256\n                    },\n                    {\n                        \"name\": \"tablet-wireless-conectivity\",\n                        \"value\": [\n                            {\n                                \"key\": \"tablet-bt\",\n                                \"label\": \"Bluetooth\"\n                            },\n                            {\n                                \"key\": \"tablet-wifi\",\n                                \"label\": \"Wi-Fi\"\n                            }\n                        ]\n                    },\n                    {\n                        \"name\": \"tablet-stylus-support\",\n                        \"value\": true\n                    },\n                    {\n                        \"name\": \"tablet-charging-interface\",\n                        \"value\": {\n                            \"key\": \"tablet-charging-usbc\",\n                            \"label\": \"USB Type C\"\n                        }\n                    }\n                ]\n            },\n            \"variants\": [\n                {\n                    \"sku\": \"SM-X810NZAHXAR\",\n                    \"key\": \"SM-X810NZAHXAR\",\n                    \"attributes\": [\n                        {\n                            \"name\": \"tablet-brand\",\n                            \"value\": \"Samesong\"\n                        },\n                        {\n                            \"name\": \"tablet-operating-system\",\n                            \"value\": {\n                                \"key\": \"os-android\",\n                                \"label\": \"Android\"\n                            }\n                        },\n                        {\n                            \"name\": \"tablet-screen-size\",\n                            \"value\": 12.4\n                        },\n                        {\n                            \"name\": \"tablet-internal-storage\",\n                            \"value\": 512\n                        },\n                        {\n                            \"name\": \"tablet-wireless-conectivity\",\n                            \"value\": [\n                                {\n                                    \"key\": \"tablet-bt\",\n                                    \"label\": \"Bluetooth\"\n                                },\n                                {\n                                    \"key\": \"tablet-wifi\",\n                                    \"label\": \"Wi-Fi\"\n                                }\n                            ]\n                        },\n                        {\n                            \"name\": \"tablet-stylus-support\",\n                            \"value\": true\n                        },\n                        {\n                            \"name\": \"tablet-charging-interface\",\n                            \"value\": {\n                                \"key\": \"tablet-charging-usbc\",\n                                \"label\": \"USB Type C\"\n                            }\n                        }\n                    ]\n                },\n                {\n                    \"sku\": \"SM-X810NZAHYAR\",\n                    \"key\": \"SM-X810NZAHYAR\",\n                    \"attributes\": [\n                        {\n                            \"name\": \"tablet-brand\",\n                            \"value\": \"Samesong\"\n                        },\n                        {\n                            \"name\": \"tablet-operating-system\",\n                            \"value\": {\n                                \"key\": \"os-android\",\n                                \"label\": \"Android\"\n                            }\n                        },\n                        {\n                            \"name\": \"tablet-screen-size\",\n                            \"value\": 12.4\n                        },\n                        {\n                            \"name\": \"tablet-internal-storage\",\n                            \"value\": 1024\n                        },\n                        {\n                            \"name\": \"tablet-wireless-conectivity\",\n                            \"value\": [\n                                {\n                                    \"key\": \"tablet-cell\",\n                                    \"label\": \"Cellular\"\n                                },\n                                {\n                                    \"key\": \"tablet-bt\",\n                                    \"label\": \"Bluetooth\"\n                                },\n                                {\n                                    \"key\": \"tablet-wifi\",\n                                    \"label\": \"Wi-Fi\"\n                                }\n                            ]\n                        },\n                        {\n                            \"name\": \"tablet-stylus-support\",\n                            \"value\": true\n                        },\n                        {\n                            \"name\": \"tablet-charging-interface\",\n                            \"value\": {\n                                \"key\": \"tablet-charging-usbc\",\n                                \"label\": \"USB Type C\"\n                            }\n                        }\n                    ]\n                }\n            ]\n        },\n        {\n            \"productType\": {\n                \"typeId\": \"product-type\",\n                \"key\": \"tablet-product-type\"\n            },\n            \"key\": \"tablet-amazing-fire-hd-10\",\n            \"priceMode\": \"Standalone\",\n            \"publish\": true,\n            \"name\": {\n                \"en\": \"Amazing Fire HD 10 Tablet\"\n            },\n            \"description\": {\n                \"en\": \"Do what you love, uninterrupted — 25% faster performance than the previous generation and 3 GB RAM are ideal for seamless streaming, reading, and gaming.\"\n            },\n            \"categories\": [\n                {\n                    \"typeId\": \"category\",\n                    \"key\": \"on-sale-category\"\n                }\n            ],\n            \"slug\": {\n                \"en\": \"tablet-amazing-fire-hd-10\"\n            },\n            \"masterVariant\": {\n                \"sku\": \"BABHZT5S12\",\n                \"key\": \"BABHZT5S12\",\n                \"attributes\": [\n                    {\n                        \"name\": \"tablet-brand\",\n                        \"value\": \"Amazing\"\n                    },\n                    {\n                        \"name\": \"tablet-operating-system\",\n                        \"value\": {\n                            \"key\": \"os-fireos\",\n                            \"label\": \"Fire OS\"\n                        }\n                    },\n                    {\n                        \"name\": \"tablet-screen-size\",\n                        \"value\": 10.1\n                    },\n                    {\n                        \"name\": \"tablet-internal-storage\",\n                        \"value\": 32\n                    },\n                    {\n                        \"name\": \"tablet-wireless-conectivity\",\n                        \"value\": [\n                            {\n                                \"key\": \"tablet-bt\",\n                                \"label\": \"Bluetooth\"\n                            },\n                            {\n                                \"key\": \"tablet-wifi\",\n                                \"label\": \"Wi-Fi\"\n                            }\n                        ]\n                    },\n                    {\n                        \"name\": \"tablet-stylus-support\",\n                        \"value\": false\n                    },\n                    {\n                        \"name\": \"tablet-charging-interface\",\n                        \"value\": {\n                            \"key\": \"tablet-charging-microusb\",\n                            \"label\": \"Micro USB\"\n                        }\n                    }\n                ]\n            },\n            \"variants\": [\n                {\n                    \"sku\": \"BIBL5PYD69\",\n                    \"key\": \"BIBL5PYD69\",\n                    \"attributes\": [\n                        {\n                            \"name\": \"tablet-brand\",\n                            \"value\": \"Amazing\"\n                        },\n                        {\n                            \"name\": \"tablet-operating-system\",\n                            \"value\": {\n                                \"key\": \"os-fireos\",\n                                \"label\": \"Fire OS\"\n                            }\n                        },\n                        {\n                            \"name\": \"tablet-screen-size\",\n                            \"value\": 10.1\n                        },\n                        {\n                            \"name\": \"tablet-internal-storage\",\n                            \"value\": 64\n                        },\n                        {\n                            \"name\": \"tablet-wireless-conectivity\",\n                            \"value\": [\n                                {\n                                    \"key\": \"tablet-bt\",\n                                    \"label\": \"Bluetooth\"\n                                },\n                                {\n                                    \"key\": \"tablet-wifi\",\n                                    \"label\": \"Wi-Fi\"\n                                }\n                            ]\n                        },\n                        {\n                            \"name\": \"tablet-stylus-support\",\n                            \"value\": false\n                        },\n                        {\n                            \"name\": \"tablet-charging-interface\",\n                            \"value\": {\n                                \"key\": \"tablet-charging-usbc\",\n                                \"label\": \"USB Type C\"\n                            }\n                        }\n                    ]\n                }\n            ]\n        },\n        {\n            \"productType\": {\n                \"typeId\": \"product-type\",\n                \"key\": \"tablet-product-type\"\n            },\n            \"key\": \"tablet-amazing-fire-hd-8-plus\",\n            \"priceMode\": \"Standalone\",\n            \"publish\": true,\n            \"name\": {\n                \"en\": \"Amazing Fire HD 8 plus Tablet\"\n            },\n            \"description\": {\n                \"en\": \"Do what you love, uninterrupted — 25% faster performance than the previous generation and 3 GB RAM are ideal for seamless streaming, reading, and gaming.\"\n            },\n            \"slug\": {\n                \"en\": \"tablet-amazing-fire-hd-8-plus\"\n            },\n            \"masterVariant\": {\n                \"sku\": \"BSBHZT5S12\",\n                \"key\": \"BSBHZT5S12\",\n                \"attributes\": [\n                    {\n                        \"name\": \"tablet-brand\",\n                        \"value\": \"Amazing\"\n                    },\n                    {\n                        \"name\": \"tablet-operating-system\",\n                        \"value\": {\n                            \"key\": \"os-fireos\",\n                            \"label\": \"Fire OS\"\n                        }\n                    },\n                    {\n                        \"name\": \"tablet-screen-size\",\n                        \"value\": 8\n                    },\n                    {\n                        \"name\": \"tablet-internal-storage\",\n                        \"value\": 64\n                    },\n                    {\n                        \"name\": \"tablet-wireless-conectivity\",\n                        \"value\": [\n                            {\n                                \"key\": \"tablet-bt\",\n                                \"label\": \"Bluetooth\"\n                            },\n                            {\n                                \"key\": \"tablet-wifi\",\n                                \"label\": \"Wi-Fi\"\n                            }\n                        ]\n                    },\n                    {\n                        \"name\": \"tablet-stylus-support\",\n                        \"value\": false\n                    },\n                    {\n                        \"name\": \"tablet-charging-interface\",\n                        \"value\": {\n                            \"key\": \"tablet-charging-microusb\",\n                            \"label\": \"Micro USB\"\n                        }\n                    }\n                ]\n            },\n            \"variants\": [\n                {\n                    \"sku\": \"BBBL5PYD69\",\n                    \"key\": \"BBBL5PYD69\",\n                    \"attributes\": [\n                        {\n                            \"name\": \"tablet-brand\",\n                            \"value\": \"Amazing\"\n                        },\n                        {\n                            \"name\": \"tablet-operating-system\",\n                            \"value\": {\n                                \"key\": \"os-fireos\",\n                                \"label\": \"Fire OS\"\n                            }\n                        },\n                        {\n                            \"name\": \"tablet-screen-size\",\n                            \"value\": 8\n                        },\n                        {\n                            \"name\": \"tablet-internal-storage\",\n                            \"value\": 128\n                        },\n                        {\n                            \"name\": \"tablet-wireless-conectivity\",\n                            \"value\": [\n                                {\n                                    \"key\": \"tablet-bt\",\n                                    \"label\": \"Bluetooth\"\n                                },\n                                {\n                                    \"key\": \"tablet-wifi\",\n                                    \"label\": \"Wi-Fi\"\n                                }\n                            ]\n                        },\n                        {\n                            \"name\": \"tablet-stylus-support\",\n                            \"value\": false\n                        },\n                        {\n                            \"name\": \"tablet-charging-interface\",\n                            \"value\": {\n                                \"key\": \"tablet-charging-microusb\",\n                                \"label\": \"Micro USB\"\n                            }\n                        }\n                    ]\n                }\n            ]\n        },\n        {\n            \"productType\": {\n                \"typeId\": \"product-type\",\n                \"key\": \"tablet-product-type\"\n            },\n            \"key\": \"tablet-googly-pixel-tablet\",\n            \"priceMode\": \"Standalone\",\n            \"publish\": true,\n            \"name\": {\n                \"en\": \"Googly Pixel Tablet\"\n            },\n            \"description\": {\n                \"en\": \"The Pixel Tablet is engineered by Googly to be more helpful at home – and in your hand. Place it on the Charging Speaker Dock for great-sounding music and video streaming.[1] Control your smart home, and say Hey Googly for hands-free help.[2] It’s all powered by the Google Tensor G2 chip, and it’s the perfect companion to your Pixel phone. \"\n            },\n            \"slug\": {\n                \"en\": \"tablet-googly-pixel-tablet\"\n            },\n            \"masterVariant\": {\n                \"sku\": \"GA04754-AUS\",\n                \"key\": \"GA04754-AUS\",\n                \"attributes\": [\n                    {\n                        \"name\": \"tablet-brand\",\n                        \"value\": \"Googly\"\n                    },\n                    {\n                        \"name\": \"tablet-operating-system\",\n                        \"value\": {\n                            \"key\": \"os-android\",\n                            \"label\": \"Android\"\n                        }\n                    },\n                    {\n                        \"name\": \"tablet-screen-size\",\n                        \"value\": 11\n                    },\n                    {\n                        \"name\": \"tablet-internal-storage\",\n                        \"value\": 128\n                    },\n                    {\n                        \"name\": \"tablet-wireless-conectivity\",\n                        \"value\": [\n                            {\n                                \"key\": \"tablet-bt\",\n                                \"label\": \"Bluetooth\"\n                            },\n                            {\n                                \"key\": \"tablet-wifi\",\n                                \"label\": \"Wi-Fi\"\n                            }\n                        ]\n                    },\n                    {\n                        \"name\": \"tablet-stylus-support\",\n                        \"value\": false\n                    },\n                    {\n                        \"name\": \"tablet-charging-interface\",\n                        \"value\": {\n                            \"key\": \"tablet-charging-usbc\",\n                            \"label\": \"USB Type C\"\n                        }\n                    }\n                ]\n            },\n            \"variants\": [\n                {\n                    \"sku\": \"GA04934-AUS\",\n                    \"key\": \"GA04934-AUS\",\n                    \"attributes\": [\n                        {\n                            \"name\": \"tablet-brand\",\n                            \"value\": \"Googly\"\n                        },\n                        {\n                            \"name\": \"tablet-operating-system\",\n                            \"value\": {\n                                \"key\": \"os-android\",\n                                \"label\": \"Android\"\n                            }\n                        },\n                        {\n                            \"name\": \"tablet-screen-size\",\n                            \"value\": 11\n                        },\n                        {\n                            \"name\": \"tablet-internal-storage\",\n                            \"value\": 256\n                        },\n                        {\n                            \"name\": \"tablet-wireless-conectivity\",\n                            \"value\": [\n                                {\n                                    \"key\": \"tablet-bt\",\n                                    \"label\": \"Bluetooth\"\n                                },\n                                {\n                                    \"key\": \"tablet-wifi\",\n                                    \"label\": \"Wi-Fi\"\n                                }\n                            ]\n                        },\n                        {\n                            \"name\": \"tablet-stylus-support\",\n                            \"value\": false\n                        },\n                        {\n                            \"name\": \"tablet-charging-interface\",\n                            \"value\": {\n                                \"key\": \"tablet-charging-usbc\",\n                                \"label\": \"USB Type C\"\n                            }\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{import-host}}/{{project-key}}/product-drafts/import-containers/{{ps-product-container-key}}",
+									"host": [
+										"{{import-host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"product-drafts",
+										"import-containers",
+										"{{ps-product-container-key}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Backend] Create standalone prices import container",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+											"var data = JSON.parse(responseBody);",
+											"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+											"    pm.environment.set(\"ps-standalone-price-container-id\", data.results[0].id); ",
+											"    pm.environment.set(\"ps-standalone-price-container-version\", data.results[0].version);",
+											"}",
+											"if(data.results && data.results[0] && data.results[0].key){",
+											"    pm.environment.set(\"ps-standalone-price-container-key\", data.results[0].key); ",
+											"}",
+											"if(data.version){",
+											"    pm.environment.set(\"ps-standalone-price-container-version\", data.version);",
+											"}",
+											"if(data.id){",
+											"    pm.environment.set(\"ps-standalone-price-container-id\", data.id); ",
+											"}",
+											"if(data.key){",
+											"    pm.environment.set(\"ps-standalone-price-container-key\", data.key);",
+											"}",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ctp_access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"key\": \"ps-standalone-price-import-container-01\",\n    \"resourceType\": \"standalone-price\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{import-host}}/{{project-key}}/import-containers",
+									"host": [
+										"{{import-host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"import-containers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Backend] Create VIP Customer Group",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+											"var data = JSON.parse(responseBody);",
+											"",
+											"if(data.id){",
+											"    pm.environment.set(\"vip-customer-group-id\", data.id); ",
+											"}",
+											"if(data.key){",
+											"    pm.environment.set(\"vip-customer-group-key\", data.key);",
+											"}",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ctp_access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"key\" : \"vip-customer-group\",\n    \"groupName\" : \"VIP Customers\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/customer-groups",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"customer-groups"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Backend] Import Standalone Prices",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ctp_access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"type\": \"standalone-price\",\n    \"resources\": [\n        {\n            \"key\": \"BSBHZT5S12-price-01\",\n            \"sku\": \"BSBHZT5S12\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 7499\n            },\n            \"country\": \"AU\"\n        },\n        {\n            \"key\": \"BBBL5PYD69-price-01\",\n            \"sku\": \"BBBL5PYD69\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 9499\n            },\n            \"country\": \"AU\"\n        },\n        {\n            \"key\": \"GA04754-AUS-price-01\",\n            \"sku\": \"GA04754-AUS\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 49900\n            },\n            \"country\": \"AU\"\n        },\n        {\n            \"key\": \"GA04934-AUS-price-01\",\n            \"sku\": \"GA04934-AUS-AUS\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 59900\n            },\n            \"country\": \"AU\"\n        },\n        {\n            \"key\": \"MK2K3LLA-price-01\",\n            \"sku\": \"MK2K3LLA\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 34900\n            },\n            \"country\": \"AU\"\n        },\n        {\n            \"key\": \"MK2N3LLA-price-01\",\n            \"sku\": \"MK2N3LLA\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 49900\n            },\n            \"country\": \"AU\"\n        },\n        {\n            \"key\": \"MK2I3LLA-price-01\",\n            \"sku\": \"MK2I3LLA\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 54900\n            },\n            \"country\": \"AU\"\n        },\n        {\n            \"key\": \"SM-X810NZAAXAR-price-01\",\n            \"sku\": \"SM-X810NZAAXAR\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 99999\n            },\n            \"country\": \"AU\"\n        },\n        {\n            \"key\": \"SM-X810NZAHXAR-price-01\",\n            \"sku\": \"SM-X810NZAHXAR\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 111999\n            },\n            \"country\": \"AU\"\n        },\n        {\n            \"key\": \"SM-X810NZAHYAR-price-01\",\n            \"sku\": \"SM-X810NZAHYAR\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 119999\n            },\n            \"country\": \"AU\"\n        },\n        {\n            \"key\": \"BABHZT5S12-price-01\",\n            \"sku\": \"BABHZT5S12\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 9499\n            },\n            \"country\": \"AU\"\n        },\n        {\n            \"key\": \"BIBL5PYD69-price-01\",\n            \"sku\": \"BIBL5PYD69\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 10499\n            },\n            \"country\": \"AU\"\n        },\n        {\n            \"key\": \"SM-X710NZAAXAR-price-01\",\n            \"sku\": \"SM-X710NZAAXAR\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 79999\n            },\n            \"country\": \"AU\"\n        },\n        {\n            \"key\": \"SM-X710NZAEXAR-price-01\",\n            \"sku\": \"SM-X710NZAEXAR\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 91999\n            },\n            \"country\": \"AU\"\n        },\n        {\n            \"key\": \"SM-X710NZAOXAR-price-01\",\n            \"sku\": \"SM-X710NZAOXAR\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 99999\n            },\n            \"country\": \"AU\"\n        },\n        {\n            \"key\": \"B0BHZT5S12-price-01\",\n            \"sku\": \"B0BHZT5S12\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 9999\n            },\n            \"country\": \"AU\"\n        },\n        {\n            \"key\": \"B0BL5PYD69-price-01\",\n            \"sku\": \"B0BL5PYD69\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 11999\n            },\n            \"country\": \"AU\"\n        },\n        {\n            \"key\": \"QCB-00001-price-01\",\n            \"sku\": \"QCB-00001\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 99999\n            },\n            \"country\": \"AU\"\n        },\n        {\n            \"key\": \"QEZ-00001-price-01\",\n            \"sku\": \"QEZ-00001\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 119999\n            },\n            \"country\": \"AU\"\n        },\n        {\n            \"key\": \"QKI-00001-price-01\",\n            \"sku\": \"QKI-00001\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 129999\n            },\n            \"country\": \"AU\"\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{import-host}}/{{project-key}}/standalone-prices/import-containers/{{ps-standalone-price-container-key}}",
+									"host": [
+										"{{import-host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"standalone-prices",
+										"import-containers",
+										"{{ps-standalone-price-container-key}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Backend] Import Standalone VIP Prices",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ctp_access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"type\": \"standalone-price\",\n    \"resources\": [\n        {\n            \"key\": \"GA04754-AUS-price-02\",\n            \"sku\": \"GA04754-AUS\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 48849\n            },\n            \"country\": \"AU\",\n            \"customerGroup\": {\n                \"typeId\": \"customer-group\",\n                \"key\": \"{{vip-customer-group-key}}\"\n            }\n        },\n        {\n            \"key\": \"GA04934-AUS-price-02\",\n            \"sku\": \"GA04934-AUS-AUS\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 58849\n            },\n            \"country\": \"AU\",\n            \"customerGroup\": {\n                \"typeId\": \"customer-group\",\n                \"key\": \"{{vip-customer-group-key}}\"\n            }\n        },\n        {\n            \"key\": \"MK2K3LLA-price-02\",\n            \"sku\": \"MK2K3LLA\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 33849\n            },\n            \"country\": \"AU\",\n            \"customerGroup\": {\n                \"typeId\": \"customer-group\",\n                \"key\": \"{{vip-customer-group-key}}\"\n            }\n        },\n        {\n            \"key\": \"MK2N3LLA-price-02\",\n            \"sku\": \"MK2N3LLA\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 48900\n            },\n            \"country\": \"AU\",\n            \"customerGroup\": {\n                \"typeId\": \"customer-group\",\n                \"key\": \"{{vip-customer-group-key}}\"\n            }\n        },\n        {\n            \"key\": \"MK2I3LLA-price-02\",\n            \"sku\": \"MK2I3LLA\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 53849\n            },\n            \"country\": \"AU\",\n            \"customerGroup\": {\n                \"typeId\": \"customer-group\",\n                \"key\": \"{{vip-customer-group-key}}\"\n            }\n        },\n        {\n            \"key\": \"SM-X810NZAAXAR-price-02\",\n            \"sku\": \"SM-X810NZAAXAR\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 98999\n            },\n            \"country\": \"AU\",\n            \"customerGroup\": {\n                \"typeId\": \"customer-group\",\n                \"key\": \"{{vip-customer-group-key}}\"\n            }\n        },\n        {\n            \"key\": \"SM-X810NZAHXAR-price-02\",\n            \"sku\": \"SM-X810NZAHXAR\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 110999\n            },\n            \"country\": \"AU\",\n            \"customerGroup\": {\n                \"typeId\": \"customer-group\",\n                \"key\": \"{{vip-customer-group-key}}\"\n            }\n        },\n        {\n            \"key\": \"SM-X810NZAHYAR-price-02\",\n            \"sku\": \"SM-X810NZAHYAR\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 118999\n            },\n            \"country\": \"AU\",\n            \"customerGroup\": {\n                \"typeId\": \"customer-group\",\n                \"key\": \"{{vip-customer-group-key}}\"\n            }\n        },\n        {\n            \"key\": \"SM-X710NZAAXAR-price-02\",\n            \"sku\": \"SM-X710NZAAXAR\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 78949\n            },\n            \"country\": \"AU\",\n            \"customerGroup\": {\n                \"typeId\": \"customer-group\",\n                \"key\": \"{{vip-customer-group-key}}\"\n            }\n        },\n        {\n            \"key\": \"SM-X710NZAEXAR-price-02\",\n            \"sku\": \"SM-X710NZAEXAR\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 90900\n            },\n            \"country\": \"AU\",\n            \"customerGroup\": {\n                \"typeId\": \"customer-group\",\n                \"key\": \"{{vip-customer-group-key}}\"\n            }\n        },\n        {\n            \"key\": \"SM-X710NZAOXAR-price-02\",\n            \"sku\": \"SM-X710NZAOXAR\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 98949\n            },\n            \"country\": \"AU\",\n            \"customerGroup\": {\n                \"typeId\": \"customer-group\",\n                \"key\": \"{{vip-customer-group-key}}\"\n            }\n        },\n        {\n            \"key\": \"B0BHZT5S12-price-02\",\n            \"sku\": \"B0BHZT5S12\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 8999\n            },\n            \"country\": \"AU\",\n            \"customerGroup\": {\n                \"typeId\": \"customer-group\",\n                \"key\": \"{{vip-customer-group-key}}\"\n            }\n        },\n        {\n            \"key\": \"B0BL5PYD69-price-02\",\n            \"sku\": \"B0BL5PYD69\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 10999\n            },\n            \"country\": \"AU\",\n            \"customerGroup\": {\n                \"typeId\": \"customer-group\",\n                \"key\": \"{{vip-customer-group-key}}\"\n            }\n        },\n        {\n            \"key\": \"QCB-00001-price-02\",\n            \"sku\": \"QCB-00001\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 98999\n            },\n            \"country\": \"AU\",\n            \"customerGroup\": {\n                \"typeId\": \"customer-group\",\n                \"key\": \"{{vip-customer-group-key}}\"\n            }\n        },\n        {\n            \"key\": \"QEZ-00001-price-02\",\n            \"sku\": \"QEZ-00001\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 118999\n            },\n            \"country\": \"AU\",\n            \"customerGroup\": {\n                \"typeId\": \"customer-group\",\n                \"key\": \"{{vip-customer-group-key}}\"\n            }\n        },\n        {\n            \"key\": \"QKI-00001-price-02\",\n            \"sku\": \"QKI-00001\",\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"AUD\",\n                \"centAmount\": 128999\n            },\n            \"country\": \"AU\",\n            \"customerGroup\": {\n                \"typeId\": \"customer-group\",\n                \"key\": \"{{vip-customer-group-key}}\"\n            }\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{import-host}}/{{project-key}}/standalone-prices/import-containers/{{ps-standalone-price-container-key}}",
+									"host": [
+										"{{import-host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"standalone-prices",
+										"import-containers",
+										"{{ps-standalone-price-container-key}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Demo",
+					"item": [
+						{
+							"name": "[PPS] fullText query",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/product-projections/search?staged=false&text.en=amazing tablet",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"product-projections",
+										"search"
+									],
+									"query": [
+										{
+											"key": "staged",
+											"value": "false"
+										},
+										{
+											"key": "text.en",
+											"value": "amazing tablet"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[PS] fullText query",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// Find products containing \"amazing tablet\" in their name\n{\n    \"query\": {\n        \"fullText\": {\n            \"field\": \"name\",\n            \"language\": \"en\",\n            \"value\": \"amazing tablet\",\n            \"mustMatch\": \"any\" // \"amazing\" or \"tablet\". Use \"all\" for both\n        }\n    },\n    \"projection\": {\n        \"staged\": false,\n        \"priceCurrency\": \"AUD\",\n        \"priceCountry\": \"AU\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/products/search",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"products",
+										"search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[PS] exact query",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// Find tablets with a 10.1 inch screen\n{\n    \"query\": {\n        \"exact\": {\n            \"field\": \"variants.attributes.tablet-screen-size\",\n            \"attributeType\" : \"number\",\n            \"value\": 10.1\n        }\n    },\n    \"projection\": {\n        \"staged\": false,\n        \"priceCurrency\": \"AUD\",\n        \"priceCountry\": \"AU\"\n    },\n    \"markMatchingVariants\" : true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/products/search",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"products",
+										"search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[PS] exact query 2",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// Show products with prices for VIP Customer Group and show those prices\n{\n    \"query\": {\n        \"exact\": {\n            \"field\": \"variants.prices.customerGroup\",\n            \"value\": \"89526af1-a884-46c8-abe9-359deb6d7b8e\"\n        }\n    },\n    \"projection\": {\n        \"staged\": false,\n        \"priceCurrency\": \"AUD\",\n        \"priceCountry\": \"AU\",\n        \"priceCustomerGroup\" : \"89526af1-a884-46c8-abe9-359deb6d7b8e\"\n    },\n    \"markMatchingVariants\" : true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/products/search",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"products",
+										"search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[PS] prefix query",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// Find all products whose slug starts with \"tablet-amazing\"\n{\n    \"query\": {\n        \"prefix\": {\n            \"field\": \"slug\",\n            \"language\": \"en\",\n            \"value\": \"tablet-amazing\"\n        }\n    },\n    \"projection\": {\n        \"staged\": false,\n        \"priceCurrency\": \"AUD\",\n        \"priceCountry\": \"AU\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/products/search",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"products",
+										"search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[PS] wildcard query",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// Find all product whose variants SKU has \"B\" as the 1st and 3rd character\n{\n    \"query\": {\n        \"wildcard\": {\n            \"field\": \"variants.sku\",\n            \"value\": \"B?B*\"\n        }\n    },\n    \"projection\": {\n        \"staged\": false,\n        \"priceCurrency\": \"AUD\",\n        \"priceCountry\": \"AU\"\n    },\n    \"markMatchingVariants\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/products/search",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"products",
+										"search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[PS] range query",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// Find all products having at least 16 GB and not more than 64 GB of memory\n{\n    \"query\": {\n        \"range\": {\n            \"field\": \"variants.attributes.tablet-internal-storage\",\n            \"attributeType\": \"number\",\n            \"gte\": 16,\n            \"lte\": 64\n        }\n    },\n    \"projection\": {\n        \"staged\": false,\n        \"priceCurrency\": \"AUD\",\n        \"priceCountry\": \"AU\"\n    },\n    \"markMatchingVariants\" : true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/products/search",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"products",
+										"search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[PS] exists query",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// Find all Product Variants that have inventory.\n{\n    \"query\": {\n        \"exists\": {\n            \"field\": \"variants.availability\"\n        }\n    },\n    \"projection\": {\n        \"staged\": false,\n        \"priceCurrency\": \"AUD\",\n        \"priceCountry\": \"AU\"\n    },\n    \"markMatchingVariants\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/products/search",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"products",
+										"search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[PS] Compound expressions",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// Find all tablets that have at either at least 256 GB of memory or a USB charging interface (or both)\n{\n    \"query\": {\n        \"and\": [\n            {\n                \"fullText\": {\n                    \"field\": \"name\",\n                    \"language\": \"en\",\n                    \"value\": \"tablet\",\n                    \"mustMatch\": \"all\"\n                }\n            },\n            {\n                \"or\": [\n                    {\n                        \"range\": {\n                            \"field\": \"variants.attributes.tablet-internal-storage\",\n                            \"attributeType\": \"number\",\n                            \"gte\": 256 \n                        }\n                    },\n                    {\n                        \"wildcard\": {\n                            \"field\": \"variants.attributes.tablet-charging-interface.label\",\n                            \"attributeType\" : \"enum\",\n                            \"value\": \"USB*\",\n                            \"caseInsensitive\" : true\n                        }\n                    }\n                ]\n            }\n        ]\n    },\n    \"sort\": [\n        {\n            \"field\": \"name\",\n            \"language\": \"en\",\n            \"order\": \"desc\"\n        }\n    ],\n    \"projection\": {\n        \"staged\": false,\n        \"priceCurrency\": \"AUD\",\n        \"priceCountry\": \"AU\"\n    },\n    \"markMatchingVariants\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/products/search",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"products",
+										"search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[PS] Result boosting",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// Find all Amazing or Googly Products, but make sure the Googly ones are on top of the results\n{\n    \"query\": {\n        \"or\": [\n            {\n                \"exact\": {\n                    \"field\": \"variants.attributes.tablet-brand\",\n                    \"attributeType\": \"text\",\n                    \"value\": \"Amazing\"\n                }\n            },\n            {\n                \"exact\": {\n                    \"field\": \"variants.attributes.tablet-brand\",\n                    \"attributeType\": \"text\",\n                    \"value\": \"Googly\",\n                    \"boost\": 2\n                }\n            }\n        ]\n    },\n    \"projection\": {\n        \"staged\": false,\n        \"priceCurrency\": \"AUD\",\n        \"priceCountry\": \"AU\"\n    },\n    \"markMatchingVariants\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/products/search",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"products",
+										"search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[PS] Facets",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// Show all tablets and summarise how many there are with different charging interfaces\n{\n    \"query\": {\n        \"fullText\": {\n            \"field\": \"name\",\n            \"language\": \"en\",\n            \"value\": \"tablet\",\n            \"mustMatch\": \"all\"\n        }\n    },\n    \"projection\": {\n        \"staged\": false,\n        \"priceCurrency\": \"AUD\",\n        \"priceCountry\": \"AU\"\n    },\n    \"facets\": [\n        {\n            \"distinct\": {\n                \"name\": \"Chargin interfaces\",\n                \"field\": \"variants.attributes.tablet-charging-interface.label\",\n                \"attributeType\": \"enum\",\n                \"count\" : \"variants\"\n            }\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/products/search",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"products",
+										"search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[PS] Facets - specific buckets",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// Show how many tablets there are with wither cellular or bluetooth connectivity (or both)\n{\n    \"query\": {\n        \"fullText\": {\n            \"field\": \"name\",\n            \"language\": \"en\",\n            \"value\": \"tablet\",\n            \"mustMatch\": \"all\"\n        }\n    },\n    \"sort\": [\n        {\n            \"field\": \"name\",\n            \"language\": \"en\",\n            \"order\": \"desc\"\n        }\n    ],\n    \"projection\": {\n        \"staged\": false,\n        \"priceCurrency\": \"AUD\",\n        \"priceCountry\": \"AU\"\n    },\n    \"facets\": [\n        {\n            \"distinct\": {\n                \"name\": \"Wireless conectivity\",\n                \"field\": \"variants.attributes.tablet-wireless-conectivity.label\",\n                \"attributeType\": \"enum\",\n                \"includes\": [\n                    \"Cellular\",\n                    \"Bluetooth\"\n                ],\n                \"count\" : \"variants\"\n            }\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/products/search",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"products",
+										"search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[PS] Facets - ranges",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"query\": {\n        \"fullText\": {\n            \"field\": \"name\",\n            \"language\": \"en\",\n            \"value\": \"tablet\",\n            \"mustMatch\": \"all\"\n        }\n    },\n    \"sort\": [\n        {\n            \"field\": \"name\",\n            \"language\": \"en\",\n            \"order\": \"desc\"\n        }\n    ],\n    \"projection\": {\n        \"staged\": false,\n        \"priceCurrency\": \"AUD\",\n        \"priceCountry\": \"AU\"\n    },\n    \"facets\": [\n        {\n            \"ranges\": {\n                \"name\": \"Storage (GB)\",\n                \"field\": \"variants.attributes.tablet-internal-storage\",\n                \"attributeType\": \"number\",\n                \"ranges\": [\n                    {\n                        \"key\": \"Low memory\",\n                        \"to\": 64\n                    },\n                    {\n                        \"key\": \"Medium memory\",\n                        \"from\": 64,\n                        \"to\": 256\n                    },\n                    {\n                        \"key\": \"High memory\",\n                        \"from\": 256\n                    }\n                ],\n                \"count\": \"variants\"\n            }\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/products/search",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"products",
+										"search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[PS] Facets - count",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"query\": {\n        \"fullText\": {\n            \"field\": \"name\",\n            \"language\": \"en\",\n            \"value\": \"tablet\",\n            \"mustMatch\": \"all\"\n        }\n    },\n    \"projection\": {\n        \"staged\": false,\n        \"priceCurrency\": \"AUD\",\n        \"priceCountry\": \"AU\"\n    },\n    \"facets\": [\n        {\n            \"count\": {\n                \"name\": \"all-products\"\n            }\n        },\n        {\n            \"count\": {\n                \"name\": \"all-variants\",\n                \"level\": \"variants\"\n            }\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/products/search",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"products",
+										"search"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Case 01 - The search for the perfect tablet",
+					"item": [
+						{
+							"name": "Case 01",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"query\": {\n        \"and\": [\n            {\n                \"or\": [\n                    {\n                        \"exact\": {\n                            \"field\": \"variants.attributes.tablet-brand\",\n                            \"attributeType\": \"text\",\n                            \"value\": \"Appeal\"\n                        }\n                    },\n                    {\n                        \"exact\": {\n                            \"field\": \"variants.attributes.tablet-brand\",\n                            \"attributeType\": \"text\",\n                            \"value\": \"Samesong\",\n                            \"boost\": 2\n                        }\n                    }\n                ]\n            },\n            {\n                \"range\": {\n                    \"field\": \"variants.attributes.tablet-screen-size\",\n                    \"attributeType\": \"number\",\n                    \"gte\": 10\n                }\n            },\n            {\n                \"exact\": {\n                    \"field\": \"variants.attributes.tablet-stylus-support\",\n                    \"attributeType\": \"boolean\",\n                    \"value\": true\n                }\n            },\n            {\n                \"exact\": {\n                    \"field\": \"variants.attributes.tablet-wireless-conectivity.key\",\n                    \"attributeType\": \"enum\",\n                    \"value\": \"tablet-cell\"\n                }\n            },\n            {\n                \"range\": {\n                    \"field\": \"variants.prices.centAmount\",\n                    \"lte\": \"60000\"\n                }\n            }\n        ]\n    },\n    \"projection\": {\n        \"staged\": false,\n        \"priceCurrency\": \"AUD\",\n        \"priceCountry\": \"AU\"\n    },\n    \"markMatchingVariants\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/products/search",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"products",
+										"search"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"description": "Run everything in the Case 00 - Setup fodler before starting the demos or starting Case 01"
 		}
 	],
 	"auth": {
@@ -7743,7 +8756,7 @@
 		},
 		{
 			"key": "order-custom-type-key",
-			"value": "deliveryInfo",
+			"value": "deliveryinfo",
 			"type": "string"
 		},
 		{
@@ -7752,48 +8765,19 @@
 			"type": "string"
 		},
 		{
-			"key": "customer-01-id",
-			"value": ""
+			"key": "spa-client-credentials-scope",
+			"value": "view_categories:{{projectKey}} view_published_products:{{projectKey}} manage_my_profile:{{projectKey}}",
+			"type": "string"
 		},
 		{
-			"key": "customer-01-email",
-			"value": ""
+			"key": "spa-password-scope",
+			"value": "manage_my_profile:{{projectKey}} manage_my_orders:{{projectKey}}",
+			"type": "string"
 		},
 		{
-			"key": "customer-01-address-street-name",
-			"value": ""
-		},
-		{
-			"key": "customer-01-address-street-nr",
-			"value": ""
-		},
-		{
-			"key": "customer-01-address-city",
-			"value": ""
-		},
-		{
-			"key": "customer-01-address-country",
-			"value": ""
-		},
-		{
-			"key": "customer-01-address-state",
-			"value": ""
-		},
-		{
-			"key": "customer-01-address-postal-code",
-			"value": ""
-		},
-		{
-			"key": "standard-shipping-method-id",
-			"value": ""
-		},
-		{
-			"key": "prefered-delivery-type-id",
-			"value": ""
-		},
-		{
-			"key": "warehouse-channel-id",
-			"value": ""
+			"key": "spa-anonymous-scope",
+			"value": "manage_my_profile:{{projectKey}} manage_my_orders:{{projectKey}}",
+			"type": "string"
 		}
 	]
 }
