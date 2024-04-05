@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "1085f8d2-e27f-4a09-b87a-f53ef3475846",
+		"_postman_id": "81824ccc-e6e3-42fb-b820-99a29b7d3242",
 		"name": "FA_Integration_Training",
 		"description": "## Disclaimer\n\nThis is not the official commercetools Composable Commerce documentation. Please see [here](http://docs.commercetools.com/)  \nfor a complete and approved documentation of the commercetools Composable Commerce.\n\n## How to use\n\n**:warning: Be aware that postman automatically synchronizes environment variables (including your API client credentials) to your workspace if logged in.  \nUse this collection only for development purposes and non-production projects.**\n\nTo use this collection in Postman please perform the following steps:\n\n1. Download and install the Postman Client\n2. Import the [collection.json](collection.json) and [template.json](template.json) in your postman application\n3. In the Merchant Center, create a new API Client and fill in the client credentials in your environment\n4. Obtain an access token by sending the \"Authorization/Obtain access token\" request at the bottom of the request list. Now you can use all other endpoints\n    \n\nFeel free to clone and modify this collection to your needs.\n\nTo automate frequent tasks the collection automatically manages commonly required values and parameters such  \nas resource ids, keys and versions in Postman environment variables for you.\n\nPlease see [http://docs.commercetools.com/](http://docs.commercetools.com/) for further information about the commercetools Plattform.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "11897687"
+		"_exporter_id": "26457968"
 	},
 	"item": [
 		{
@@ -1347,7 +1347,8 @@
 													"}",
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -1374,13 +1375,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/{{project-key}}/me/carts",
+											"raw": "{{host}}/{{project-key}}/carts",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"{{project-key}}",
-												"me",
 												"carts"
 											]
 										}
@@ -1414,7 +1414,8 @@
 													"}",
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -1441,13 +1442,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/{{project-key}}/me/carts/{{case-01-cart-id}}",
+											"raw": "{{host}}/{{project-key}}/carts/{{case-01-cart-id}}",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"{{project-key}}",
-												"me",
 												"carts",
 												"{{case-01-cart-id}}"
 											]
@@ -1520,7 +1520,8 @@
 													"}",
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -1547,13 +1548,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/{{project-key}}/me/carts/{{case-01-cart-id}}",
+											"raw": "{{host}}/{{project-key}}/carts/{{case-01-cart-id}}",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"{{project-key}}",
-												"me",
 												"carts",
 												"{{case-01-cart-id}}"
 											]
@@ -1594,7 +1594,8 @@
 													"}",
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -1621,13 +1622,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/{{project-key}}/me/payments",
+											"raw": "{{host}}/{{project-key}}/payments",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"{{project-key}}",
-												"me",
 												"payments"
 											]
 										}
@@ -1661,7 +1661,8 @@
 													"}",
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -1688,13 +1689,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/{{project-key}}/me/carts/{{case-01-cart-id}}",
+											"raw": "{{host}}/{{project-key}}/carts/{{case-01-cart-id}}",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"{{project-key}}",
-												"me",
 												"carts",
 												"{{case-01-cart-id}}"
 											]
@@ -1734,7 +1734,8 @@
 													"}",
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -1753,7 +1754,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"id\": \"{{case-01-cart-id}}\",\n    \"version\": {{case-01-cart-version}}\n}",
+											"raw": "{\n    \"cart\": {\n        \"id\": \"{{case-01-cart-id}}\",\n        \"type\": \"cart\"\n    },\n    \"version\": {{case-01-cart-version}},\n    \"orderNumber\" : \"C01\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1761,13 +1762,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/{{project-key}}/me/orders/",
+											"raw": "{{host}}/{{project-key}}/orders/",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"{{project-key}}",
-												"me",
 												"orders",
 												""
 											]
@@ -4078,7 +4078,8 @@
 													"    pm.environment.set(\"me_access_token\", data.access_token);",
 													"}"
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -4101,7 +4102,7 @@
 										"method": "POST",
 										"header": [],
 										"url": {
-											"raw": "{{auth_url}}/oauth/{{project-key}}/customers/token?grant_type=password&username={{customer-01-email}}&password=secret123&scopes=manage_my_profile:{{project-key}} manage_my_orders:{{project-key}} manage_shipping_methods:{{project-key}} manage_payments:{{project-key}} manage_my_payments:{{project-key}}",
+											"raw": "{{auth_url}}/oauth/{{project-key}}/customers/token?grant_type=password&username={{customer-01-email}}&password=secret123",
 											"host": [
 												"{{auth_url}}"
 											],
@@ -4123,10 +4124,6 @@
 												{
 													"key": "password",
 													"value": "secret123"
-												},
-												{
-													"key": "scopes",
-													"value": "manage_my_profile:{{project-key}} manage_my_orders:{{project-key}} manage_shipping_methods:{{project-key}} manage_payments:{{project-key}} manage_my_payments:{{project-key}}"
 												}
 											]
 										}
@@ -4160,7 +4157,8 @@
 													"}",
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -4187,13 +4185,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/{{project-key}}/me/carts",
+											"raw": "{{host}}/{{project-key}}/carts",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"{{project-key}}",
-												"me",
 												"carts"
 											]
 										}
@@ -4314,7 +4311,8 @@
 													"}",
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -4333,7 +4331,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"version\": {{case-02-cart-version}},\n    \"actions\": [\n        {\n            \"action\": \"setCustomType\",\n            \"type\": {\n                \"id\": \"{{prefered-delivery-type-id}}\",\n                \"typeId\": \"type\"\n            },\n            \"fields\": {\n                \"timeZone\": \"aus-west\", //get from customer every time they select a store\n                \"localTime\": \"17:00:00.000\", //get from customer every time they select a store\n                \"preferredDeliveryType\": \"retailClickAndCollect\",\n                \"deliveryChannel\": {\n                    \"typeId\": \"channel\",\n                    \"id\": \"78d16c7c-5fd6-4707-b277-e048a40653c7\" //get id from previous GET request\n                }\n            }\n        }\n    ]\n}",
+											"raw": "{\n    \"version\": {{case-02-cart-version}},\n    \"actions\": [\n        {\n            \"action\": \"setCustomType\",\n            \"type\": {\n                \"id\": \"{{prefered-delivery-type-id}}\",\n                \"typeId\": \"type\"\n            },\n            \"fields\": {\n                \"timeZone\": \"aus-west\", //get from customer every time they select a store\n                \"localTime\": \"17:00:00.000\", //get from customer every time they select a store\n                \"preferredDeliveryType\": \"retailClickAndCollect\",\n                \"deliveryChannel\": {\n                    \"typeId\": \"channel\",\n                    \"id\": \"530bb688-d4fe-494d-9b4a-92eae6a40b9e\" //get id from previous GET request\n                }\n            }\n        }\n    ]\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -4341,13 +4339,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/{{project-key}}/me/carts/{{case-02-cart-id}}",
+											"raw": "{{host}}/{{project-key}}/carts/{{case-02-cart-id}}",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"{{project-key}}",
-												"me",
 												"carts",
 												"{{case-02-cart-id}}"
 											]
@@ -4425,7 +4422,8 @@
 													"    pm.environment.set(\"case-02-cart-total-amount\", data.totalPrice.centAmount);",
 													"}"
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -4452,13 +4450,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/{{project-key}}/me/carts/{{case-02-cart-id}}",
+											"raw": "{{host}}/{{project-key}}/carts/{{case-02-cart-id}}",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"{{project-key}}",
-												"me",
 												"carts",
 												"{{case-02-cart-id}}"
 											]
@@ -4496,7 +4493,8 @@
 													"}",
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -4523,13 +4521,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/{{project-key}}/me/carts/{{case-02-cart-id}}",
+											"raw": "{{host}}/{{project-key}}/carts/{{case-02-cart-id}}",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"{{project-key}}",
-												"me",
 												"carts",
 												"{{case-02-cart-id}}"
 											]
@@ -4569,7 +4566,8 @@
 													"}",
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -4596,13 +4594,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/{{project-key}}/me/payments",
+											"raw": "{{host}}/{{project-key}}/payments",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"{{project-key}}",
-												"me",
 												"payments"
 											]
 										}
@@ -4636,7 +4633,8 @@
 													"}",
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -4663,13 +4661,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/{{project-key}}/me/carts/{{case-02-cart-id}}",
+											"raw": "{{host}}/{{project-key}}/carts/{{case-02-cart-id}}",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"{{project-key}}",
-												"me",
 												"carts",
 												"{{case-02-cart-id}}"
 											]
@@ -4709,7 +4706,8 @@
 													"}",
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -4728,7 +4726,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"id\": \"{{case-02-cart-id}}\",\n    \"version\": {{case-02-cart-version}}\n}",
+											"raw": "{\n    \"cart\": {\n        \"id\": \"{{case-02-cart-id}}\",\n        \"type\": \"cart\"\n    },\n    \"version\": {{case-02-cart-version}},\n    \"orderNumber\" : \"C02\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -4736,13 +4734,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/{{project-key}}/me/orders/",
+											"raw": "{{host}}/{{project-key}}/orders/",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"{{project-key}}",
-												"me",
 												"orders",
 												""
 											]
@@ -4918,7 +4915,8 @@
 													"    pm.environment.set(\"me_access_token\", data.access_token);",
 													"}"
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -4941,7 +4939,7 @@
 										"method": "POST",
 										"header": [],
 										"url": {
-											"raw": "{{auth_url}}/oauth/{{project-key}}/customers/token?grant_type=password&username={{customer-01-email}}&password=secret123&scopes=manage_my_profile:{{project-key}} manage_my_orders:{{project-key}} manage_shipping_methods:{{project-key}} manage_payments:{{project-key}} manage_my_payments:{{project-key}}",
+											"raw": "{{auth_url}}/oauth/{{project-key}}/customers/token?grant_type=password&username={{customer-01-email}}&password=secret123",
 											"host": [
 												"{{auth_url}}"
 											],
@@ -4963,10 +4961,6 @@
 												{
 													"key": "password",
 													"value": "secret123"
-												},
-												{
-													"key": "scopes",
-													"value": "manage_my_profile:{{project-key}} manage_my_orders:{{project-key}} manage_shipping_methods:{{project-key}} manage_payments:{{project-key}} manage_my_payments:{{project-key}}"
 												}
 											]
 										}
@@ -5000,7 +4994,8 @@
 													"}",
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -5027,13 +5022,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/{{project-key}}/me/carts",
+											"raw": "{{host}}/{{project-key}}/carts",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"{{project-key}}",
-												"me",
 												"carts"
 											]
 										}
@@ -5072,7 +5066,8 @@
 													"}",
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -5099,13 +5094,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/{{project-key}}/me/carts/{{case-03-cart-id}}",
+											"raw": "{{host}}/{{project-key}}/carts/{{case-03-cart-id}}",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"{{project-key}}",
-												"me",
 												"carts",
 												"{{case-03-cart-id}}"
 											]
@@ -5313,7 +5307,8 @@
 													"    pm.environment.set(\"case-03-cart-total-amount\", data.totalPrice.centAmount);",
 													"}"
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -5340,13 +5335,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/{{project-key}}/me/carts/{{case-03-cart-id}}",
+											"raw": "{{host}}/{{project-key}}/carts/{{case-03-cart-id}}",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"{{project-key}}",
-												"me",
 												"carts",
 												"{{case-03-cart-id}}"
 											]
@@ -5387,7 +5381,8 @@
 													"}",
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -5414,13 +5409,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/{{project-key}}/me/payments",
+											"raw": "{{host}}/{{project-key}}/payments",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"{{project-key}}",
-												"me",
 												"payments"
 											]
 										}
@@ -5454,7 +5448,8 @@
 													"}",
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -5481,13 +5476,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/{{project-key}}/me/carts/{{case-03-cart-id}}",
+											"raw": "{{host}}/{{project-key}}/carts/{{case-03-cart-id}}",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"{{project-key}}",
-												"me",
 												"carts",
 												"{{case-03-cart-id}}"
 											]
@@ -5527,7 +5521,8 @@
 													"}",
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -5546,7 +5541,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"id\": \"{{case-03-cart-id}}\",\n    \"version\": {{case-03-cart-version}}\n}",
+											"raw": "{\n    \"cart\": {\n        \"id\": \"{{case-03-cart-id}}\",\n        \"type\": \"cart\"\n    },\n    \"version\": {{case-03-cart-version}},\n    \"orderNumber\" : \"C03\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -5554,13 +5549,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/{{project-key}}/me/orders/",
+											"raw": "{{host}}/{{project-key}}/orders/",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"{{project-key}}",
-												"me",
 												"orders",
 												""
 											]
