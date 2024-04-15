@@ -1242,35 +1242,26 @@
 									"response": []
 								},
 								{
-									"name": "[BFF] Customer sign-in | Oauth client credentials",
+									"name": "[BFF] Customer sign-in",
 									"event": [
 										{
 											"listen": "test",
 											"script": {
 												"exec": [
-													"tests[\"Status code is 200\"] = responseCode.code === 200;",
-													"pm.environment.set(\"import-host\", \"https://import.europe-west1.gcp.commercetools.com\");",
-													"var data = JSON.parse(responseBody);",
-													"if(data.access_token){",
-													"    pm.environment.set(\"me_access_token\", data.access_token);",
-													"}"
+													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
 									"request": {
 										"auth": {
-											"type": "basic",
-											"basic": [
+											"type": "bearer",
+											"bearer": [
 												{
-													"key": "username",
-													"value": "{{client_id}}",
-													"type": "string"
-												},
-												{
-													"key": "password",
-													"value": "{{client_secret}}",
+													"key": "token",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
@@ -1279,7 +1270,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "",
+											"raw": "{\n    \"email\" : \"{{customer-01-email}}\",\n    \"password\" : \"secret123\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1287,34 +1278,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{auth_url}}/oauth/{{project-key}}/customers/token?grant_type=password&username={{customer-01-email}}&password=secret123",
+											"raw": "{{host}}/{{project-key}}/login",
 											"host": [
-												"{{auth_url}}"
+												"{{host}}"
 											],
 											"path": [
-												"oauth",
 												"{{project-key}}",
-												"customers",
-												"token"
-											],
-											"query": [
-												{
-													"key": "grant_type",
-													"value": "password"
-												},
-												{
-													"key": "username",
-													"value": "{{customer-01-email}}"
-												},
-												{
-													"key": "password",
-													"value": "secret123"
-												},
-												{
-													"key": "scope",
-													"value": "manage_my_profile:{{project-key}} manage_my_orders:{{project-key}} manage_shipping_methods:{{project-key}} manage_payments:{{project-key}} manage_my_payments:{{project-key}}",
-													"disabled": true
-												}
+												"login"
 											]
 										}
 									},
@@ -1358,7 +1328,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
@@ -1425,7 +1395,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
@@ -1463,7 +1433,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
@@ -1531,7 +1501,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
@@ -1605,7 +1575,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
@@ -1672,7 +1642,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
@@ -1745,7 +1715,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
@@ -1784,78 +1754,6 @@
 					"name": "Case 02 - Retail store click & collect",
 					"item": [
 						{
-							"name": "Add timeZone field to channel",
-							"item": [
-								{
-									"name": "[Backend] Add Time Zone field to Channel",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
-													"var data = JSON.parse(responseBody);",
-													"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
-													"    pm.environment.set(\"channel-type-id\", data.results[0].id); ",
-													"    pm.environment.set(\"channel-type-version\", data.results[0].version);",
-													"}",
-													"if(data.results && data.results[0] && data.results[0].key){",
-													"    pm.environment.set(\"channel-type-key\", data.results[0].key); ",
-													"}",
-													"if(data.version){",
-													"    pm.environment.set(\"channel-type-version\", data.version);",
-													"}",
-													"if(data.id){",
-													"    pm.environment.set(\"channel-type-id\", data.id); ",
-													"}",
-													"if(data.key){",
-													"    pm.environment.set(\"channel-type-key\", data.key);",
-													"}",
-													""
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"request": {
-										"auth": {
-											"type": "bearer",
-											"bearer": [
-												{
-													"key": "token",
-													"value": "{{ctp_access_token}}",
-													"type": "string"
-												}
-											]
-										},
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"version\": {{channel-type-version}},\n    \"actions\": [\n        {\n            \"action\": \"addFieldDefinition\",\n            \"fieldDefinition\": {\n                \"type\": {\n                    \"name\": \"Enum\",\n                    \"values\": [\n                        {\n                            \"key\": \"aus-west\",\n                            \"label\": \"AUS Western Standard Time\"\n                        },\n                        {\n                            \"key\": \"aus-central\",\n                            \"label\": \"AUS Central Standard Time\"\n                        },\n                        {\n                            \"key\": \"aus-east\",\n                            \"label\": \"AUS Eastern Standard Time\"\n                        }\n                    ]\n                },\n                \"name\": \"timeZone\",\n                \"label\": {\n                    \"en\": \"Time Zone\"\n                },\n                \"required\": false\n            }\n        }\n    ]\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{host}}/{{project-key}}/types/{{channel-type-id}}",
-											"host": [
-												"{{host}}"
-											],
-											"path": [
-												"{{project-key}}",
-												"types",
-												"{{channel-type-id}}"
-											]
-										}
-									},
-									"response": []
-								}
-							]
-						},
-						{
 							"name": "Add stores (channels)",
 							"item": [
 								{
@@ -1875,7 +1773,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-altona\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Altona\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3025\",\n        \"streetName\": \"124/134 Millers Rd\",\n        \"region\": \"Altona North\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.8487,\n            -37.8218\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-altona\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Altona\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3025\",\n        \"streetName\": \"124/134 Millers Rd\",\n        \"region\": \"Altona North\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.8487,\n            -37.8218\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1912,7 +1810,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-armadale\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Armadale\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6112\",\n        \"streetName\": \"224 Jull St\",\n        \"region\": \"Armadale\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            116.0108,\n            -32.1264\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-west\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-armadale\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Armadale\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6112\",\n        \"streetName\": \"224 Jull St\",\n        \"region\": \"Armadale\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            116.0108,\n            -32.1264\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1949,7 +1847,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-belmont\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Belmont\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6104\",\n        \"streetName\": \"Belmont Ave\",\n        \"region\": \"Belmont\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.9388,\n            -31.9521\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-west\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-belmont\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Belmont\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6104\",\n        \"streetName\": \"Belmont Ave\",\n        \"region\": \"Belmont\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.9388,\n            -31.9521\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1986,7 +1884,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-booragoon\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Booragoon\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6154\",\n        \"streetName\": \"125 Riseley St\",\n        \"region\": \"Booragoon\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.8352,\n            -32.0214\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-west\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-booragoon\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Booragoon\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6154\",\n        \"streetName\": \"125 Riseley St\",\n        \"region\": \"Booragoon\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.8352,\n            -32.0214\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2023,7 +1921,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-broadmeadows\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Broadmeadows\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3047\",\n        \"streetName\": \"1169 Pascoe Vale Rd\",\n        \"region\": \"Broadmeadows\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.9228,\n            -37.6664\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-broadmeadows\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Broadmeadows\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3047\",\n        \"streetName\": \"1169 Pascoe Vale Rd\",\n        \"region\": \"Broadmeadows\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.9228,\n            -37.6664\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2060,7 +1958,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-brunswick\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Brunswick\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3056\",\n        \"streetName\": \"90/106 Sydney Rd\",\n        \"region\": \"Brunswick\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.9565,\n            -37.7626\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-brunswick\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Brunswick\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3056\",\n        \"streetName\": \"90/106 Sydney Rd\",\n        \"region\": \"Brunswick\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.9565,\n            -37.7626\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2097,7 +1995,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-burwood\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Burwood\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3151\",\n        \"streetName\": \"172 Burwood Hwy\",\n        \"region\": \"Burwood East\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            145.1510,\n            -37.8468\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-burwood\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Burwood\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3151\",\n        \"streetName\": \"172 Burwood Hwy\",\n        \"region\": \"Burwood East\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            145.1510,\n            -37.8468\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2134,7 +2032,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-camberwell\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Camberwell\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3108\",\n        \"streetName\": \"15/25 Station St\",\n        \"region\": \"Camberwell\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            145.0600,\n            -37.8233\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-camberwell\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Camberwell\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3108\",\n        \"streetName\": \"15/25 Station St\",\n        \"region\": \"Camberwell\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            145.0600,\n            -37.8233\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2171,7 +2069,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-campbellfield\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Campbellfield\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3061\",\n        \"streetName\": \"1434 Sydney Rd\",\n        \"region\": \"Campbellfield\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.9627,\n            -37.6773\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-campbellfield\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Campbellfield\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3061\",\n        \"streetName\": \"1434 Sydney Rd\",\n        \"region\": \"Campbellfield\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.9627,\n            -37.6773\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2208,7 +2106,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-caroline-springs\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Caroline Springs\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3023\",\n        \"streetName\": \"29/35 Lake St\",\n        \"region\": \"Caroline Springs\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.7415,\n            -37.7237\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-caroline-springs\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Caroline Springs\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3023\",\n        \"streetName\": \"29/35 Lake St\",\n        \"region\": \"Caroline Springs\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.7415,\n            -37.7237\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2245,7 +2143,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-carousel\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Carousel\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6107\",\n        \"streetName\": \"1382 Albany Hwy\",\n        \"region\": \"Cannington\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.9388,\n            -32.0051\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-west\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-carousel\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Carousel\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6107\",\n        \"streetName\": \"1382 Albany Hwy\",\n        \"region\": \"Cannington\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.9388,\n            -32.0051\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2282,7 +2180,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-clarkson\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Clarkson\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6063\",\n        \"streetName\": \"36 Ocean Keys Blvd\",\n        \"region\": \"Clarkson\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.7183,\n            -31.6682\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-west\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-clarkson\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Clarkson\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6063\",\n        \"streetName\": \"36 Ocean Keys Blvd\",\n        \"region\": \"Clarkson\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.7183,\n            -31.6682\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2319,7 +2217,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"key\": \"aus-store-merchant-high-tech-clayton\",\n  \"name\": {\n    \"en\": \"Merchant High-Tech Clayton\"\n  },\n  \"roles\": [\n    \"InventorySupply\"\n  ],\n  \"address\": {\n    \"country\": \"AU\",\n    \"state\": \"VIC\",\n    \"postalCode\": \"3168\",\n    \"streetName\": \"M.01/2107 Dandenong Rd\",\n    \"region\": \"Clayton\"\n  },\n  \"geoLocation\": {\n    \"type\": \"Point\",\n    \"coordinates\": [\n      145.1403,\n      -37.9120\n    ]\n  },\n  \"custom\": {\n    \"type\": {\n      \"typeId\": \"type\",\n      \"id\": \"{{channel-type-id}}\"\n    },\n    \"fields\": {\n      \"deliveryType\": [\n        \"courierAsap\",\n        \"retailClickAndCollect\"\n      ],\n      \"timeZone\": \"aus-east\"\n    }\n  }\n}\n",
+											"raw": "{\n  \"key\": \"aus-store-merchant-high-tech-clayton\",\n  \"name\": {\n    \"en\": \"Merchant High-Tech Clayton\"\n  },\n  \"roles\": [\n    \"InventorySupply\"\n  ],\n  \"address\": {\n    \"country\": \"AU\",\n    \"state\": \"VIC\",\n    \"postalCode\": \"3168\",\n    \"streetName\": \"M.01/2107 Dandenong Rd\",\n    \"region\": \"Clayton\"\n  },\n  \"geoLocation\": {\n    \"type\": \"Point\",\n    \"coordinates\": [\n      145.1403,\n      -37.9120\n    ]\n  },\n  \"custom\": {\n    \"type\": {\n      \"typeId\": \"type\",\n      \"id\": \"{{channel-type-id}}\"\n    },\n    \"fields\": {\n      \"deliveryType\": [\n        \"courierAsap\",\n        \"retailClickAndCollect\"\n      ]\n    }\n  }\n}\n",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2356,7 +2254,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-cockburn-gateway\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Cockburn Gateway\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6164\",\n        \"streetName\": \"816 Beeliar Dr\",\n        \"region\": \"Success\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.8584,\n            -32.0985\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-west\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-cockburn-gateway\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Cockburn Gateway\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6164\",\n        \"streetName\": \"816 Beeliar Dr\",\n        \"region\": \"Success\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.8584,\n            -32.0985\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2393,7 +2291,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-doncaster\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Doncaster\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3108\",\n        \"streetName\": \"619 Doncaster Rd\",\n        \"region\": \"Doncaster\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            145.1272,\n            -37.7778\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-doncaster\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Doncaster\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3108\",\n        \"streetName\": \"619 Doncaster Rd\",\n        \"region\": \"Doncaster\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            145.1272,\n            -37.7778\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2430,7 +2328,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-east-victoria-park\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech East Victoria Park\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6101\",\n        \"streetName\": \"Albany Hwy\",\n        \"region\": \"East Victoria Park\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.9018,\n            -31.9696\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-west\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-east-victoria-park\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech East Victoria Park\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6101\",\n        \"streetName\": \"Albany Hwy\",\n        \"region\": \"East Victoria Park\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.9018,\n            -31.9696\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2467,7 +2365,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-eastland\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Eastland\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3134\",\n        \"streetName\": \"171 Maroondah Hwy\",\n        \"region\": \"Ringwood\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            145.2294,\n            -37.8055\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-eastland\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Eastland\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3134\",\n        \"streetName\": \"171 Maroondah Hwy\",\n        \"region\": \"Ringwood\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            145.2294,\n            -37.8055\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2504,7 +2402,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-ellenbrook\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Ellenbrook\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6069\",\n        \"streetName\": \"11 Main St\",\n        \"region\": \"Ellenbrook\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.9678,\n            -31.7627\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-west\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-ellenbrook\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Ellenbrook\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6069\",\n        \"streetName\": \"11 Main St\",\n        \"region\": \"Ellenbrook\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.9678,\n            -31.7627\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2541,7 +2439,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-footscray\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Footscray\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3011\",\n        \"streetName\": \"1/51 Paisley St\",\n        \"region\": \"Footscray\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.9009,\n            -37.7919\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-footscray\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Footscray\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3011\",\n        \"streetName\": \"1/51 Paisley St\",\n        \"region\": \"Footscray\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.9009,\n            -37.7919\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2578,7 +2476,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-greensborough\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Greensborough\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3088\",\n        \"streetName\": \"25 Main St\",\n        \"region\": \"Greensborough\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            145.1040,\n            -37.6941\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-greensborough\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Greensborough\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3088\",\n        \"streetName\": \"25 Main St\",\n        \"region\": \"Greensborough\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            145.1040,\n            -37.6941\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2615,7 +2513,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-highpoint\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Highpoint\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3032\",\n        \"streetName\": \"120/200 Rosamond Rd\",\n        \"region\": \"Maribyrnong\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.8892,\n            -37.7588\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-highpoint\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Highpoint\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3032\",\n        \"streetName\": \"120/200 Rosamond Rd\",\n        \"region\": \"Maribyrnong\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.8892,\n            -37.7588\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2652,7 +2550,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-innaloo\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Innaloo\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6018\",\n        \"streetName\": \"384 Scarborough Beach Rd\",\n        \"region\": \"Innaloo\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.8008,\n            -31.8898\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-west\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-innaloo\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Innaloo\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6018\",\n        \"streetName\": \"384 Scarborough Beach Rd\",\n        \"region\": \"Innaloo\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.8008,\n            -31.8898\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2689,7 +2587,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-joondalup\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Joondalup\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6027\",\n        \"streetName\": \"420 Joondalup Dr\",\n        \"region\": \"Joondalup\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.7780,\n            -31.7141\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-west\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-joondalup\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Joondalup\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6027\",\n        \"streetName\": \"420 Joondalup Dr\",\n        \"region\": \"Joondalup\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.7780,\n            -31.7141\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2726,7 +2624,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-kardinya\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Kardinya\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6163\",\n        \"streetName\": \"15 South St\",\n        \"region\": \"Kardinya\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.8130,\n            -32.0391\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-west\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-kardinya\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Kardinya\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6163\",\n        \"streetName\": \"15 South St\",\n        \"region\": \"Kardinya\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.8130,\n            -32.0391\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2763,7 +2661,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-keilor\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Keilor\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3038\",\n        \"streetName\": \"80 Taylors Rd\",\n        \"region\": \"Keilor Downs\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.8075,\n            -37.7143\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-keilor\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Keilor\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3038\",\n        \"streetName\": \"80 Taylors Rd\",\n        \"region\": \"Keilor Downs\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.8075,\n            -37.7143\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2800,7 +2698,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-knox\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Knox\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3152\",\n        \"streetName\": \"425 Burwood Hwy\",\n        \"region\": \"Wantirna South\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            145.2431,\n            -37.8618\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-knox\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Knox\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3152\",\n        \"streetName\": \"425 Burwood Hwy\",\n        \"region\": \"Wantirna South\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            145.2431,\n            -37.8618\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2837,7 +2735,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-maddington\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Maddington\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6109\",\n        \"streetName\": \"Olga & Attfield Rds\",\n        \"region\": \"Maddington\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.9844,\n            -32.0391\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-west\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-maddington\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Maddington\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6109\",\n        \"streetName\": \"Olga & Attfield Rds\",\n        \"region\": \"Maddington\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.9844,\n            -32.0391\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2874,7 +2772,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-melbourne-cbd\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Melbourne Cbd\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3000\",\n        \"streetName\": \"236 Bourke St\",\n        \"region\": \"Melbourne\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.9675,\n            -37.8064\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-melbourne-cbd\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Melbourne Cbd\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3000\",\n        \"streetName\": \"236 Bourke St\",\n        \"region\": \"Melbourne\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.9675,\n            -37.8064\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2911,7 +2809,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-midland\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Midland\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6056\",\n        \"streetName\": \"Great Eastern Hwy\",\n        \"region\": \"Midland\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            116.0089,\n            -31.8740\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-west\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-midland\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Midland\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6056\",\n        \"streetName\": \"Great Eastern Hwy\",\n        \"region\": \"Midland\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            116.0089,\n            -31.8740\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2948,7 +2846,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-mirrabooka\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Mirrabooka\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6061\",\n        \"streetName\": \"Cnr Yirrigan Dr & Farrier Rd\",\n        \"region\": \"Mirrabooka\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.8633,\n            -31.8543\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-west\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-mirrabooka\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Mirrabooka\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6061\",\n        \"streetName\": \"Cnr Yirrigan Dr & Farrier Rd\",\n        \"region\": \"Mirrabooka\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.8633,\n            -31.8543\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2985,7 +2883,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-moonee-ponds\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Moonee Ponds\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3039\",\n        \"streetName\": \"21/31 Hall St\",\n        \"region\": \"Moonee Ponds\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.9235,\n            -37.7528\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-moonee-ponds\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Moonee Ponds\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3039\",\n        \"streetName\": \"21/31 Hall St\",\n        \"region\": \"Moonee Ponds\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.9235,\n            -37.7528\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -3022,7 +2920,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-morley\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Morley\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6062\",\n        \"streetName\": \"Bishop St\",\n        \"region\": \"Morley\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.8935,\n            -31.8857\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-west\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-morley\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Morley\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6062\",\n        \"streetName\": \"Bishop St\",\n        \"region\": \"Morley\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.8935,\n            -31.8857\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -3059,7 +2957,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-perth-cbd\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Perth Cbd\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6000\",\n        \"streetName\": \"712 Hay Street Mall\",\n        \"region\": \"Perth\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.8571,\n            -31.9422\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-west\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-perth-cbd\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Perth Cbd\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6000\",\n        \"streetName\": \"712 Hay Street Mall\",\n        \"region\": \"Perth\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.8571,\n            -31.9422\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -3096,7 +2994,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-reservoir\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Reservoir\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3072\",\n        \"streetName\": \"850 Plenty Rd\",\n        \"region\": \"Reservoir\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            145.0309,\n            -37.7162\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-reservoir\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Reservoir\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3072\",\n        \"streetName\": \"850 Plenty Rd\",\n        \"region\": \"Reservoir\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            145.0309,\n            -37.7162\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -3133,7 +3031,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-richmond\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Richmond\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3121\",\n        \"streetName\": \"620 Victoria St\",\n        \"region\": \"Richmond\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            145.0113,\n            -37.8064\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-richmond\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Richmond\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3121\",\n        \"streetName\": \"620 Victoria St\",\n        \"region\": \"Richmond\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            145.0113,\n            -37.8064\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -3170,7 +3068,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-rockingham\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Rockingham\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6168\",\n        \"streetName\": \"1 Council Ave\",\n        \"region\": \"Rockingham\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.7406,\n            -32.2790\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-west\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-rockingham\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Rockingham\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6168\",\n        \"streetName\": \"1 Council Ave\",\n        \"region\": \"Rockingham\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.7406,\n            -32.2790\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -3207,7 +3105,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-wanneroo\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Wanneroo\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6065\",\n        \"streetName\": \"950 Wanneroo Rd\",\n        \"region\": \"Wanneroo\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.8133,\n            -31.7314\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-west\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-wanneroo\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Wanneroo\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6065\",\n        \"streetName\": \"950 Wanneroo Rd\",\n        \"region\": \"Wanneroo\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.8133,\n            -31.7314\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -3244,7 +3142,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-warwick\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Warwick\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6024\",\n        \"streetName\": \"643 Beach Rd\",\n        \"region\": \"Warwick\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.8083,\n            -31.8272\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-west\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-warwick\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Warwick\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"WA\",\n        \"postalCode\": \"6024\",\n        \"streetName\": \"643 Beach Rd\",\n        \"region\": \"Warwick\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.8083,\n            -31.8272\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -3281,7 +3179,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-werribee\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Werribee\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3030\",\n        \"streetName\": \"S/C Cnr Heaths & Derrimut Rds\",\n        \"region\": \"Hoppers Crossing\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.6838,\n            -37.8646\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-werribee\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Werribee\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"VIC\",\n        \"postalCode\": \"3030\",\n        \"streetName\": \"S/C Cnr Heaths & Derrimut Rds\",\n        \"region\": \"Hoppers Crossing\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            144.6838,\n            -37.8646\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"courierAsap\",\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -3318,7 +3216,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-whitford-city\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Whitford City\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"Hillarys\",\n        \"postalCode\": \"WA\",\n        \"streetName\": \"Cnr Whitfords &\",\n        \"region\": \"Marmion Ave\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.7533,\n            -31.7748\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"retailClickAndCollect\"\n            ],\n            \"timeZone\": \"aus-east\"\n        }\n    }\n}",
+											"raw": "{\n    \"key\": \"aus-store-merchant-high-tech-whitford-city\",\n    \"name\": {\n        \"en\": \"Merchant High-Tech Whitford City\"\n    },\n    \"roles\": [\n        \"InventorySupply\"\n    ],\n    \"address\": {\n        \"country\": \"AU\",\n        \"state\": \"Hillarys\",\n        \"postalCode\": \"WA\",\n        \"streetName\": \"Cnr Whitfords &\",\n        \"region\": \"Marmion Ave\"\n    },\n    \"geoLocation\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n            115.7533,\n            -31.7748\n        ]\n    },\n    \"custom\": {\n        \"type\": {\n            \"typeId\": \"type\",\n            \"id\": \"{{channel-type-id}}\"\n        },\n        \"fields\": {\n            \"deliveryType\": [\n                \"retailClickAndCollect\"\n            ]\n        }\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -3881,7 +3779,8 @@
 													"}",
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -3900,7 +3799,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"version\": {{prefered-delivery-type-version}},\n    \"actions\": [\n        {\n            \"action\": \"addFieldDefinition\",\n            \"fieldDefinition\": {\n                \"type\": {\n                    \"name\": \"Time\"\n                },\n                \"name\": \"localTime\",\n                \"label\": {\n                    \"en\": \"Local time\"\n                },\n                \"required\": false\n            }\n        },\n        {\n            \"action\": \"addFieldDefinition\",\n            \"fieldDefinition\": {\n                \"type\": {\n                    \"name\": \"Enum\",\n                    \"values\": [\n                        {\n                            \"key\": \"aus-west\",\n                            \"label\": \"AUS Western Standard Time\"\n                        },\n                        {\n                            \"key\": \"aus-central\",\n                            \"label\": \"AUS Central Standard Time\"\n                        },\n                        {\n                            \"key\": \"aus-east\",\n                            \"label\": \"AUS Eastern Standard Time\"\n                        }\n                    ]\n                },\n                \"name\": \"timeZone\",\n                \"label\": {\n                    \"en\": \"Time Zone\"\n                },\n                \"required\": false\n            }\n        }\n    ]\n}",
+											"raw": "{\n    \"version\": {{prefered-delivery-type-version}},\n    \"actions\": [\n        {\n            \"action\": \"addFieldDefinition\",\n            \"fieldDefinition\": {\n                \"type\": {\n                    \"name\": \"Time\"\n                },\n                \"name\": \"localTime\",\n                \"label\": {\n                    \"en\": \"Local time\"\n                },\n                \"required\": false\n            }\n        }\n    ]\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -4065,18 +3964,13 @@
 							"name": "Create Cart",
 							"item": [
 								{
-									"name": "[BFF] Customer sign-in | Oauth client credentials",
+									"name": "[BFF] Customer sign-in",
 									"event": [
 										{
 											"listen": "test",
 											"script": {
 												"exec": [
-													"tests[\"Status code is 200\"] = responseCode.code === 200;",
-													"pm.environment.set(\"import-host\", \"https://import.europe-west1.gcp.commercetools.com\");",
-													"var data = JSON.parse(responseBody);",
-													"if(data.access_token){",
-													"    pm.environment.set(\"me_access_token\", data.access_token);",
-													"}"
+													""
 												],
 												"type": "text/javascript",
 												"packages": {}
@@ -4085,46 +3979,34 @@
 									],
 									"request": {
 										"auth": {
-											"type": "basic",
-											"basic": [
+											"type": "bearer",
+											"bearer": [
 												{
-													"key": "password",
-													"value": "{{client_secret}}",
-													"type": "string"
-												},
-												{
-													"key": "username",
-													"value": "{{client_id}}",
+													"key": "token",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
 										},
 										"method": "POST",
 										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\" : \"{{customer-01-email}}\",\n    \"password\" : \"secret123\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
 										"url": {
-											"raw": "{{auth_url}}/oauth/{{project-key}}/customers/token?grant_type=password&username={{customer-01-email}}&password=secret123",
+											"raw": "{{host}}/{{project-key}}/login",
 											"host": [
-												"{{auth_url}}"
+												"{{host}}"
 											],
 											"path": [
-												"oauth",
 												"{{project-key}}",
-												"customers",
-												"token"
-											],
-											"query": [
-												{
-													"key": "grant_type",
-													"value": "password"
-												},
-												{
-													"key": "username",
-													"value": "{{customer-01-email}}"
-												},
-												{
-													"key": "password",
-													"value": "secret123"
-												}
+												"login"
 											]
 										}
 									},
@@ -4168,7 +4050,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
@@ -4218,7 +4100,7 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{host}}/{{project-key}}/channels?limit=5&where=geoLocation within circle(115.9213, -32.0777, 20000) and custom(fields(deliveryType contains any (\"retailClickAndCollect\")))",
+											"raw": "{{host}}/{{project-key}}/channels?limit=5&where=geoLocation within circle(144.9627, -37.8139, 20000) and custom(fields(deliveryType contains any (\"retailClickAndCollect\")))",
 											"host": [
 												"{{host}}"
 											],
@@ -4233,7 +4115,7 @@
 												},
 												{
 													"key": "where",
-													"value": "geoLocation within circle(115.9213, -32.0777, 20000) and custom(fields(deliveryType contains any (\"retailClickAndCollect\")))"
+													"value": "geoLocation within circle(144.9627, -37.8139, 20000) and custom(fields(deliveryType contains any (\"retailClickAndCollect\")))"
 												}
 											]
 										}
@@ -4322,7 +4204,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
@@ -4331,7 +4213,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"version\": {{case-02-cart-version}},\n    \"actions\": [\n        {\n            \"action\": \"setCustomType\",\n            \"type\": {\n                \"id\": \"{{prefered-delivery-type-id}}\",\n                \"typeId\": \"type\"\n            },\n            \"fields\": {\n                \"timeZone\": \"aus-west\", //get from customer every time they select a store\n                \"localTime\": \"17:00:00.000\", //get from customer every time they select a store\n                \"preferredDeliveryType\": \"retailClickAndCollect\",\n                \"deliveryChannel\": {\n                    \"typeId\": \"channel\",\n                    \"id\": \"530bb688-d4fe-494d-9b4a-92eae6a40b9e\" //get id from previous GET request\n                }\n            }\n        }\n    ]\n}",
+											"raw": "{\n    \"version\": {{case-02-cart-version}},\n    \"actions\": [\n        {\n            \"action\": \"setCustomType\",\n            \"type\": {\n                \"id\": \"{{prefered-delivery-type-id}}\",\n                \"typeId\": \"type\"\n            },\n            \"fields\": {\n                \"localTime\": \"17:00:00.000\", //get from customer every time they select a store\n                \"preferredDeliveryType\": \"retailClickAndCollect\",\n                \"deliveryChannel\": {\n                    \"typeId\": \"channel\",\n                    \"id\": \"34e7d2b0-01e6-4f3d-90db-5ccb3dc6d63b\" //get id from previous GET request\n                }\n            }\n        }\n    ]\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -4433,7 +4315,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
@@ -4504,7 +4386,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
@@ -4577,7 +4459,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
