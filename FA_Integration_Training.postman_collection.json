@@ -608,7 +608,8 @@
 													"}",
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -627,7 +628,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"key\": \"additiopnaChannelInfo\",\n    \"name\": {\n        \"en\": \"Additional Channel Information\"\n    },\n    \"resourceTypeIds\": [\n        \"channel\"\n    ],\n    \"fieldDefinitions\": [\n        {\n            \"name\": \"deliveryType\",\n            \"label\": {\n                \"en\": \"Delivery Type\"\n            },\n            \"required\": false,\n            \"type\": {\n                \"name\": \"Set\",\n                \"elementType\": {\n                    \"name\": \"Enum\",\n                    \"values\": [\n                        {\n                            \"key\": \"warehouse\",\n                            \"label\": \"Warehouse\"\n                        },\n                        {\n                            \"key\": \"retailClickAndCollect\",\n                            \"label\": \"Retail Click & Collect\"\n                        },\n                        {\n                            \"key\": \"courierAsap\",\n                            \"label\": \"Courier ASAP\"\n                        }\n                    ]\n                }\n            },\n            \"inputHint\": \"SingleLine\"\n        }\n    ]\n}",
+											"raw": "{\n    \"key\": \"additiopnaChannelInfo\",\n    \"name\": {\n        \"en\": \"Additional Channel Information\"\n    },\n    \"resourceTypeIds\": [\n        \"channel\"\n    ],\n    \"fieldDefinitions\": [\n        {\n            \"name\": \"deliveryType\",\n            \"label\": {\n                \"en\": \"Delivery Type\"\n            },\n            \"required\": false,\n            \"type\": {\n                \"name\": \"Set\",\n                \"elementType\": {\n                    \"name\": \"Enum\",\n                    \"values\": [\n                        {\n                            \"key\": \"warehouse\",\n                            \"label\": \"Warehouse\"\n                        },\n                        {\n                            \"key\": \"retailClickAndCollect\",\n                            \"label\": \"Retail Click & Collect\"\n                        },\n                        {\n                            \"key\": \"courierAsap\",\n                            \"label\": \"Same day courier delivery\"\n                        }\n                    ]\n                }\n            },\n            \"inputHint\": \"SingleLine\"\n        }\n    ]\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1754,7 +1755,7 @@
 					"name": "Case 02 - Retail store click & collect",
 					"item": [
 						{
-							"name": "Add stores (channels)",
+							"name": "Add retail locations (channels)",
 							"item": [
 								{
 									"name": "[Backend] aus-store-merchant-high-tech-altona",
@@ -4213,7 +4214,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"version\": {{case-02-cart-version}},\n    \"actions\": [\n        {\n            \"action\": \"setCustomType\",\n            \"type\": {\n                \"id\": \"{{prefered-delivery-type-id}}\",\n                \"typeId\": \"type\"\n            },\n            \"fields\": {\n                \"localTime\": \"17:00:00.000\", //get from customer every time they select a store\n                \"preferredDeliveryType\": \"retailClickAndCollect\",\n                \"deliveryChannel\": {\n                    \"typeId\": \"channel\",\n                    \"id\": \"34e7d2b0-01e6-4f3d-90db-5ccb3dc6d63b\" //get id from previous GET request\n                }\n            }\n        }\n    ]\n}",
+											"raw": "{\n    \"version\": {{case-02-cart-version}},\n    \"actions\": [\n        {\n            \"action\": \"setCustomType\",\n            \"type\": {\n                \"id\": \"{{prefered-delivery-type-id}}\",\n                \"typeId\": \"type\"\n            },\n            \"fields\": {\n                \"localTime\": \"17:00:00.000\", //get from customer every time they select a store\n                \"preferredDeliveryType\": \"retailClickAndCollect\",\n                \"deliveryChannel\": {\n                    \"typeId\": \"channel\",\n                    \"id\": \"f8cf0334-4518-4886-bdc7-03183d85c8af\" //get id from previous GET request\n                }\n            }\n        }\n    ]\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -4526,7 +4527,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
@@ -4599,7 +4600,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
@@ -4784,18 +4785,13 @@
 							"name": "Create cart and add items to it",
 							"item": [
 								{
-									"name": "[BFF] Customer sign-in | Oauth client credentials",
+									"name": "[BFF] Customer sign-in",
 									"event": [
 										{
 											"listen": "test",
 											"script": {
 												"exec": [
-													"tests[\"Status code is 200\"] = responseCode.code === 200;",
-													"pm.environment.set(\"import-host\", \"https://import.europe-west1.gcp.commercetools.com\");",
-													"var data = JSON.parse(responseBody);",
-													"if(data.access_token){",
-													"    pm.environment.set(\"me_access_token\", data.access_token);",
-													"}"
+													""
 												],
 												"type": "text/javascript",
 												"packages": {}
@@ -4804,46 +4800,34 @@
 									],
 									"request": {
 										"auth": {
-											"type": "basic",
-											"basic": [
+											"type": "bearer",
+											"bearer": [
 												{
-													"key": "password",
-													"value": "{{client_secret}}",
-													"type": "string"
-												},
-												{
-													"key": "username",
-													"value": "{{client_id}}",
+													"key": "token",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
 										},
 										"method": "POST",
 										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\" : \"{{customer-01-email}}\",\n    \"password\" : \"secret123\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
 										"url": {
-											"raw": "{{auth_url}}/oauth/{{project-key}}/customers/token?grant_type=password&username={{customer-01-email}}&password=secret123",
+											"raw": "{{host}}/{{project-key}}/login",
 											"host": [
-												"{{auth_url}}"
+												"{{host}}"
 											],
 											"path": [
-												"oauth",
 												"{{project-key}}",
-												"customers",
-												"token"
-											],
-											"query": [
-												{
-													"key": "grant_type",
-													"value": "password"
-												},
-												{
-													"key": "username",
-													"value": "{{customer-01-email}}"
-												},
-												{
-													"key": "password",
-													"value": "secret123"
-												}
+												"login"
 											]
 										}
 									},
@@ -4887,7 +4871,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
@@ -4959,7 +4943,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
@@ -4968,7 +4952,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"version\": {{case-03-cart-version}},\n    \"actions\": [\n        {\n            \"action\": \"setCustomType\",\n            \"type\": {\n                \"id\": \"{{prefered-delivery-type-id}}\",\n                \"typeId\": \"type\"\n            },\n            \"fields\": {\n                \"timeZone\": \"aus-west\", //update every time cart gets updated and right before order creation\n                \"localTime\": \"14:00:00.000\", //update every time cart gets updated and right before order creation\n                \"preferredDeliveryType\": \"courierAsap\"\n            }\n        }\n    ]\n}",
+											"raw": "{\n    \"version\": {{case-03-cart-version}},\n    \"actions\": [\n        {\n            \"action\": \"setCustomType\",\n            \"type\": {\n                \"id\": \"{{prefered-delivery-type-id}}\",\n                \"typeId\": \"type\"\n            },\n            \"fields\": {\n                \"localTime\": \"14:00:00.000\", //update every time cart gets updated and right before order creation\n                \"preferredDeliveryType\": \"courierAsap\"\n            }\n        }\n    ]\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -5200,7 +5184,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
@@ -5209,7 +5193,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"version\": {{case-03-cart-version}},\n    \"actions\": [\n        {\n            \"action\": \"setCustomType\",\n            \"type\": {\n                \"id\": \"{{prefered-delivery-type-id}}\",\n                \"typeId\": \"type\"\n            },\n            \"fields\": {\n                \"timeZone\": \"aus-west\", //update every time cart gets updated and right before order creation\n                \"localTime\": \"14:00:00.000\", //update every time cart gets updated and right before order creation\n                \"preferredDeliveryType\": \"courierAsap\",\n                \"deliveryChannel\": {\n                    \"typeId\": \"channel\",\n                    \"id\": \"{{case-03-closest-store-id}}\"\n                },\n                \"deliveryTrackingUrl\": \"{{tracking-url}}\" //get from checking courier availability\n            }\n        }\n    ]\n}",
+											"raw": "{\n    \"version\": {{case-03-cart-version}},\n    \"actions\": [\n        {\n            \"action\": \"setCustomType\",\n            \"type\": {\n                \"id\": \"{{prefered-delivery-type-id}}\",\n                \"typeId\": \"type\"\n            },\n            \"fields\": {\n                \"localTime\": \"14:00:00.000\", //update every time cart gets updated and right before order creation\n                \"preferredDeliveryType\": \"courierAsap\",\n                \"deliveryChannel\": {\n                    \"typeId\": \"channel\",\n                    \"id\": \"{{case-03-closest-store-id}}\"\n                },\n                \"deliveryTrackingUrl\": \"{{tracking-url}}\" //get from checking courier availability\n            }\n        }\n    ]\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -5274,7 +5258,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
@@ -5341,7 +5325,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
@@ -5414,7 +5398,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "{{me_access_token}}",
+													"value": "{{ctp_access_token}}",
 													"type": "string"
 												}
 											]
