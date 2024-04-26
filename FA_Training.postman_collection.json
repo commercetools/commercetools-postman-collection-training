@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "d36d6655-5cf1-4ac4-a166-6898de0b7a83",
+		"_postman_id": "c4f27d2a-1256-4431-b7a0-27169dba5f71",
 		"name": "FA_Training",
 		"description": "## How-to Use\n\nTo be used for quick data creation in the trainings.\nBefore sending any request, please make sure that you have a valid token.\n\n- Import the environment file from https://github.com/commercetools/commercetools-postman-collection/blob/master/api/template.json into postman. \n- Create an api client (use admin template) for your project in the Merchant Center.\n- Set the `client_id` and `client_secret` in the `Commercetools template` environment from top-right (eye icon).\n- Send the request `Obtain access token`.\n- Send the request Get TaxCategory",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -849,7 +849,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\" : \"Equipment\",\n  \"description\" : \"Equipment\",\n  \"key\" : \"equipment-product-type\",\n  \"attributes\" : [ {\n    \"type\" : {\n      \"name\" : \"text\"\n    },\n    \"isSearchable\" : true,\n    \"inputHint\" : \"SingleLine\",\n    \"name\" : \"size\",\n    \"label\" : {\n      \"en\" : \"Size\",\n      \"de\" : \"Size\"\n    },\n    \"isRequired\" : false,\n    \"attributeConstraint\" : \"Unique\"\n  } ]\n}"
+							"raw": "{\n    \"name\": \"Equipment\",\n    \"description\": \"Equipment\",\n    \"key\": \"equipment-product-type\",\n    \"attributes\": [\n        {\n            \"type\": {\n                \"name\": \"text\"\n            },\n            \"isSearchable\": true,\n            \"inputHint\": \"SingleLine\",\n            \"name\": \"size\",\n            \"label\": {\n                \"en\": \"Size\",\n                \"de\": \"Size\"\n            },\n            \"isRequired\": false,\n            \"attributeConstraint\": \"Unique\"\n        },\n        {\n            \"type\": {\n                \"name\": \"text\"\n            },\n            \"isSearchable\": true,\n            \"inputHint\": \"SingleLine\",\n            \"name\": \"style\",\n            \"label\": {\n                \"en\": \"Style\",\n                \"de\": \"Style\"\n            },\n            \"isRequired\": false,\n            \"attributeConstraint\": \"Unique\"\n        }\n    ]\n}"
 						},
 						"url": {
 							"raw": "{{host}}/{{project-key}}/product-types",
@@ -933,7 +933,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\" : \"Dinnerware\",\n  \"description\" : \"Dinnerware\",\n  \"key\" : \"dinnerware-product-type\",\n  \"attributes\" : [ {\n    \"type\" : {\n      \"name\" : \"text\"\n    },\n    \"isSearchable\" : true,\n    \"inputHint\" : \"SingleLine\",\n    \"name\" : \"size\",\n    \"label\" : {\n      \"en\" : \"Size\",\n      \"de\" : \"Size\"\n    },\n    \"isRequired\" : true,\n    \"attributeConstraint\" : \"Unique\"\n  } ]\n}"
+							"raw": "{\n  \"name\" : \"Dinnerware\",\n  \"description\" : \"Dinnerware\",\n  \"key\" : \"dinnerware-product-type\",\n  \"attributes\" : [ {\n    \"type\" : {\n      \"name\" : \"text\"\n    },\n    \"isSearchable\" : true,\n    \"inputHint\" : \"SingleLine\",\n    \"name\" : \"material\",\n    \"label\" : {\n      \"en\" : \"Material\",\n      \"de\" : \"Material\"\n    },\n    \"isRequired\" : true,\n    \"attributeConstraint\" : \"Unique\"\n  } ]\n}"
 						},
 						"url": {
 							"raw": "{{host}}/{{project-key}}/product-types",
@@ -1071,7 +1071,7 @@
 					"response": []
 				},
 				{
-					"name": "022 Create Product - Ramekins",
+					"name": "022 Create Product - Ceramic ramekins",
 					"event": [
 						{
 							"listen": "test",
@@ -1080,20 +1080,20 @@
 									"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
 									"var data = JSON.parse(responseBody);",
 									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
-									"    pm.environment.set(\"product-id-ramekins\", data.results[0].id); ",
-									"    pm.environment.set(\"product-version-ramekins\", data.results[0].version);",
+									"    pm.environment.set(\"product-id-ceramic-ramekins\", data.results[0].id); ",
+									"    pm.environment.set(\"product-version-ceramic-ramekins\", data.results[0].version);",
 									"}",
 									"if(data.results && data.results[0] && data.results[0].key){",
-									"    pm.environment.set(\"product-key-ramekins\", data.results[0].key); ",
+									"    pm.environment.set(\"product-key-ceramic-ramekins\", data.results[0].key); ",
 									"}",
 									"if(data.version){",
-									"    pm.environment.set(\"product-version-ramekins\", data.version);",
+									"    pm.environment.set(\"product-version-ceramic-ramekins\", data.version);",
 									"}",
 									"if(data.id){",
-									"    pm.environment.set(\"product-id-ramekins\", data.id); ",
+									"    pm.environment.set(\"product-id-ceramic-ramekins\", data.id); ",
 									"}",
 									"if(data.key){",
-									"    pm.environment.set(\"product-key-ramekins\", data.key);",
+									"    pm.environment.set(\"product-key-ceramic-ramekins\", data.key);",
 									"}",
 									""
 								],
@@ -1131,7 +1131,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "\n{\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{product-type-id-dinnerware}}\"\n    },\n    \"name\":{\n        \"de\":\"Set of 4 Ramekins\",\n        \"en\":\"Set of 4 Ramekins\"\n    },\n    \"slug\":{\n        \"de\":\"set-of-4-ramekins\",\n        \"en\":\"set-of-4-ramekins\"\n    },\n    \"metaTitle\":{\n        \"de\":\"Set of 4 Ramekins\",\n        \"en\":\"Set of 4 Ramekins\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"set-of-4-ramekin-01\",\n        \"key\":\"set-of-4-ramekin-01\",\n        \"prices\":[\n            {\n            \"value\":{\n                \"type\":\"centPrecision\",\n                \"currencyCode\":\"EUR\",\n                \"centAmount\":1999,\n                \"fractionDigits\":2\n            },\n            \"country\":\"DE\"\n            }\n        ],\n        \"images\":[],\n        \"attributes\":[\n            {\n            \"name\":\"size\",\n            \"value\":\"4 oz.\"\n            }\n        ],\n        \"assets\":[]\n    },\n    \"variants\":[\n        {\n            \"id\":2,\n            \"sku\":\"set-of-4-ramekin-02\",\n            \"key\":\"set-of-4-ramekin-02\",\n            \"prices\":[\n            {\n                \"value\":{\n                    \"type\":\"centPrecision\",\n                    \"currencyCode\":\"EUR\",\n                    \"centAmount\":1999,\n                    \"fractionDigits\":2\n                },\n                \"country\":\"DE\"\n            }\n            ],\n            \"images\":[],\n            \"attributes\":[\n            {\n                \"name\":\"size\",\n                \"value\":\"6 oz\"\n            }\n            ],\n            \"assets\":[]\n        },\n        {\n            \"id\":3,\n            \"sku\":\"set-of-4-ramekin-03\",\n            \"key\":\"set-of-4-ramekin-03\",\n            \"prices\":[\n            {\n                \"value\":{\n                    \"type\":\"centPrecision\",\n                    \"currencyCode\":\"EUR\",\n                    \"centAmount\":1999,\n                    \"fractionDigits\":2\n                },\n                \"country\":\"DE\"\n            }\n            ],\n            \"images\":[\n            \n            ],\n            \"attributes\":[\n            {\n                \"name\":\"size\",\n                \"value\":\"8 oz.\"\n            }\n            ],\n            \"assets\":[\n            \n            ]\n        }\n    ],\n    \"searchKeywords\":{\n        \n    },\n    \"publish\": true,\n    \"key\":\"set-of-4-ramekins\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
+							"raw": "{\n    \"productType\": {\n        \"typeId\": \"product-type\",\n        \"id\": \"{{product-type-id-dinnerware}}\"\n    },\n    \"name\": {\n        \"de\": \"Ceramic ramekins\",\n        \"en\": \"Ceramic ramekins\"\n    },\n    \"slug\": {\n        \"de\": \"ceramic-ramekins\",\n        \"en\": \"ceramic-ramekins\"\n    },\n    \"metaTitle\": {\n        \"de\": \"Ceramic ramekins\",\n        \"en\": \"Ceramic ramekins\"\n    },\n    \"masterVariant\": {\n        \"id\": 1,\n        \"sku\": \"ramekin-01\",\n        \"key\": \"ramekin-01\",\n        \"prices\": [\n            {\n                \"value\": {\n                    \"type\": \"centPrecision\",\n                    \"currencyCode\": \"EUR\",\n                    \"centAmount\": 1999,\n                    \"fractionDigits\": 2\n                },\n                \"country\": \"DE\"\n            }\n        ],\n        \"images\": [],\n        \"attributes\": [\n            {\n                \"name\": \"material\",\n                \"value\": \"ceramic\"\n            }\n        ],\n        \"assets\": []\n    },\n    \"searchKeywords\": {},\n    \"publish\": true,\n    \"key\": \"ceramic-ramekins\",\n    \"taxCategory\": {\n        \"typeId\": \"tax-category\",\n        \"id\": \"{{tax-category-id}}\"\n    }\n}"
 						},
 						"url": {
 							"raw": "{{host}}/{{project-key}}/products",
@@ -1185,7 +1185,7 @@
 					"response": []
 				},
 				{
-					"name": "023 Create Product - Pasta Pot",
+					"name": "022 Create Product - Glass ramekins",
 					"event": [
 						{
 							"listen": "test",
@@ -1194,20 +1194,20 @@
 									"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
 									"var data = JSON.parse(responseBody);",
 									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
-									"    pm.environment.set(\"product-id-ramekins\", data.results[0].id); ",
-									"    pm.environment.set(\"product-version-ramekins\", data.results[0].version);",
+									"    pm.environment.set(\"product-id-glass-ramekins\", data.results[0].id); ",
+									"    pm.environment.set(\"product-version-glass-ramekins\", data.results[0].version);",
 									"}",
 									"if(data.results && data.results[0] && data.results[0].key){",
-									"    pm.environment.set(\"product-key-pasta\", data.results[0].key); ",
+									"    pm.environment.set(\"product-key-glass-ramekins\", data.results[0].key); ",
 									"}",
 									"if(data.version){",
-									"    pm.environment.set(\"product-version-pasta\", data.version);",
+									"    pm.environment.set(\"product-version-glass-ramekins\", data.version);",
 									"}",
 									"if(data.id){",
-									"    pm.environment.set(\"product-id-pasta\", data.id); ",
+									"    pm.environment.set(\"product-id-glass-ramekins\", data.id); ",
 									"}",
 									"if(data.key){",
-									"    pm.environment.set(\"product-key-pasta\", data.key);",
+									"    pm.environment.set(\"product-key-glass-ramekins\", data.key);",
 									"}",
 									""
 								],
@@ -1245,7 +1245,461 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "\n{\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{product-type-id-equipment}}\"\n    },\n    \"name\":{\n        \"de\":\"Pasta Pot\",\n        \"en\":\"Pasta Pot\"\n    },\n    \"slug\":{\n        \"de\":\"pasta-pot\",\n        \"en\":\"pasta-pot\"\n    },\n    \"metaTitle\":{\n        \"de\":\"Pasta Pot\",\n        \"en\":\"Pasta Pot\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"pasta-pot-01\",\n        \"key\":\"pasta-pot-01\",\n        \"prices\":[\n            {\n            \"value\":{\n                \"type\":\"centPrecision\",\n                \"currencyCode\":\"EUR\",\n                \"centAmount\":1999,\n                \"fractionDigits\":2\n            },\n            \"country\":\"DE\"\n            }\n        ],\n        \"images\":[],\n        \"attributes\":[\n            {\n            \"name\":\"size\",\n            \"value\":\"2 qt.\"\n            }\n        ],\n        \"assets\":[]\n    },\n    \"variants\":[\n        {\n            \"id\":2,\n            \"sku\":\"pasta-pot-02\",\n            \"key\":\"pasta-pot-02\",\n            \"prices\":[\n            {\n                \"value\":{\n                    \"type\":\"centPrecision\",\n                    \"currencyCode\":\"EUR\",\n                    \"centAmount\":2999,\n                    \"fractionDigits\":2\n                },\n                \"country\":\"DE\"\n            }\n            ],\n            \"images\":[],\n            \"attributes\":[\n            {\n                \"name\":\"size\",\n                \"value\":\"4 qt.\"\n            }\n            ],\n            \"assets\":[]\n        },\n        {\n            \"id\":3,\n            \"sku\":\"pasta-pot-03\",\n            \"key\":\"pasta-pot-03\",\n            \"prices\":[\n            {\n                \"value\":{\n                    \"type\":\"centPrecision\",\n                    \"currencyCode\":\"EUR\",\n                    \"centAmount\":3999,\n                    \"fractionDigits\":2\n                },\n                \"country\":\"DE\"\n            }\n            ],\n            \"images\":[\n            \n            ],\n            \"attributes\":[\n            {\n                \"name\":\"size\",\n                \"value\":\"6 qt.\"\n            }\n            ],\n            \"assets\":[\n            \n            ]\n        }\n    ],\n    \"searchKeywords\":{\n        \n    },\n    \"publish\": true,\n    \"key\":\"pasta-pot\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
+							"raw": "{\n    \"productType\": {\n        \"typeId\": \"product-type\",\n        \"id\": \"{{product-type-id-dinnerware}}\"\n    },\n    \"name\": {\n        \"de\": \"Glass ramekins\",\n        \"en\": \"Glass ramekins\"\n    },\n    \"slug\": {\n        \"de\": \"glass-ramekins\",\n        \"en\": \"glass-ramekins\"\n    },\n    \"metaTitle\": {\n        \"de\": \"Glass ramekins\",\n        \"en\": \"Glass ramekins\"\n    },\n    \"masterVariant\": {\n        \"id\": 1,\n        \"sku\": \"ramekin-02\",\n        \"key\": \"ramekin-02\",\n        \"prices\": [\n            {\n                \"value\": {\n                    \"type\": \"centPrecision\",\n                    \"currencyCode\": \"EUR\",\n                    \"centAmount\": 2999,\n                    \"fractionDigits\": 2\n                },\n                \"country\": \"DE\"\n            }\n        ],\n        \"images\": [],\n        \"attributes\": [\n            {\n                \"name\": \"material\",\n                \"value\": \"glass\"\n            }\n        ],\n        \"assets\": []\n    },\n    \"searchKeywords\": {},\n    \"publish\": true,\n    \"key\": \"glass-ramekins\",\n    \"taxCategory\": {\n        \"typeId\": \"tax-category\",\n        \"id\": \"{{tax-category-id}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"products"
+							],
+							"query": [
+								{
+									"key": "priceCurrency",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceCountry",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceCustomerGroup",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceChannel",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "localeProjection",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "storeProjection",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "To create a new product, send a representation that is going to become the initial staged representation\nof the new product in the master catalog. If price selection query parameters are provided,\nthe selected prices will be added to the response.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "022 Create Product - Steel ramekins",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+									"var data = JSON.parse(responseBody);",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"product-id-steel-ramekins\", data.results[0].id); ",
+									"    pm.environment.set(\"product-version-steel-ramekins\", data.results[0].version);",
+									"}",
+									"if(data.results && data.results[0] && data.results[0].key){",
+									"    pm.environment.set(\"product-key-steel-ramekins\", data.results[0].key); ",
+									"}",
+									"if(data.version){",
+									"    pm.environment.set(\"product-version-steel-ramekins\", data.version);",
+									"}",
+									"if(data.id){",
+									"    pm.environment.set(\"product-id-steel-ramekins\", data.id); ",
+									"}",
+									"if(data.key){",
+									"    pm.environment.set(\"product-key-steel-ramekins\", data.key);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{ctp_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productType\": {\n        \"typeId\": \"product-type\",\n        \"id\": \"{{product-type-id-dinnerware}}\"\n    },\n    \"name\": {\n        \"de\": \"Steel ramekins\",\n        \"en\": \"Steel ramekins\"\n    },\n    \"slug\": {\n        \"de\": \"steel-ramekins\",\n        \"en\": \"steel-ramekins\"\n    },\n    \"metaTitle\": {\n        \"de\": \"Steel ramekins\",\n        \"en\": \"Steel ramekins\"\n    },\n    \"masterVariant\": {\n        \"id\": 1,\n        \"sku\": \"ramekin-03\",\n        \"key\": \"ramekin-03\",\n        \"prices\": [\n            {\n                \"value\": {\n                    \"type\": \"centPrecision\",\n                    \"currencyCode\": \"EUR\",\n                    \"centAmount\": 1999,\n                    \"fractionDigits\": 2\n                },\n                \"country\": \"DE\"\n            }\n        ],\n        \"images\": [],\n        \"attributes\": [\n            {\n                \"name\": \"material\",\n                \"value\": \"steel\"\n            }\n        ],\n        \"assets\": []\n    },\n    \"searchKeywords\": {},\n    \"publish\": true,\n    \"key\": \"steel-ramekins\",\n    \"taxCategory\": {\n        \"typeId\": \"tax-category\",\n        \"id\": \"{{tax-category-id}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"products"
+							],
+							"query": [
+								{
+									"key": "priceCurrency",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceCountry",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceCustomerGroup",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceChannel",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "localeProjection",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "storeProjection",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "To create a new product, send a representation that is going to become the initial staged representation\nof the new product in the master catalog. If price selection query parameters are provided,\nthe selected prices will be added to the response.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "023 Create Product - Classic pasta pot",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+									"var data = JSON.parse(responseBody);",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"product-id-classic-pasta-pot\", data.results[0].id); ",
+									"    pm.environment.set(\"product-version-classic-pasta-pot\", data.results[0].version);",
+									"}",
+									"if(data.results && data.results[0] && data.results[0].key){",
+									"    pm.environment.set(\"product-key-classic-pasta-pot\", data.results[0].key); ",
+									"}",
+									"if(data.version){",
+									"    pm.environment.set(\"product-version-classic-pasta-pot\", data.version);",
+									"}",
+									"if(data.id){",
+									"    pm.environment.set(\"product-id-classic-pasta-pot\", data.id); ",
+									"}",
+									"if(data.key){",
+									"    pm.environment.set(\"product-key-classic-pasta-pot\", data.key);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{ctp_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productType\": {\n        \"typeId\": \"product-type\",\n        \"id\": \"{{product-type-id-equipment}}\"\n    },\n    \"name\": {\n        \"de\": \"Classic pasta pot\",\n        \"en\": \"Classic pasta pot\"\n    },\n    \"slug\": {\n        \"de\": \"classic-pasta-pot\",\n        \"en\": \"classic-pasta-pot\"\n    },\n    \"metaTitle\": {\n        \"de\": \"Classic pasta pot\",\n        \"en\": \"Classic pasta pot\"\n    },\n    \"masterVariant\": {\n        \"id\": 1,\n        \"sku\": \"pasta-pot-01\",\n        \"key\": \"pasta-pot-01\",\n        \"prices\": [\n            {\n                \"value\": {\n                    \"type\": \"centPrecision\",\n                    \"currencyCode\": \"EUR\",\n                    \"centAmount\": 1999,\n                    \"fractionDigits\": 2\n                },\n                \"country\": \"DE\"\n            }\n        ],\n        \"images\": [],\n        \"attributes\": [\n            {\n                \"name\": \"size\",\n                \"value\": \"2 qt.\"\n            },\n            {\n                \"name\": \"style\",\n                \"value\": \"classic\"\n            }\n        ],\n        \"assets\": []\n    },\n    \"searchKeywords\": {},\n    \"publish\": true,\n    \"key\": \"classic-pasta-pot\",\n    \"taxCategory\": {\n        \"typeId\": \"tax-category\",\n        \"id\": \"{{tax-category-id}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"products"
+							],
+							"query": [
+								{
+									"key": "priceCurrency",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceCountry",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceCustomerGroup",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceChannel",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "localeProjection",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "storeProjection",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "023 Create Product - Rustic pasta pot",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+									"var data = JSON.parse(responseBody);",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"product-id-rustic-pasta-pot\", data.results[0].id); ",
+									"    pm.environment.set(\"product-version-rustic-pasta-pot\", data.results[0].version);",
+									"}",
+									"if(data.results && data.results[0] && data.results[0].key){",
+									"    pm.environment.set(\"product-key-rustic-pasta-pot\", data.results[0].key); ",
+									"}",
+									"if(data.version){",
+									"    pm.environment.set(\"product-version-rustic-pasta-pot\", data.version);",
+									"}",
+									"if(data.id){",
+									"    pm.environment.set(\"product-id-rustic-pasta-pot\", data.id); ",
+									"}",
+									"if(data.key){",
+									"    pm.environment.set(\"product-key-rustic-pasta-pot\", data.key);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{ctp_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productType\": {\n        \"typeId\": \"product-type\",\n        \"id\": \"{{product-type-id-equipment}}\"\n    },\n    \"name\": {\n        \"de\": \"Rustic pasta pot\",\n        \"en\": \"Rustic pasta pot\"\n    },\n    \"slug\": {\n        \"de\": \"rustic-pasta-pot\",\n        \"en\": \"rustic-pasta-pot\"\n    },\n    \"metaTitle\": {\n        \"de\": \"Rustic pasta pot\",\n        \"en\": \"Rustic pasta pot\"\n    },\n    \"masterVariant\": {\n        \"id\": 1,\n        \"sku\": \"pasta-pot-02\",\n        \"key\": \"pasta-pot-02\",\n        \"prices\": [\n            {\n                \"value\": {\n                    \"type\": \"centPrecision\",\n                    \"currencyCode\": \"EUR\",\n                    \"centAmount\": 2999,\n                    \"fractionDigits\": 2\n                },\n                \"country\": \"DE\"\n            }\n        ],\n        \"images\": [],\n        \"attributes\": [\n            {\n                \"name\": \"size\",\n                \"value\": \"2 qt.\"\n            },\n            {\n                \"name\": \"style\",\n                \"value\": \"rustic\"\n            }\n        ],\n        \"assets\": []\n    },\n    \"searchKeywords\": {},\n    \"publish\": true,\n    \"key\": \"rustic-pasta-pot\",\n    \"taxCategory\": {\n        \"typeId\": \"tax-category\",\n        \"id\": \"{{tax-category-id}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"products"
+							],
+							"query": [
+								{
+									"key": "priceCurrency",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceCountry",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceCustomerGroup",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceChannel",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "localeProjection",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "storeProjection",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "023 Create Product - Industrial pasta pot",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+									"var data = JSON.parse(responseBody);",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"product-id-industrial-pasta-pot\", data.results[0].id); ",
+									"    pm.environment.set(\"product-version-industrial-pasta-pot\", data.results[0].version);",
+									"}",
+									"if(data.results && data.results[0] && data.results[0].key){",
+									"    pm.environment.set(\"product-key-industrial-pasta-pot\", data.results[0].key); ",
+									"}",
+									"if(data.version){",
+									"    pm.environment.set(\"product-version-industrial-pasta-pot\", data.version);",
+									"}",
+									"if(data.id){",
+									"    pm.environment.set(\"product-id-industrial-pasta-pot\", data.id); ",
+									"}",
+									"if(data.key){",
+									"    pm.environment.set(\"product-key-industrial-pasta-pot\", data.key);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{ctp_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productType\": {\n        \"typeId\": \"product-type\",\n        \"id\": \"{{product-type-id-equipment}}\"\n    },\n    \"name\": {\n        \"de\": \"Industrial pasta pot\",\n        \"en\": \"Industrial pasta pot\"\n    },\n    \"slug\": {\n        \"de\": \"industrial-pasta-pot\",\n        \"en\": \"industrial-pasta-pot\"\n    },\n    \"metaTitle\": {\n        \"de\": \"Industrial pasta pot\",\n        \"en\": \"Industrial pasta pot\"\n    },\n    \"masterVariant\": {\n        \"id\": 1,\n        \"sku\": \"pasta-pot-03\",\n        \"key\": \"pasta-pot-03\",\n        \"prices\": [\n            {\n                \"value\": {\n                    \"type\": \"centPrecision\",\n                    \"currencyCode\": \"EUR\",\n                    \"centAmount\": 1599,\n                    \"fractionDigits\": 2\n                },\n                \"country\": \"DE\"\n            }\n        ],\n        \"images\": [],\n        \"attributes\": [\n            {\n                \"name\": \"size\",\n                \"value\": \"2 qt.\"\n            },\n            {\n                \"name\": \"style\",\n                \"value\": \"industrial\"\n            }\n        ],\n        \"assets\": []\n    },\n    \"searchKeywords\": {},\n    \"publish\": true,\n    \"key\": \"industrial-pasta-pot\",\n    \"taxCategory\": {\n        \"typeId\": \"tax-category\",\n        \"id\": \"{{tax-category-id}}\"\n    }\n}"
 						},
 						"url": {
 							"raw": "{{host}}/{{project-key}}/products",
@@ -1358,7 +1812,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"Bundle ProductType\",\n  \"description\": \"AllForFoodies Bundle ProductType\",\n  \"classifier\": \"Complex\",\n  \"attributes\": [\n    {\n      \"name\": \"Items\",\n      \"label\": {\n        \"de\": \"Items\",\n        \"en\": \"Items\"\n      },\n      \"inputTip\": {\n        \"de\": \"Bundle item\",\n        \"en\": \"Bundle item\"\n      },\n      \"isRequired\": false,\n      \"type\": {\n        \"name\": \"set\",\n        \"elementType\": {\n          \"name\": \"reference\",\n          \"referenceTypeId\": \"product\"\n        }\n      },\n      \"attributeConstraint\": \"None\",\n      \"isSearchable\": true,\n      \"inputHint\": \"SingleLine\"\n    }\n  ],\n  \"key\": \"bundle-producttype\"\n}"
+							"raw": "{\n  \"name\": \"Bundle ProductType\",\n  \"description\": \"AllForFoodies Bundle ProductType\",\n  \"classifier\": \"Complex\",\n  \"attributes\": [\n    {\n      \"name\": \"items\",\n      \"label\": {\n        \"de\": \"Items\",\n        \"en\": \"Items\"\n      },\n      \"inputTip\": {\n        \"de\": \"Bundle item\",\n        \"en\": \"Bundle item\"\n      },\n      \"isRequired\": false,\n      \"type\": {\n        \"name\": \"set\",\n        \"elementType\": {\n          \"name\": \"reference\",\n          \"referenceTypeId\": \"product\"\n        }\n      },\n      \"attributeConstraint\": \"None\",\n      \"isSearchable\": true,\n      \"inputHint\": \"SingleLine\"\n    }\n  ],\n  \"key\": \"bundle-producttype\"\n}"
 						},
 						"url": {
 							"raw": "{{host}}/{{project-key}}/product-types",
@@ -1382,7 +1836,7 @@
 					"response": []
 				},
 				{
-					"name": "optional after task demo - Create Product - bundle",
+					"name": "optional after task demo - Create Product - french bundle",
 					"event": [
 						{
 							"listen": "test",
@@ -1408,7 +1862,8 @@
 									"}",
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1442,7 +1897,122 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"productType\": {\n        \"typeId\": \"product-type\",\n        \"id\": \"{{product-type-id-bundle}}\"\n    },\n    \"name\": {\n      \"en\": \"French Cooking Bundle\"\n    },\n    \"slug\": {\n        \"en\": \"french-cooking-bundle\"\n    },\n    \"masterVariant\": {\n        \"id\": 1,\n        \"sku\": \"french-cooking-bundle\",\n        \"key\": \"french-cooking-bundle\",\n        \"prices\": [\n            {\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"EUR\",\n                \"centAmount\": 12900,\n                \"fractionDigits\": 2\n            },\n            \"country\": \"DE\"\n            }\n        ],\n\n    \"images\": [],\n    \"attributes\": [\n        {\n        \"name\": \"Items\",\n        \"value\": [\n            {\n            \"typeId\": \"product\",\n            \"id\": \"{{product-id-french-class}}\"\n            },\n            {\n            \"typeId\": \"product\",\n            \"id\": \"{{product-id-torch}}\"\n            },\n            {\n            \"typeId\": \"product\",\n            \"id\": \"{{product-id-ramekins}}\"\n            }\n        ]\n        }\n    ],\n    \"assets\": []\n    },\n    \"variants\": [],\n    \"searchKeywords\": {},\n    \"publish\": true,\n    \"key\": \"french-cooking-bundle\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
+							"raw": "{\n    \"productType\": {\n        \"typeId\": \"product-type\",\n        \"id\": \"{{product-type-id-bundle}}\"\n    },\n    \"name\": {\n      \"en\": \"French Cooking Bundle\"\n    },\n    \"slug\": {\n        \"en\": \"french-cooking-bundle\"\n    },\n    \"masterVariant\": {\n        \"id\": 1,\n        \"sku\": \"french-ceramic-cooking-bundle\",\n        \"key\": \"french-ceramic-cooking-bundle\",\n        \"prices\": [\n            {\n            \"value\": {\n                \"type\": \"centPrecision\",\n                \"currencyCode\": \"EUR\",\n                \"centAmount\": 12900,\n                \"fractionDigits\": 2\n            },\n            \"country\": \"DE\"\n            }\n        ],\n\n    \"images\": [],\n    \"attributes\": [\n        {\n        \"name\": \"items\",\n        \"value\": [\n            {\n            \"typeId\": \"product\",\n            \"id\": \"{{product-id-french-class}}\"\n            },\n            {\n            \"typeId\": \"product\",\n            \"id\": \"{{product-id-torch}}\"\n            },\n            {\n            \"typeId\": \"product\",\n            \"id\": \"{{product-id-ceramic-ramekins}}\"\n            }\n        ]\n        }\n    ],\n    \"assets\": []\n    },\n    \"variants\": [],\n    \"searchKeywords\": {},\n    \"publish\": true,\n    \"key\": \"french-cooking-bundle\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"products"
+							],
+							"query": [
+								{
+									"key": "priceCurrency",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceCountry",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceCustomerGroup",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceChannel",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "localeProjection",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "storeProjection",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "To create a new product, send a representation that is going to become the initial staged representation\nof the new product in the master catalog. If price selection query parameters are provided,\nthe selected prices will be added to the response.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "optional after task demo - Create Product - italian bundle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+									"var data = JSON.parse(responseBody);",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"product-id-bundle\", data.results[0].id); ",
+									"    pm.environment.set(\"product-version-bundle\", data.results[0].version);",
+									"}",
+									"if(data.results && data.results[0] && data.results[0].key){",
+									"    pm.environment.set(\"product-key-bundle\", data.results[0].key); ",
+									"}",
+									"if(data.version){",
+									"    pm.environment.set(\"product-version-bundle\", data.version);",
+									"}",
+									"if(data.id){",
+									"    pm.environment.set(\"product-id-bundle\", data.id); ",
+									"}",
+									"if(data.key){",
+									"    pm.environment.set(\"product-key-bundle\", data.key);",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{ctp_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productType\": {\n        \"typeId\": \"product-type\",\n        \"id\": \"{{product-type-id-bundle}}\"\n    },\n    \"name\": {\n        \"en\": \"Italian Cooking Bundle\"\n    },\n    \"slug\": {\n        \"en\": \"italian-cooking-bundle\"\n    },\n    \"masterVariant\": {\n        \"id\": 1,\n        \"sku\": \"italian-industrial-cooking-bundle\",\n        \"key\": \"italian-industrial-cooking-bundle\",\n        \"prices\": [\n            {\n                \"value\": {\n                    \"type\": \"centPrecision\",\n                    \"currencyCode\": \"EUR\",\n                    \"centAmount\": 12900,\n                    \"fractionDigits\": 2\n                },\n                \"country\": \"DE\"\n            }\n        ],\n        \"images\": [],\n        \"attributes\": [\n            {\n                \"name\": \"items\",\n                \"value\": [\n                    {\n                        \"typeId\": \"product\",\n                        \"id\": \"{{product-id-italian-class}}\"\n                    },\n                    {\n                        \"typeId\": \"product\",\n                        \"id\": \"{{product-id-industrial-pasta-pot}}\"\n                    }\n                ]\n            }\n        ],\n        \"assets\": []\n    },\n    \"variants\": [],\n    \"searchKeywords\": {},\n    \"publish\": true,\n    \"key\": \"italian-cooking-bundle\",\n    \"taxCategory\": {\n        \"typeId\": \"tax-category\",\n        \"id\": \"{{tax-category-id}}\"\n    }\n}"
 						},
 						"url": {
 							"raw": "{{host}}/{{project-key}}/products",
@@ -2899,7 +3469,7 @@
 			"name": "Case 5 - Pricing",
 			"item": [
 				{
-					"name": "01 Create ProductType - School lunch",
+					"name": "01 Create ProductType - Gourmet food",
 					"event": [
 						{
 							"listen": "test",
@@ -2908,24 +3478,25 @@
 									"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
 									"var data = JSON.parse(responseBody);",
 									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
-									"    pm.environment.set(\"product-type-id-lunch\", data.results[0].id); ",
-									"    pm.environment.set(\"product-type-version-lunch\", data.results[0].version);",
+									"    pm.environment.set(\"product-type-id-food\", data.results[0].id); ",
+									"    pm.environment.set(\"product-type-version-food\", data.results[0].version);",
 									"}",
 									"if(data.results && data.results[0] && data.results[0].key){",
-									"    pm.environment.set(\"product-type-key-lunch\", data.results[0].key); ",
+									"    pm.environment.set(\"product-type-key-food\", data.results[0].key); ",
 									"}",
 									"if(data.version){",
-									"    pm.environment.set(\"product-type-version-lunch\", data.version);",
+									"    pm.environment.set(\"product-type-version-food\", data.version);",
 									"}",
 									"if(data.id){",
-									"    pm.environment.set(\"product-type-id-lunch\", data.id); ",
+									"    pm.environment.set(\"product-type-id-food\", data.id); ",
 									"}",
 									"if(data.key){",
-									"    pm.environment.set(\"product-type-key-lunch\", data.key);",
+									"    pm.environment.set(\"product-type-key-food\", data.key);",
 									"}",
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -2959,7 +3530,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\" : \"School Lunch\",\n  \"description\" : \"School Lunch\",\n  \"key\" : \"school-lunch-product-type\",\n  \"attributes\" : [ \n  {\n    \"type\" : {\n      \"name\" : \"boolean\"\n    },\n    \"isSearchable\" : true,\n    \"name\" : \"withDrink\",\n    \"label\" : {\n      \"en\" : \"Drink included\",\n      \"de\" : \"Drink included\"\n    },\n    \"isRequired\" : true\n  } ]\n}"
+							"raw": "{\n  \"name\" : \"Gourmet Food\",\n  \"description\" : \"Gourmet food\",\n  \"key\" : \"gourmet-food-product-type\",\n  \"attributes\" : [ \n  {\n    \"type\" : {\n      \"name\" : \"text\"\n    },\n    \"isSearchable\" : true,\n    \"name\" : \"description\",\n    \"label\" : {\n      \"en\" : \"Description\",\n      \"de\" : \"Description\"\n    },\n    \"isRequired\" : true,\n    \"inputHint\": \"MultiLine\"\n  } ]\n}"
 						},
 						"url": {
 							"raw": "{{host}}/{{project-key}}/product-types",
@@ -2983,7 +3554,7 @@
 					"response": []
 				},
 				{
-					"name": "02 Create Product - Avocado Egg Salad lunch",
+					"name": "01 Create ProductType - Gourmet coffee",
 					"event": [
 						{
 							"listen": "test",
@@ -2992,24 +3563,25 @@
 									"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
 									"var data = JSON.parse(responseBody);",
 									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
-									"    pm.environment.set(\"product-id\", data.results[0].id); ",
-									"    pm.environment.set(\"product-version\", data.results[0].version);",
+									"    pm.environment.set(\"product-type-id-coffee\", data.results[0].id); ",
+									"    pm.environment.set(\"product-type-version-coffee\", data.results[0].version);",
 									"}",
 									"if(data.results && data.results[0] && data.results[0].key){",
-									"    pm.environment.set(\"product-key\", data.results[0].key); ",
+									"    pm.environment.set(\"product-type-key-coffee\", data.results[0].key); ",
 									"}",
 									"if(data.version){",
-									"    pm.environment.set(\"product-version\", data.version);",
+									"    pm.environment.set(\"product-type-version-coffee\", data.version);",
 									"}",
 									"if(data.id){",
-									"    pm.environment.set(\"product-id\", data.id); ",
+									"    pm.environment.set(\"product-type-id-coffee\", data.id); ",
 									"}",
 									"if(data.key){",
-									"    pm.environment.set(\"product-key\", data.key);",
+									"    pm.environment.set(\"product-type-key-coffee\", data.key);",
 									"}",
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -3043,7 +3615,262 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{product-type-id-lunch}}\"\n    },\n    \"name\":{\n        \"de\":\"Avocado Egg Salad Lunch\",\n        \"en\":\"Avocado Egg Salad Lunch\"\n    },\n    \"slug\":{\n        \"de\":\"avocado-egg-salad-lunch\",\n        \"en\":\"avocado-egg-salad-lunch\"\n    },\n    \"metaTitle\":{\n        \"de\":\"Avocado Egg Salad Lunch\",\n        \"en\":\"Avocado Egg Salad Lunch\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"avocado-egg-salad-lunch-w-drink\",\n        \"key\":\"avocado-egg-salad-lunch-w-drink\",\n        \"images\":[],\n        \"attributes\":[\n            {\n            \"name\":\"withDrink\",\n            \"value\":true\n            }\n        ],\n        \"assets\":[]\n    },\n    \"variants\":[\n        {\n            \"id\":2,\n            \"sku\":\"avocado-egg-salad-lunch-no-drink\",\n            \"key\":\"avocado-egg-salad-lunch-no-drink\",\n            \"images\":[],\n            \"attributes\":[\n            {\n                \"name\":\"withDrink\",\n                \"value\":false\n            }\n            ],\n            \"assets\":[]\n        }\n    ],\n    \"searchKeywords\":{\n        \n    },\n    \"publish\": true,\n    \"key\":\"avocado-egg-salad-lunch\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
+							"raw": "{\n  \"name\" : \"Gourmet Coffee\",\n  \"description\" : \"Gourmet coffee\",\n  \"key\" : \"gourmet-coffee-product-type\",\n  \"attributes\" : [ \n  {\n    \"type\" : {\n      \"name\" : \"text\"\n    },\n    \"isSearchable\" : true,\n    \"name\" : \"description\",\n    \"label\" : {\n      \"en\" : \"Description\",\n      \"de\" : \"Description\"\n    },\n    \"isRequired\" : true,\n    \"inputHint\": \"MultiLine\"\n  } ]\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/product-types",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"product-types"
+							],
+							"query": [
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Create ProductType"
+					},
+					"response": []
+				},
+				{
+					"name": "01 Create ProductType - Kitchen utensil",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+									"var data = JSON.parse(responseBody);",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"product-type-id-utensil\", data.results[0].id); ",
+									"    pm.environment.set(\"product-type-version-utensil\", data.results[0].version);",
+									"}",
+									"if(data.results && data.results[0] && data.results[0].key){",
+									"    pm.environment.set(\"product-type-key-utensil\", data.results[0].key); ",
+									"}",
+									"if(data.version){",
+									"    pm.environment.set(\"product-type-version-utensil\", data.version);",
+									"}",
+									"if(data.id){",
+									"    pm.environment.set(\"product-type-id-utensil\", data.id); ",
+									"}",
+									"if(data.key){",
+									"    pm.environment.set(\"product-type-key-utensil\", data.key);",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{ctp_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\" : \"Kitchen Utensil\",\n  \"description\" : \"Kitchen utensil\",\n  \"key\" : \"kitchen-utensil-product-type\",\n  \"attributes\" : [ \n  {\n    \"type\" : {\n      \"name\" : \"text\"\n    },\n    \"isSearchable\" : true,\n    \"name\" : \"description\",\n    \"label\" : {\n      \"en\" : \"Description\",\n      \"de\" : \"Description\"\n    },\n    \"isRequired\" : true,\n    \"inputHint\": \"MultiLine\"\n  } ]\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/product-types",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"product-types"
+							],
+							"query": [
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Create ProductType"
+					},
+					"response": []
+				},
+				{
+					"name": "01 Create ProductType - Home decor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+									"var data = JSON.parse(responseBody);",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"product-type-id-decor\", data.results[0].id); ",
+									"    pm.environment.set(\"product-type-version-decor\", data.results[0].version);",
+									"}",
+									"if(data.results && data.results[0] && data.results[0].key){",
+									"    pm.environment.set(\"product-type-key-decor\", data.results[0].key); ",
+									"}",
+									"if(data.version){",
+									"    pm.environment.set(\"product-type-version-decor\", data.version);",
+									"}",
+									"if(data.id){",
+									"    pm.environment.set(\"product-type-id-decor\", data.id); ",
+									"}",
+									"if(data.key){",
+									"    pm.environment.set(\"product-type-key-decor\", data.key);",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{ctp_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\" : \"Home Decor\",\n  \"description\" : \"Home decor\",\n  \"key\" : \"home-decor-product-type\",\n  \"attributes\" : [ \n  {\n    \"type\" : {\n      \"name\" : \"text\"\n    },\n    \"isSearchable\" : true,\n    \"name\" : \"description\",\n    \"label\" : {\n      \"en\" : \"Description\",\n      \"de\" : \"Description\"\n    },\n    \"isRequired\" : true,\n    \"inputHint\": \"MultiLine\"\n  } ]\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/product-types",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"product-types"
+							],
+							"query": [
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Create ProductType"
+					},
+					"response": []
+				},
+				{
+					"name": "02 Create Product - Truffle Infused Olive Oil",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
+									"var data = JSON.parse(responseBody);",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"product-id\", data.results[0].id); ",
+									"    pm.environment.set(\"product-version\", data.results[0].version);",
+									"}",
+									"if(data.results && data.results[0] && data.results[0].key){",
+									"    pm.environment.set(\"product-key\", data.results[0].key); ",
+									"}",
+									"if(data.version){",
+									"    pm.environment.set(\"product-version\", data.version);",
+									"}",
+									"if(data.id){",
+									"    pm.environment.set(\"product-id\", data.id); ",
+									"}",
+									"if(data.key){",
+									"    pm.environment.set(\"product-key\", data.key);",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{ctp_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{product-type-id-food}}\"\n    },\n    \"name\":{\n        \"de\":\"Truffle Infused Olive Oil\",\n        \"en\":\"Truffle Infused Olive Oil\"\n    },\n    \"slug\":{\n        \"de\":\"truffle-infused-olive-oil\",\n        \"en\":\"truffle-infused-olive-oil\"\n    },\n    \"metaTitle\":{\n        \"de\":\"Truffle Infused Olive Oil\",\n        \"en\":\"Truffle Infused Olive Oil\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"white-truffle-infused-olive-oil\",\n        \"key\":\"white-truffle-infused-olive-oil\",\n        \"images\":[],\n        \"attributes\":[\n            {\n            \"name\":\"description\",\n            \"value\":\"Premium extra virgin olive oil infused with the delicate and earthy flavor of white truffles. Suitable for enhancing the taste of salads, pasta, and other culinary creations.\"\n            }\n        ],\n        \"assets\":[]\n    },\n    \"variants\":[\n        {\n            \"id\":2,\n            \"sku\":\"black-truffle-infused-olive-oil\",\n            \"key\":\"black-truffle-infused-olive-oil\",\n            \"images\":[],\n            \"attributes\":[\n            {\n                \"name\":\"description\",\n                \"value\":\"Cold-pressed extra virgin olive oil infused with the bold and rich flavor of black truffles. Ideal for drizzling over dishes to add a luxurious and aromatic touch.\"\n            }\n            ],\n            \"assets\":[]\n        }\n    ],\n    \"searchKeywords\":{\n        \n    },\n    \"publish\": true,\n    \"key\":\"truffle-infused-olive-oil\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
 						},
 						"url": {
 							"raw": "{{host}}/{{project-key}}/products",
@@ -3096,7 +3923,7 @@
 					"response": []
 				},
 				{
-					"name": "03 Create Product - Tomato salad grilled halloumi lunch",
+					"name": "03 Create Product - Premium Coffee Beans",
 					"event": [
 						{
 							"listen": "test",
@@ -3122,7 +3949,8 @@
 									"}",
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -3156,7 +3984,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{product-type-id-lunch}}\"\n    },\n    \"name\":{\n        \"de\":\"Tomato Salad Grilled Halloumi Lunch\",\n        \"en\":\"Tomato Salad Grilled Halloumi Lunch\"\n    },\n    \"slug\":{\n        \"de\":\"tomato-salad-grilled-halloumi-lunch\",\n        \"en\":\"tomato-salad-grilled-halloumi-lunch\"\n    },\n    \"metaTitle\":{\n        \"de\":\"Tomato Salad Grilled Halloumi Lunch\",\n        \"en\":\"Tomato Salad Grilled Halloumi Lunch\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"tomato-salad-grilled-halloumi-lunch-w-drink\",\n        \"key\":\"tomato-salad-grilled-halloumi-lunch-w-drink\",\n        \"images\":[],\n        \"attributes\":[\n            {\n            \"name\":\"withDrink\",\n            \"value\":true\n            }\n        ],\n        \"assets\":[]\n    },\n    \"variants\":[\n        {\n            \"id\":2,\n            \"sku\":\"tomato-salad-grilled-halloumi-lunch-no-drink\",\n            \"key\":\"tomato-salad-grilled-halloumi-lunch-no-drink\",\n            \"images\":[],\n            \"attributes\":[\n            {\n                \"name\":\"withDrink\",\n                \"value\":false\n            }\n            ],\n            \"assets\":[]\n        }\n    ],\n    \"searchKeywords\":{\n        \n    },\n    \"publish\": true,\n    \"key\":\"tomato-salad-grilled-halloumi-lunch\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
+							"raw": "{\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{product-type-id-coffee}}\"\n    },\n    \"name\":{\n        \"de\":\"Premium Coffee Beans\",\n        \"en\":\"Premium Coffee Beans\"\n    },\n    \"slug\":{\n        \"de\":\"premium-coffee-beans\",\n        \"en\":\"premium-coffee-beans\"\n    },\n    \"metaTitle\":{\n        \"de\":\"Premium Coffee Beans\",\n        \"en\":\"Premium Coffee Beans\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"single-origin-arabica-coffee-beans\",\n        \"key\":\"single-origin-arabica-coffee-beans\",\n        \"images\":[],\n        \"attributes\":[\n            {\n            \"name\":\"description\",\n            \"value\":\"High-quality Arabica coffee beans sourced from a specific region, offering a distinct flavor profile. Suitable for coffee connoisseurs who appreciate the unique characteristics of single-origin beans.\"\n            }\n        ],\n        \"assets\":[]\n    },\n    \"variants\":[\n        {\n            \"id\":2,\n            \"sku\":\"limited-edition-espresso-blend\",\n            \"key\":\"limited-edition-espresso-blend\",\n            \"images\":[],\n            \"attributes\":[\n            {\n                \"name\":\"description\",\n                \"value\":\"A carefully crafted blend of premium coffee beans, specifically designed for espresso enthusiasts. Limited edition to provide a special and exclusive coffee experience.\"\n            }\n            ],\n            \"assets\":[]\n        }\n    ],\n    \"searchKeywords\":{\n        \n    },\n    \"publish\": true,\n    \"key\":\"premium-coffee-beans\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
 						},
 						"url": {
 							"raw": "{{host}}/{{project-key}}/products",
@@ -3209,7 +4037,7 @@
 					"response": []
 				},
 				{
-					"name": "04 Create Product - Avocado Poke Bowl Lunch",
+					"name": "04 Create Product - Premium Copper Kitchen Utensil Set",
 					"event": [
 						{
 							"listen": "test",
@@ -3235,7 +4063,8 @@
 									"}",
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -3269,7 +4098,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{product-type-id-lunch}}\"\n    },\n    \"name\":{\n        \"de\":\"Avocado Poke Bowl Lunch\",\n        \"en\":\"Avocado Poke Bowl Lunch\"\n    },\n    \"slug\":{\n        \"de\":\"avocado-poke-bowl-lunch\",\n        \"en\":\"avocado-poke-bowl-lunch\"\n    },\n    \"metaTitle\":{\n        \"de\":\"Avocado Poke Bowl Lunch\",\n        \"en\":\"Avocado Poke Bowl Lunch\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"avocado-poke-bowl-lunch-w-drink\",\n        \"key\":\"avocado-poke-bowl-lunch-w-drink\",\n        \"images\":[],\n        \"attributes\":[\n            {\n            \"name\":\"withDrink\",\n            \"value\":true\n            }\n        ],\n        \"assets\":[]\n    },\n    \"variants\":[\n        {\n            \"id\":2,\n            \"sku\":\"avocado-poke-bowl-lunch-no-drink\",\n            \"key\":\"avocado-poke-bowl-lunch-no-drink\",\n            \"images\":[],\n            \"attributes\":[\n            {\n                \"name\":\"withDrink\",\n                \"value\":false\n            }\n            ],\n            \"assets\":[]\n        }\n    ],\n    \"searchKeywords\":{\n        \n    },\n    \"publish\": true,\n    \"key\":\"avocado-poke-bowl-lunch\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
+							"raw": "{\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{product-type-id-utensil}}\"\n    },\n    \"name\":{\n        \"de\":\"Premium Copper Kitchen Utensil Set\",\n        \"en\":\"Premium Copper Kitchen Utensil Set\"\n    },\n    \"slug\":{\n        \"de\":\"premium-copper-kitchen-utensil-set\",\n        \"en\":\"premium-copper-kitchen-utensil-set\"\n    },\n    \"metaTitle\":{\n        \"de\":\"Premium Copper Kitchen Utensil Set\",\n        \"en\":\"Premium Copper Kitchen Utensil Set\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"copper-coated-stainless-steel-cooking-spoons\",\n        \"key\":\"copper-coated-stainless-steel-cooking-spoons\",\n        \"images\":[],\n        \"attributes\":[\n            {\n            \"name\":\"description\",\n            \"value\":\"A set of cooking spoons made from durable stainless steel with a copper coating. Adds a touch of elegance to the kitchen and provides high-quality utensils for cooking.\"\n            }\n        ],\n        \"assets\":[]\n    },\n    \"variants\":[\n        {\n            \"id\":2,\n            \"sku\":\"copper-handled-silicone-cooking-utensils\",\n            \"key\":\"copper-handled-silicone-cooking-utensils\",\n            \"images\":[],\n            \"attributes\":[\n            {\n                \"name\":\"description\",\n                \"value\":\"Cooking utensils with copper-handled design for a stylish and ergonomic grip. Features silicone heads for non-stick cookware and versatility in the kitchen.\"\n            }\n            ],\n            \"assets\":[]\n        }\n    ],\n    \"searchKeywords\":{\n        \n    },\n    \"publish\": true,\n    \"key\":\"premium-copper-kitchen-utensil-set\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
 						},
 						"url": {
 							"raw": "{{host}}/{{project-key}}/products",
@@ -3322,7 +4151,7 @@
 					"response": []
 				},
 				{
-					"name": "05 Create Product - Chicken Wrap With Arugula",
+					"name": "05 Create Product - Gourmet Scented Candle Collection",
 					"event": [
 						{
 							"listen": "test",
@@ -3348,7 +4177,8 @@
 									"}",
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -3382,7 +4212,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{product-type-id-lunch}}\"\n    },\n    \"name\":{\n        \"de\":\"Chicken Wrap With Arugula\",\n        \"en\":\"Chicken Wrap With Arugula\"\n    },\n    \"slug\":{\n        \"de\":\"chicken-wrap-with-arugula\",\n        \"en\":\"chicken-wrap-with-arugula\"\n    },\n    \"metaTitle\":{\n        \"de\":\"Chicken Wrap With Arugula\",\n        \"en\":\"Chicken Wrap With Arugula\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"chicken-wrap-with-arugula-w-drink\",\n        \"key\":\"chicken-wrap-with-arugula-w-drink\",\n        \"images\":[],\n        \"attributes\":[\n            {\n            \"name\":\"withDrink\",\n            \"value\":true\n            }\n        ],\n        \"assets\":[]\n    },\n    \"variants\":[\n        {\n            \"id\":2,\n            \"sku\":\"chicken-wrap-with-arugula-no-drink\",\n            \"key\":\"chicken-wrap-with-arugula-no-drink\",\n            \"images\":[],\n            \"attributes\":[\n            {\n                \"name\":\"withDrink\",\n                \"value\":false\n            }\n            ],\n            \"assets\":[]\n        }\n    ],\n    \"searchKeywords\":{\n        \n    },\n    \"publish\": true,\n    \"key\":\"chicken-wrap-with-arugula\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
+							"raw": "{\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{product-type-id-decor}}\"\n    },\n    \"name\":{\n        \"de\":\"Gourmet Scented Candle Collection\",\n        \"en\":\"Gourmet Scented Candle Collection\"\n    },\n    \"slug\":{\n        \"de\":\"gourmet-scented-candle-collection\",\n        \"en\":\"gourmet-scented-candle-collection\"\n    },\n    \"metaTitle\":{\n        \"de\":\"Gourmet Scented Candle Collection\",\n        \"en\":\"Gourmet Scented Candle Collection\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"espresso-vanilla-bean-scented-candle\",\n        \"key\":\"espresso-vanilla-bean-scented-candle\",\n        \"images\":[],\n        \"attributes\":[\n            {\n            \"name\":\"description\",\n            \"value\":\"A scented candle with the rich aroma of espresso and the sweet undertones of vanilla bean. Adds a gourmet touch to home ambiance.\"\n            }\n        ],\n        \"assets\":[]\n    },\n    \"variants\":[\n        {\n            \"id\":2,\n            \"sku\":\"lavender-early-grey-infused-candle\",\n            \"key\":\"lavender-early-grey-infused-candle\",\n            \"images\":[],\n            \"attributes\":[\n            {\n                \"name\":\"description\",\n                \"value\":\"Scented candle infused with the calming fragrance of lavender and the subtle notes of Earl Grey tea. Creates a relaxing and aromatic environment.\"\n            }\n            ],\n            \"assets\":[]\n        }\n    ],\n    \"searchKeywords\":{\n        \n    },\n    \"publish\": true,\n    \"key\":\"gourmet-scented-candle-collection\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
 						},
 						"url": {
 							"raw": "{{host}}/{{project-key}}/products",
