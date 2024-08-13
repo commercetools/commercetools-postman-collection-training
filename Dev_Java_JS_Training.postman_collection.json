@@ -1,1046 +1,2008 @@
 {
 	"info": {
-		"_postman_id": "2ef89ef6-b7ec-413e-abfb-750fc94bc7fb",
+		"_postman_id": "1757cae7-f285-4435-8b33-9d4b39d681b0",
 		"name": "Dev_Java_JS_Training",
-		"description": "## How-to Use\n\nTo be used for quick data creation in the trainings.\nBefore sending any request, please make sure that you have a valid token.\n\n- Import the environment file from https://github.com/commercetools/commercetools-postman-collection/blob/master/api/template.json into postman. \n- Create an api client (use admin template) for your project in the Merchant Center.\n- Set the `client_id` and `client_secret` in the `Commercetools template` environment from top-right (eye icon).\n- Send the request `Obtain access token`.\n- Send the request Get TaxCategory",
+		"description": "## How-to Use\n\nTo be used for quick data creation in the trainings.  \nBefore sending any request, please make sure that you have a valid token.\n\n- Create an api client (use admin template) for your project in the Merchant Center.\n    \n- Import API Client into Postman and set it as your current environment\n    \n- Send the request `Obtain access token`.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "11897687"
 	},
 	"item": [
 		{
-			"name": "Obtain access token Copy",
+			"name": "Authorization",
+			"item": [
+				{
+					"name": "Obtain access token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var data = pm.response.json();",
+									"if(data.access_token){",
+									"    pm.environment.set(\"ctp-access-token\", data.access_token);",
+									"}",
+									"if (data.scope) {",
+									"    pm.environment.set(\"ctp-scope\", data.scope);",
+									"    parts = data.scope.split(\" \");",
+									"    parts = parts.filter(scope => scope.includes(\":\")).map(scope => scope.split(\":\"))",
+									"    if (parts.length > 0) {",
+									"        scopeParts = parts[0];",
+									"        pm.environment.set(\"project-key\", scopeParts[1]);",
+									"        parts = parts.filter(scope => scope.length >= 3)",
+									"        if (parts.length > 0) {",
+									"            scopeParts = parts[0];",
+									"            pm.environment.set(\"store-key\", scopeParts[2]);",
+									"        }",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{client_id}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{client_secret}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{auth_url}}/oauth/token?grant_type=client_credentials",
+							"host": [
+								"{{auth_url}}"
+							],
+							"path": [
+								"oauth",
+								"token"
+							],
+							"query": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials"
+								}
+							]
+						},
+						"description": "Use this request to obtain an access token for your commercetools platform project via Client Credentials Flow. As a prerequisite you must have filled out environment variables in Postman for projectKey, client_id and client_secret to use this."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Checkout Exercises",
+			"item": [
+				{
+					"name": "Get TaxCategory",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var data = pm.response.json();",
+									"",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"tax-category-id\", data.results[0].id);",
+									"    pm.environment.set(\"tax-category-version\", data.results[0].version);",
+									"    if(data.results[0].key) {",
+									"      pm.environment.set(\"tax-category-key\", data.results[0].key);",
+									"    }",
+									"}",
+									"",
+									"if(data && data.id && data.version){",
+									"    pm.environment.set(\"tax-category-id\", data.id); ",
+									"    pm.environment.set(\"tax-category-version\", data.version);",
+									"    if(data.key) {",
+									"      pm.environment.set(\"tax-category-key\", data.key);",
+									"    }",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/tax-categories",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"tax-categories"
+							],
+							"query": [
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get TaxCategory by key"
+					},
+					"response": []
+				},
+				{
+					"name": "00 Create Category - seeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"  pm.response.to.have.status(201);",
+									"});",
+									"",
+									"var data = pm.response.json();",
+									"",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"seeds-category-id\", data.results[0].id);",
+									"    pm.environment.set(\"seeds-category-version\", data.results[0].version);",
+									"    if(data.results[0].key) {",
+									"      pm.environment.set(\"seeds-category-key\", data.results[0].key);",
+									"    }",
+									"}",
+									"",
+									"if(data && data.id && data.version){",
+									"    pm.environment.set(\"seeds-category-id\", data.id); ",
+									"    pm.environment.set(\"seeds-category-version\", data.version);",
+									"    if(data.key) {",
+									"      pm.environment.set(\"seeds-category-key\", data.key);",
+									"    }",
+									"}",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"key\":\"plant-seeds\",\n    \"name\" : {\n        \"en\" : \"Seeds\",\n        \"de\" : \"Seeds\"\n    },\n    \"slug\" : {\n        \"en\" : \"plant-seeds\",\n        \"de\" : \"plant-seeds\"\n    },\n    \"orderHint\" : \"0.1\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/categories",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"categories"
+							],
+							"query": [
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Creating a category produces the CategoryCreated message."
+					},
+					"response": []
+				},
+				{
+					"name": "01 Create Category - veg seeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"  pm.response.to.have.status(201);",
+									"});",
+									"",
+									"var data = pm.response.json();",
+									"",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"veg-seeds-category-id\", data.results[0].id);",
+									"    pm.environment.set(\"veg-seeds-category-version\", data.results[0].version);",
+									"    if(data.results[0].key) {",
+									"      pm.environment.set(\"veg-seeds-category-key\", data.results[0].key);",
+									"    }",
+									"}",
+									"",
+									"if(data && data.id && data.version){",
+									"    pm.environment.set(\"veg-seeds-category-id\", data.id); ",
+									"    pm.environment.set(\"veg-seeds-category-version\", data.version);",
+									"    if(data.key) {",
+									"      pm.environment.set(\"veg-seeds-category-key\", data.key);",
+									"    }",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"key\":\"veg-seeds\",\n    \"name\" : {\n        \"en\" : \"Vegetable Seeds\",\n        \"de\" : \"Vegetable Seeds\"\n    },\n    \"slug\" : {\n        \"en\" : \"vegetable-seeds\",\n        \"de\" : \"vegetable-seeds\"\n    },\n    \"orderHint\" : \"0.2\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/categories",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"categories"
+							],
+							"query": [
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Creating a category produces the CategoryCreated message."
+					},
+					"response": []
+				},
+				{
+					"name": "02 Create ProductType - flower seeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"  pm.response.to.have.status(201);",
+									"});",
+									"",
+									"var data = pm.response.json();",
+									"",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"flower-product-type-id\", data.results[0].id);",
+									"    pm.environment.set(\"flower-product-type-version\", data.results[0].version);",
+									"    if(data.results[0].key) {",
+									"      pm.environment.set(\"flower-product-type-key\", data.results[0].key);",
+									"    }",
+									"}",
+									"",
+									"if(data && data.id && data.version){",
+									"    pm.environment.set(\"flower-product-type-id\", data.id); ",
+									"    pm.environment.set(\"flower-product-type-version\", data.version);",
+									"    if(data.key) {",
+									"      pm.environment.set(\"flower-product-type-key\", data.key);",
+									"    }",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Flower seeds\",\n  \"description\": \"Flower seeds\",\n  \"key\": \"flower-seeds-producttype\",\n  \"attributes\": [\n    {\n      \"name\": \"size\",\n      \"label\": {\n        \"de\": \"Size\",\n        \"en\": \"Size\"\n      },\n      \"type\": {\n        \"name\": \"text\"\n      },\n      \"attributeConstraint\": \"CombinationUnique\",\n      \"isRequired\": true,\n      \"isSearchable\": true,\n      \"inputTip\": {\n        \"en\": \"\",\n        \"de\": \"\"\n      },\n      \"inputHint\": \"SingleLine\"\n    },\n    {\n      \"name\": \"weight_in_kg\",\n      \"label\": {\n        \"de\": \"Weight in Kg\",\n        \"en\": \"Weight in Kg\"\n      },\n      \"type\": {\n        \"name\": \"number\"\n      },\n      \"attributeConstraint\": \"CombinationUnique\",\n      \"isRequired\": true,\n      \"isSearchable\": true,\n      \"inputTip\": {\n        \"en\": \"\",\n        \"de\": \"\"\n      }\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/product-types",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"product-types"
+							],
+							"query": [
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Create ProductType"
+					},
+					"response": []
+				},
+				{
+					"name": "03 Create ProductType - veg seeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"  pm.response.to.have.status(201);",
+									"});",
+									"",
+									"var data = pm.response.json();",
+									"",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"veg-product-type-id\", data.results[0].id);",
+									"    pm.environment.set(\"veg-product-type-version\", data.results[0].version);",
+									"    if(data.results[0].key) {",
+									"      pm.environment.set(\"veg-product-type-key\", data.results[0].key);",
+									"    }",
+									"}",
+									"",
+									"if(data && data.id && data.version){",
+									"    pm.environment.set(\"veg-product-type-id\", data.id); ",
+									"    pm.environment.set(\"veg-product-type-version\", data.version);",
+									"    if(data.key) {",
+									"      pm.environment.set(\"veg-product-type-key\", data.key);",
+									"    }",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Vegetable seeds\",\n  \"description\": \"Vegetable seeds\",\n  \"key\": \"veg-seeds-producttype\",\n  \"attributes\": [\n    {\n      \"name\": \"size\",\n      \"label\": {\n        \"de\": \"Size\",\n        \"en\": \"Size\"\n      },\n      \"type\": {\n        \"name\": \"text\"\n      },\n      \"attributeConstraint\": \"CombinationUnique\",\n      \"isRequired\": true,\n      \"isSearchable\": true,\n      \"inputTip\": {\n        \"en\": \"\",\n        \"de\": \"\"\n      },\n      \"inputHint\": \"SingleLine\"\n    },\n    {\n      \"name\": \"weight_in_kg\",\n      \"label\": {\n        \"de\": \"Weight in Kg\",\n        \"en\": \"Weight in Kg\"\n      },\n      \"type\": {\n        \"name\": \"number\"\n      },\n      \"attributeConstraint\": \"CombinationUnique\",\n      \"isRequired\": true,\n      \"isSearchable\": true,\n      \"inputTip\": {\n        \"en\": \"\",\n        \"de\": \"\"\n      }\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/product-types",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"product-types"
+							],
+							"query": [
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Create ProductType"
+					},
+					"response": []
+				},
+				{
+					"name": "04 Create ProductType - herbs seeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"  pm.response.to.have.status(201);",
+									"});",
+									"",
+									"var data = pm.response.json();",
+									"",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"herb-product-type-id\", data.results[0].id);",
+									"    pm.environment.set(\"herb-product-type-version\", data.results[0].version);",
+									"    if(data.results[0].key) {",
+									"      pm.environment.set(\"herb-product-type-key\", data.results[0].key);",
+									"    }",
+									"}",
+									"",
+									"if(data && data.id && data.version){",
+									"    pm.environment.set(\"herb-product-type-id\", data.id); ",
+									"    pm.environment.set(\"herb-product-type-version\", data.version);",
+									"    if(data.key) {",
+									"      pm.environment.set(\"herb-product-type-key\", data.key);",
+									"    }",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Herb seeds\",\n  \"description\": \"Herb seeds\",\n  \"key\": \"herb-seeds-producttype\",\n  \"attributes\": [\n    {\n      \"name\": \"size\",\n      \"label\": {\n        \"de\": \"Size\",\n        \"en\": \"Size\"\n      },\n      \"type\": {\n        \"name\": \"text\"\n      },\n      \"attributeConstraint\": \"CombinationUnique\",\n      \"isRequired\": true,\n      \"isSearchable\": true,\n      \"inputTip\": {\n        \"en\": \"\",\n        \"de\": \"\"\n      },\n      \"inputHint\": \"SingleLine\"\n    },\n    {\n      \"name\": \"weight_in_kg\",\n      \"label\": {\n        \"de\": \"Weight in Kg\",\n        \"en\": \"Weight in Kg\"\n      },\n      \"type\": {\n        \"name\": \"number\"\n      },\n      \"attributeConstraint\": \"CombinationUnique\",\n      \"isRequired\": true,\n      \"isSearchable\": true,\n      \"inputTip\": {\n        \"en\": \"\",\n        \"de\": \"\"\n      }\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/product-types",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"product-types"
+							],
+							"query": [
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Create ProductType"
+					},
+					"response": []
+				},
+				{
+					"name": "05 Create Product - tulip",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"  pm.response.to.have.status(201);",
+									"});",
+									"",
+									"var data = pm.response.json();",
+									"",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"tulip-product-id\", data.results[0].id);",
+									"    pm.environment.set(\"tulip-product-version\", data.results[0].version);",
+									"    if(data.results[0].key) {",
+									"      pm.environment.set(\"tulip-product-key\", data.results[0].key);",
+									"    }",
+									"}",
+									"",
+									"if(data && data.id && data.version){",
+									"    pm.environment.set(\"tulip-product-id\", data.id); ",
+									"    pm.environment.set(\"tulip-product-version\", data.version);",
+									"    if(data.key) {",
+									"      pm.environment.set(\"tulip-product-type-key\", data.key);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{flower-product-type-id}}\"\n    },\n    \"name\":{\n        \"en\":\"Tulip seeds\",\n        \"de\":\"Tulip seeds\"\n    },\n    \"description\":{\n        \"en\":\"Tulip seeds\"\n    },\n    \"categories\":[\n        {\n            \"typeId\":\"category\",\n            \"id\":\"{{seeds-category-id}}\"\n        }\n    ],\n    \"categoryOrderHints\":{\n        \n    },\n    \"slug\":{\n        \"en\":\"tulip-seeds\",\n        \"de\":\"tulip-seed\"\n    },\n    \"metaDescription\":{\n        \"en\":\"Tulip seeds\",\n        \"de\":\"Tulip seeds\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"TULIPSEED01\",\n        \"key\":\"TULIPSEED01\",\n        \"prices\":[\n            {\n            \"key\":\"TulipSeed01Price01\",\n            \"value\":{\n                \"type\":\"centPrecision\",\n                \"currencyCode\":\"EUR\",\n                \"centAmount\":2710,\n                \"fractionDigits\":2\n            },\n            \"country\":\"DE\"\n            },\n            {\n           \"key\":\"TulipSeed01Price02\",\n            \"value\":{\n                \"type\":\"centPrecision\",\n                \"currencyCode\":\"EUR\",\n                \"centAmount\":5900,\n                \"fractionDigits\":2\n            }\n            }\n        ],\n        \"images\":[\n            \n        ],\n        \"attributes\":[\n            {\n            \"name\":\"size\",\n            \"value\":\"package\"\n            },\n            {\n            \"name\":\"weight_in_kg\",\n            \"value\":0.5\n            }\n        ],\n        \"assets\":[\n            \n        ],\n        \"availability\":{\n            \"isOnStock\":true,\n            \"restockableInDays\":4,\n            \"availableQuantity\":10\n            }\n        },\n    \"variants\":[\n        {\n            \"id\":2,\n            \"sku\":\"TULIPSEED02\",\n            \"key\":\"TULIPSEED02\",\n            \"prices\":[\n            {\n                \"key\":\"TulipSeed02Price01\",\n               \"value\":{\n                    \"type\":\"centPrecision\",\n                    \"currencyCode\":\"EUR\",\n                    \"centAmount\":3000,\n                    \"fractionDigits\":2\n                },\n                \"country\":\"DE\"\n            }\n            ],\n            \"images\":[\n            \n            ],\n            \"attributes\":[\n            {\n                \"name\":\"size\",\n                \"value\":\"box\"\n            },\n            {\n                \"name\":\"weight_in_kg\",\n                \"value\":1.5\n            }\n            ],\n            \"assets\":[\n            \n            ],\n            \"availability\":{\n            \"isOnStock\":true,\n            \"restockableInDays\":2,\n            \"availableQuantity\":10\n            }\n        },\n        {\n            \"id\":3,\n            \"sku\":\"TULIPSEED03\",\n            \"key\":\"TULIPSEED03\",\n            \"prices\":[\n            {\n                \"key\":\"TulipSeed03Price01\",\n                \"value\":{\n                    \"type\":\"centPrecision\",\n                    \"currencyCode\":\"EUR\",\n                    \"centAmount\":1337,\n                    \"fractionDigits\":2\n                },\n                \"country\":\"DE\"\n            }\n            ],\n            \"images\":[\n            \n            ],\n            \"attributes\":[\n            {\n                \"name\":\"size\",\n                \"value\":\"sack\"\n            },\n            {\n                \"name\":\"weight_in_kg\",\n                \"value\":10\n            }\n            ],\n            \"assets\":[\n            \n            ]\n        }\n    ],\n    \"searchKeywords\":{\n        \"en\":[\n            {\n            \"text\":\"tulip\"\n            },\n            {\n            \"text\":\"flower\"\n            },\n            {\n            \"text\":\"seeds\"\n            }\n        ]\n    },\n    \"hasStagedChanges\":false,\n    \"publish\":true,\n    \"key\":\"tulip-seed-product\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}\n"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"products"
+							],
+							"query": [
+								{
+									"key": "priceCurrency",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceCountry",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceCustomerGroup",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceChannel",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "localeProjection",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "storeProjection",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "To create a new product, send a representation that is going to become the initial staged representation\nof the new product in the master catalog. If price selection query parameters are provided,\nthe selected prices will be added to the response.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "06 Create Product - basil",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"  pm.response.to.have.status(201);",
+									"});",
+									"",
+									"var data = pm.response.json();",
+									"",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"basil-product-id\", data.results[0].id);",
+									"    pm.environment.set(\"basil-product-version\", data.results[0].version);",
+									"    if(data.results[0].key) {",
+									"      pm.environment.set(\"basil-product-key\", data.results[0].key);",
+									"    }",
+									"}",
+									"",
+									"if(data && data.id && data.version){",
+									"    pm.environment.set(\"basil-product-id\", data.id); ",
+									"    pm.environment.set(\"basil-product-version\", data.version);",
+									"    if(data.key) {",
+									"      pm.environment.set(\"basil-product-key\", data.key);",
+									"    }",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{herb-product-type-id}}\"    },\n    \"name\":{\n        \"en\":\"Basil seeds\",\n        \"de\":\"Basil seeds\"\n    },\n    \"description\":{\n        \"en\":\"Basil seeds\",\n        \"de\":\"Basil seeds\"\n    },\n    \"categories\":[\n        {\n            \"typeId\":\"category\",\n            \"id\":\"{{seeds-category-id}}\"\n        }\n    ],\n    \"categoryOrderHints\":{\n        \n    },\n    \"slug\":{\n        \"en\":\"basil-seeds\",\n        \"de\":\"basil-seed\"\n    },\n    \"metaDescription\":{\n        \"en\":\"Basil seeds\",\n        \"de\":\"Basil seeds\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"BASILSEED01\",\n        \"key\":\"BASILSEED01\",\n        \"prices\":[\n            {\n           \"key\":\"BasilSeed01Price01\",\n           \"value\":{\n                \"type\":\"centPrecision\",\n                \"currencyCode\":\"EUR\",\n                \"centAmount\":2088,\n                \"fractionDigits\":2\n            },\n            \"country\":\"DE\"\n            }\n        ],\n        \"images\":[\n            \n        ],\n        \"attributes\":[\n            {\n            \"name\":\"size\",\n            \"value\":\"package\"\n            },\n            {\n            \"name\":\"weight_in_kg\",\n            \"value\":1\n            }\n        ],\n        \"assets\":[\n            \n        ]\n    },\n    \"variants\":[\n        {\n            \"id\":2,\n            \"sku\":\"BASILSEED02\",\n            \"key\":\"BASILSEED02\",\n            \"prices\":[\n            {\n                \"key\":\"BasilSeed02Price01\",\n                \"value\":{\n                    \"type\":\"centPrecision\",\n                    \"currencyCode\":\"EUR\",\n                    \"centAmount\":18000,\n                    \"fractionDigits\":2\n                },\n                \"country\":\"DE\"\n            }\n            ],\n            \"images\":[\n            \n            ],\n            \"attributes\":[\n            {\n                \"name\":\"size\",\n                \"value\":\"box\"\n            },\n            {\n                \"name\":\"weight_in_kg\",\n                \"value\":10\n            }\n            ],\n            \"assets\":[\n            \n            ]\n        }\n    ],\n    \"searchKeywords\":{\n        \"de\":[\n            \n        ],\n        \"en\":[\n            {\n            \"text\":\"basil\"\n            },\n            {\n            \"text\":\"seeds\"\n            },\n            {\n            \"text\":\"herbs\"\n            }\n        ]\n    },\n    \"hasStagedChanges\":false,\n    \"publish\":true,\n    \"key\":\"basil-seed-product\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"products"
+							],
+							"query": [
+								{
+									"key": "priceCurrency",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceCountry",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceCustomerGroup",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceChannel",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "localeProjection",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "storeProjection",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "To create a new product, send a representation that is going to become the initial staged representation\nof the new product in the master catalog. If price selection query parameters are provided,\nthe selected prices will be added to the response.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "07 Create Product - carrot",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"  pm.response.to.have.status(201);",
+									"});",
+									"",
+									"var data = pm.response.json();",
+									"",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"carrot-product-id\", data.results[0].id);",
+									"    pm.environment.set(\"carrot-product-version\", data.results[0].version);",
+									"    if(data.results[0].key) {",
+									"      pm.environment.set(\"carrot-product-key\", data.results[0].key);",
+									"    }",
+									"}",
+									"",
+									"if(data && data.id && data.version){",
+									"    pm.environment.set(\"carrot-product-id\", data.id); ",
+									"    pm.environment.set(\"carrot-product-version\", data.version);",
+									"    if(data.key) {",
+									"      pm.environment.set(\"carrot-product-key\", data.key);",
+									"    }",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":\"caba3bb9-5a59-4a8d-85b2-80bb763b29da\",\n    \"version\":11,\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{veg-product-type-id}}\"\n    },\n    \"name\":{\n        \"en\":\"Carrot seeds\",\n        \"de\":\"Carrot seeds\"\n    },\n    \"description\":{\n        \"en\":\"Carrot seeds\",\n        \"de\":\"Carrot seeds\"\n    },\n    \"categories\":[\n        {\n            \"typeId\":\"category\",\n            \"id\":\"{{seeds-category-id}}\"\n        },\n        {\n            \"typeId\":\"category\",\n            \"id\":\"{{veg-seeds-category-id}}\"\n        }\n    ],\n    \"categoryOrderHints\":{\n        \n    },\n    \"slug\":{\n        \"en\":\"carrot-seeds\",\n        \"de\":\"carrot-seed\"\n    },\n    \"metaDescription\":{\n        \"en\":\"Carrot seeds\",\n        \"de\":\"Carrot seeds\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"CARROTSEEDS01\",\n        \"key\":\"CARROTSEEDS01\",\n        \"prices\":[\n            {\n            \"key\":\"CarrotSeed01Price01\",\n            \"value\":{\n                \"type\":\"centPrecision\",\n                \"currencyCode\":\"EUR\",\n                \"centAmount\":3200,\n                \"fractionDigits\":2\n            },\n            \"country\":\"DE\"\n            }\n        ],\n        \"images\":[\n            \n        ],\n        \"attributes\":[\n            {\n            \"name\":\"size\",\n            \"value\":\"package\"\n            },\n            {\n            \"name\":\"weight_in_kg\",\n            \"value\":1.5\n            }\n        ],\n        \"assets\":[\n            \n        ]\n    },\n    \"variants\":[\n        {\n            \"id\":2,\n            \"sku\":\"CARROTSEEDS02\",\n            \"key\":\"CARROTSEEDS02\",\n            \"prices\":[\n            {\n                \"key\":\"CarrotSeed02Price01\",\n                \"value\":{\n                    \"type\":\"centPrecision\",\n                    \"currencyCode\":\"EUR\",\n                    \"centAmount\":10000,\n                    \"fractionDigits\":2\n                },\n                \"country\":\"DE\"\n            }\n            ],\n            \"images\":[\n            \n            ],\n            \"attributes\":[\n            {\n                \"name\":\"size\",\n                \"value\":\"sack\"\n            },\n            {\n                \"name\":\"weight_in_kg\",\n                \"value\":5\n            }\n            ],\n            \"assets\":[\n            \n            ]\n        }\n    ],\n    \"searchKeywords\":{\n        \"en\":[\n            {\n            \"text\":\"seeds\"\n            },\n            {\n            \"text\":\"carrot\"\n            },\n            {\n            \"text\":\"vegetable\"\n            }\n        ]\n    },\n    \"hasStagedChanges\":false,\n    \"publish\":true,\n    \"key\":\"carrot-seed-product\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"products"
+							],
+							"query": [
+								{
+									"key": "priceCurrency",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceCountry",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceCustomerGroup",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceChannel",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "localeProjection",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "storeProjection",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "To create a new product, send a representation that is going to become the initial staged representation\nof the new product in the master catalog. If price selection query parameters are provided,\nthe selected prices will be added to the response.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "08 Create Product - celery",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"  pm.response.to.have.status(201);",
+									"});",
+									"",
+									"var data = pm.response.json();",
+									"",
+									"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+									"    pm.environment.set(\"celery-product-id\", data.results[0].id);",
+									"    pm.environment.set(\"celery-product-version\", data.results[0].version);",
+									"    if(data.results[0].key) {",
+									"      pm.environment.set(\"celery-product-key\", data.results[0].key);",
+									"    }",
+									"}",
+									"",
+									"if(data && data.id && data.version){",
+									"    pm.environment.set(\"celery-product-id\", data.id); ",
+									"    pm.environment.set(\"celery-product-version\", data.version);",
+									"    if(data.key) {",
+									"      pm.environment.set(\"celery-product-key\", data.key);",
+									"    }",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{veg-product-type-id}}\"\n    },\n    \"name\":{\n        \"en\":\"Celery seeds\",\n        \"de\":\"Celery seeds\"\n    },\n    \"description\":{\n        \"en\":\"Celery seeds\",\n        \"de\":\"Celery seeds\"\n    },\n    \"categories\":[\n        {\n            \"typeId\":\"category\",\n            \"id\":\"{{seeds-category-id}}\"\n        },\n        {\n            \"typeId\":\"category\",\n            \"id\":\"{{veg-seeds-category-id}}\"\n        }\n    ],\n    \"categoryOrderHints\":{\n        \n    },\n    \"slug\":{\n        \"en\":\"celery-seeds\"\n    },\n    \"metaDescription\":{\n        \"en\":\"Celery seeds\",\n        \"de\":\"Celery seeds\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"CELERYSEEDS01\",\n        \"key\":\"CELERYSEEDS01\",\n        \"prices\":[\n            {\n            \"key\":\"CelerySeed01Price01\",\n            \"value\":{\n                \"type\":\"centPrecision\",\n                \"currencyCode\":\"EUR\",\n                \"centAmount\":2800,\n                \"fractionDigits\":2\n            },\n            \"country\":\"DE\"\n            }\n        ],\n        \"images\":[\n            \n        ],\n        \"attributes\":[\n            {\n            \"name\":\"size\",\n            \"value\":\"box\"\n            },\n            {\n            \"name\":\"weight_in_kg\",\n            \"value\":3\n            }\n        ],\n        \"assets\":[\n            \n        ]\n    },\n    \"variants\":[\n        \n    ],\n    \"searchKeywords\":{\n        \"en\":[\n            {\n            \"text\":\"seeds\"\n            },\n            {\n            \"text\":\"celery\"\n            },\n            {\n            \"text\":\"vegetable\"\n            }\n        ]\n    },\n    \"hasStagedChanges\":false,\n    \"publish\":true,\n    \"key\":\"celery-seed-product\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{host}}/{{project-key}}/products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{project-key}}",
+								"products"
+							],
+							"query": [
+								{
+									"key": "priceCurrency",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceCountry",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceCustomerGroup",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "priceChannel",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "localeProjection",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "storeProjection",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "expand",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "To create a new product, send a representation that is going to become the initial staged representation\nof the new product in the master catalog. If price selection query parameters are provided,\nthe selected prices will be added to the response.\n"
+					},
+					"response": []
+				}
+			],
 			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"pm.environment.set(\"host\", \"https://api.europe-west1.gcp.commercetools.com\");"
+						]
+					}
+				},
 				{
 					"listen": "test",
 					"script": {
 						"type": "text/javascript",
+						"packages": {},
 						"exec": [
-							"tests[\"Status code is 200\"] = responseCode.code === 200;",
-							"var data = JSON.parse(responseBody);",
-							"if(data.access_token){",
-							"    pm.environment.set(\"ctp_access_token\", data.access_token);",
-							"}",
-							"if (data.scope) {",
-							"    parts = data.scope.split(\" \");",
-							"    parts = parts.filter(scope => scope.includes(\":\")).map(scope => scope.split(\":\"))",
-							"    if (parts.length > 0) {",
-							"        scopeParts = parts[0];",
-							"        pm.environment.set(\"project-key\", scopeParts[1]);",
-							"        parts = parts.filter(scope => scope.length >= 3)",
-							"        if (parts.length > 0) {",
-							"            scopeParts = parts[0];",
-							"            pm.environment.set(\"store-key\", scopeParts[2]);",
-							"        }",
-							"    }",
-							"}"
+							""
 						]
 					}
 				}
-			],
-			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "username",
-							"value": "{{client_id}}",
-							"type": "string"
-						},
-						{
-							"key": "password",
-							"value": "{{client_secret}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "{{auth_url}}/oauth/token?grant_type=client_credentials",
-					"host": [
-						"{{auth_url}}"
-					],
-					"path": [
-						"oauth",
-						"token"
-					],
-					"query": [
-						{
-							"key": "grant_type",
-							"value": "client_credentials"
-						}
-					]
-				},
-				"description": "Use this request to obtain an access token for your commercetools platform project via Client Credentials Flow. As a prerequisite you must have filled out environment variables in Postman for projectKey, client_id and client_secret to use this."
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Get TaxCategory",
-			"event": [
+			"name": "Connect Exercises",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
-							"var data = JSON.parse(responseBody);",
-							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
-							"    pm.environment.set(\"tax-category-id\", data.results[0].id); ",
-							"    pm.environment.set(\"tax-category-version\", data.results[0].version);",
-							"}",
-							"if(data.results && data.results[0] && data.results[0].key){",
-							"    pm.environment.set(\"tax-category-key\", data.results[0].key); ",
-							"}",
-							"if(data.version){",
-							"    pm.environment.set(\"tax-category-version\", data.version);",
-							"}",
-							"if(data.id){",
-							"    pm.environment.set(\"tax-category-id\", data.id); ",
-							"}",
-							"if(data.key){",
-							"    pm.environment.set(\"tax-category-key\", data.key);",
-							"}",
-							""
-						],
-						"type": "text/javascript"
-					}
+					"name": "Test customer-number-generator-app without ngrok",
+					"item": [
+						{
+							"name": "01 Query Customers",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var data = pm.response.json();",
+											"",
+											"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+											"    pm.environment.set(\"customer-id\", data.results[0].id);",
+											"    pm.environment.set(\"customer-version\", data.results[0].version);",
+											"    pm.environment.set(\"customer-json\", JSON.stringify(data.results[0]));",
+											"}",
+											"",
+											"if(data && data.id && data.version){",
+											"    pm.environment.set(\"customer-id\", data.id); ",
+											"    pm.environment.set(\"customer-version\", data.version);",
+											"    pm.environment.set(\"customer-json\", JSON.stringify(data));",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{project-key}}/customers?limit=1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"customers"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "02 Post CustomerCreated Input",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"action\": \"Create\",\n    \"resource\": {\n        \"typeId\": \"customer\",\n        \"id\": \"{{customer-id}}\",\n        \"obj\": {{customer-json}}\n    }\n}"
+								},
+								"url": {
+									"raw": "localhost:8080/assign-customer-number",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"assign-customer-number"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									"pm.environment.set(\"host\", \"https://api.europe-west1.gcp.commercetools.com\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Test customer-number-generator-app with ngrok",
+					"item": [
+						{
+							"name": "01 Create Customer",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 201\", function () {",
+											"  pm.response.to.have.status(201);",
+											"});",
+											"",
+											"var data = pm.response.json();",
+											"",
+											"if(data.id && data.version){",
+											"    pm.environment.set(\"customer-id\", data.id);",
+											"    pm.environment.set(\"customer-version\", data.version);",
+											"    pm.environment.set(\"customer-json\", JSON.stringify(data));",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"firstName\": \"Test2\",\n  \"lastName\": \"Tester\",\n  \"email\": \"test2@test.com\",\n  \"password\": \"secret123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/customers",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"customers"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									"pm.environment.set(\"host\", \"https://api.europe-west1.gcp.commercetools.com\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Test email-verification-sender-app",
+					"item": [
+						{
+							"name": "Initial Subscription Created Notification",
+							"item": [
+								{
+									"name": "01 Post ResourceCreated Notification",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"var crypto = require(\"crypto-js\");",
+													"var data = pm.collectionVariables.get(\"subscription-created-notification\");",
+													"",
+													"console.log(\"DATA\", data);",
+													"",
+													"var encodedData = crypto.enc.Base64.stringify(crypto.enc.Utf8.parse(data));",
+													"console.log(encodedData)",
+													"",
+													"pm.environment.set(\"encoded-data\", encodedData);",
+													"",
+													"//pm.execution.skipRequest();",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"message\": {\n        \"data\": \"{{encoded-data}}\",\n        \"messageId\": \"2070443601311540\",\n        \"message_id\": \"2070443601311540\",\n        \"publishTime\": \"2024-02-26T19:13:55.749Z\",\n        \"publish_time\": \"2024-02-26T19:13:55.749Z\"\n    },\n    \"subscription\": \"projects/myproject/subscriptions/mysubscription\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8080/send-email-verification",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"send-email-verification"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "The Customer Created Message",
+							"item": [
+								{
+									"name": "01 Query Customers",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Response status code is 200\", function () {",
+													"  pm.response.to.have.status(200);",
+													"});",
+													"",
+													"var data = pm.response.json();",
+													"",
+													"",
+													"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
+													"    pm.environment.set(\"customer-id\", data.results[0].id);",
+													"    pm.environment.set(\"customer-version\", data.results[0].version);",
+													"    pm.environment.set(\"customer-json\", JSON.stringify(data.results[0]));",
+													"}",
+													"",
+													"if(data && data.id && data.version){",
+													"    pm.environment.set(\"customer-id\", data.id); ",
+													"    pm.environment.set(\"customer-version\", data.version);",
+													"    pm.environment.set(\"customer-json\", JSON.stringify(data));",
+													"",
+													"}"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{host}}/{{project-key}}/customers?limit=1",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"{{project-key}}",
+												"customers"
+											],
+											"query": [
+												{
+													"key": "limit",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "02 Post CustomerCreated Message",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"var crypto = require(\"crypto-js\");",
+													"var data = pm.collectionVariables.get(\"customer-created-message\");",
+													"var customerId = pm.environment.get(\"customer-id\");",
+													"var customerVersion = pm.environment.get(\"customer-version\");",
+													"var customerJson = pm.environment.get(\"customer-json\");",
+													"",
+													"",
+													"var updatedData = data.replaceAll(\"customer_id\", customerId);",
+													"updatedData = updatedData.replaceAll(\"customer_version\", customerVersion);",
+													"updatedData = updatedData.replaceAll(\"customer_json\", customerJson);",
+													"",
+													"",
+													"var encodedData = crypto.enc.Base64.stringify(crypto.enc.Utf8.parse(updatedData));",
+													"console.log(encodedData)",
+													"",
+													"pm.environment.set(\"encoded-data\", encodedData);",
+													"",
+													"//pm.execution.skipRequest();",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"message\": {\n        \"data\": \"{{encoded-data}}\",\n        \"messageId\": \"2070443601311540\",\n        \"message_id\": \"2070443601311540\",\n        \"publishTime\": \"2024-02-26T19:13:55.749Z\",\n        \"publish_time\": \"2024-02-26T19:13:55.749Z\"\n    },\n    \"subscription\": \"projects/myproject/subscriptions/mysubscription\"\n}"
+										},
+										"url": {
+											"raw": "localhost:8080/send-email-verification",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"send-email-verification"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									"pm.environment.set(\"host\", \"https://api.europe-west1.gcp.commercetools.com\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Test email-verification-receiver-app",
+					"item": [
+						{
+							"name": "01 Verify Token",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"token\": \"g4293eqtFUEXNPytdkZZBHAapKoNjoOaOjpyOz-i\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/verify-token",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"verify-token"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									"pm.environment.set(\"host\", \"https://api.europe-west1.gcp.commercetools.com\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Deploy Connector",
+					"item": [
+						{
+							"name": "01 Create ConnectorStaged",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 201\", function () {",
+											"  pm.response.to.have.status(201);",
+											"});",
+											"",
+											"var data = pm.response.json();",
+											"",
+											"if(data.version){",
+											"    pm.environment.set(\"connector-staged-version\", data.version);",
+											"}",
+											"if(data.id){",
+											"    pm.environment.set(\"connector-staged-id\", data.id); ",
+											"}",
+											"if(data.key){",
+											"    pm.environment.set(\"connector-staged-key\", data.key);",
+											"}",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"key\" : \"{{connector-staged-key}}\",\n  \"name\" : \"TT Customer connector\",\n  \"description\" : \"Customer number generator, email verifier\",\n  \"creator\" : {\n    \"email\" : \"{{creator-email}}\",\n    \"company\" : \"commercetools\",\n    \"noOfContributors\" : 1\n  },\n  \"repository\" : {\n    \"url\" : \"{{repo-url}}\",\n    \"tag\" : \"{{repo-tag}}\"\n  },\n  \"privateProjects\" : [ ],\n  \"supportedRegions\" : [\"europe-west1.gcp\" ],\n  \"integrationTypes\" : [\"crm\"]\n}"
+								},
+								"url": {
+									"raw": "{{host}}/connectors/drafts",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"connectors",
+										"drafts"
+									]
+								},
+								"description": "null"
+							},
+							"response": []
+						},
+						{
+							"name": "02 Get ConnectorStaged by key",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var data = pm.response.json();",
+											"",
+											"if(data.version){",
+											"    pm.environment.set(\"connector-staged-version\", data.version);",
+											"}",
+											"if(data.id){",
+											"    pm.environment.set(\"connector-staged-id\", data.id); ",
+											"}",
+											"// if(data.key){",
+											"//     pm.environment.set(\"connector-staged-key\", data.key);",
+											"// }",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// console.log(pm.collectionVariables.get(\"connector-staged-key\"));",
+											"// pm.environment.set(\"connector-staged-key\", pm.collectionVariables.get(\"connector-staged-key\"))"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/connectors/drafts/key={{connector-staged-key}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"connectors",
+										"drafts",
+										"key={{connector-staged-key}}"
+									]
+								},
+								"description": "null"
+							},
+							"response": []
+						},
+						{
+							"name": "03 Update ConnectorStaged by key (add version) (optional)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var data = pm.response.json();",
+											"",
+											"if(data.version){",
+											"    pm.environment.set(\"connector-staged-version\", data.version);",
+											"}",
+											"if(data.id){",
+											"    pm.environment.set(\"connector-staged-id\", data.id); ",
+											"}",
+											"// if(data.key){",
+											"//     pm.environment.set(\"connector-staged-key\", data.key);",
+											"// }",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"version\": {{connector-staged-version}},\n    \"actions\": [\n        {\n            \"action\": \"setRepository\",\n            \"url\": \"{{repo-url}}\",\n            \"tag\": \"{{repo-tag}}\"\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{host}}/connectors/drafts/key={{connector-staged-key}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"connectors",
+										"drafts",
+										"key={{connector-staged-key}}"
+									]
+								},
+								"description": "null"
+							},
+							"response": []
+						},
+						{
+							"name": "04 Update ConnectorStaged by key (ask preview | publish)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var data = pm.response.json();",
+											"",
+											"if(data.version){",
+											"    pm.environment.set(\"connector-staged-version\", data.version);",
+											"}",
+											"if(data.id){",
+											"    pm.environment.set(\"connector-staged-id\", data.id); ",
+											"}",
+											"// if(data.key){",
+											"//     pm.environment.set(\"connector-staged-key\", data.key);",
+											"// }",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"version\": {{connector-staged-version}},\n    \"actions\": [\n        // {\n        //     \"action\": \"updatePreviewable\"\n        // }\n        {\n            \"action\": \"publish\",\n            \"certification\": false\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{host}}/connectors/drafts/key={{connector-staged-key}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"connectors",
+										"drafts",
+										"key={{connector-staged-key}}"
+									]
+								},
+								"description": "null"
+							},
+							"response": []
+						},
+						{
+							"name": "05 Check ConnectorStaged is previewable or published",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var data = pm.response.json();",
+											"",
+											"pm.test(\"Check isPreviewable is true or published\", function () {",
+											"  pm.expect(data.isPreviewable === \"true\" || data.status === \"Published\").to.be.true;",
+											"});",
+											"",
+											"",
+											"if(data.version){",
+											"    pm.environment.set(\"connector-staged-version\", data.version);",
+											"}",
+											"if(data.id){",
+											"    pm.environment.set(\"connector-staged-id\", data.id); ",
+											"}",
+											"// if(data.key){",
+											"//     pm.environment.set(\"connector-staged-key\", data.key);",
+											"// }",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/connectors/drafts/key={{connector-staged-key}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"connectors",
+										"drafts",
+										"key={{connector-staged-key}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "06 Create Deployment",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 201\", function () {",
+											"  pm.response.to.have.status(201);",
+											"});",
+											"",
+											"var data = pm.response.json();",
+											"",
+											"if(data.version){",
+											"    pm.environment.set(\"deployment-version\", data.version);",
+											"}",
+											"if(data.id){",
+											"    pm.environment.set(\"deployment-id\", data.id); ",
+											"}",
+											"// if(data.key){",
+											"//     pm.environment.set(\"deployment-key\", data.key);",
+											"// }",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"key\": \"{{deployment-key}}\",\n  \"connector\": {\n    \"id\": \"{{connector-staged-id}}\" //,\n    // \"staged\": true\n  },\n  \"region\": \"europe-west1.gcp\",\n  \"configurations\": [\n    {\n      \"applicationName\": \"customer-number-generator-app\",\n      \"securedConfiguration\": [\n        {\n          \"key\": \"CTP_CLIENT_ID\",\n          \"value\": \"{{client_id}}\"\n        },\n        {\n          \"key\": \"CTP_CLIENT_SECRET\",\n          \"value\": \"{{client_secret}}\"\n        },\n        {\n          \"key\": \"CTP_PROJECT_KEY\",\n          \"value\": \"{{project-key}}\"\n        },\n        {\n          \"key\": \"CTP_SCOPE\",\n          \"value\": \"{{ctp-scope}}\"\n        }\n      ],\n      \"standardConfiguration\": [\n        {\n          \"key\": \"CTP_REGION\",\n          \"value\": \"europe-west1.gcp\"\n        }\n      ]\n    },\n    {\n      \"applicationName\": \"email-verification-sender-app\",\n      \"securedConfiguration\": [\n        {\n          \"key\": \"CTP_CLIENT_ID\",\n          \"value\": \"{{client_id}}\"\n        },\n        {\n          \"key\": \"CTP_CLIENT_SECRET\",\n          \"value\": \"{{client_secret}}\"\n        },\n        {\n          \"key\": \"CTP_PROJECT_KEY\",\n          \"value\": \"{{project-key}}\"\n        },\n        {\n          \"key\": \"CTP_SCOPE\",\n          \"value\": \"{{ctp-scope}}\"\n        }\n      ],\n      \"standardConfiguration\": [\n        {\n          \"key\": \"CTP_REGION\",\n          \"value\": \"europe-west1.gcp\"\n        }\n      ]\n    },\n    {\n      \"applicationName\": \"email-verification-receiver-app\",\n      \"securedConfiguration\": [\n        {\n          \"key\": \"CTP_CLIENT_ID\",\n          \"value\": \"{{client_id}}\"\n        },\n        {\n          \"key\": \"CTP_CLIENT_SECRET\",\n          \"value\": \"{{client_secret}}\"\n        },\n        {\n          \"key\": \"CTP_PROJECT_KEY\",\n          \"value\": \"{{project-key}}\"\n        },\n        {\n          \"key\": \"CTP_SCOPE\",\n          \"value\": \"{{ctp-scope}}\"\n        }\n      ],\n      \"standardConfiguration\": [\n        {\n          \"key\": \"CTP_REGION\",\n          \"value\": \"europe-west1.gcp\"\n        }\n      ]\n    }\n  ]\n}"
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/deployments",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"deployments"
+									]
+								},
+								"description": "Specific error codes:\n- [ConnectorStagedNotPreviewable](ctp:connect:type:ConnectorStagedNotPreviewableError)\n- [DeploymentUnsupportedRegion](ctp:connect:type:DeploymentUnsupportedRegionError)\n- [DeploymentUnknownApplicationConfiguration](ctp:connect:type:DeploymentUnknownApplicationConfigurationError)\n- [DeploymentUnknownApplicationConfigurationKey](ctp:connect:type:DeploymentUnknownApplicationConfigurationKeyError)\n- [DeploymentApplicationDoNotBelong](ctp:connect:type:DeploymentApplicationDoNotBelongError)\n- [DeploymentMustIncludeApplication](ctp:connect:type:DeploymentMustIncludeApplicationError)\n- [DeploymentApplicationRequired](ctp:connect:type:DeploymentApplicationRequiredError)\n"
+							},
+							"response": []
+						},
+						{
+							"name": "07 Check deployment successful",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var data = pm.response.json();",
+											"",
+											"pm.test(\"Check status is Deployed\", function () {",
+											"    pm.expect(data.status).to.eql(\"Deployed\");",
+											"});",
+											"",
+											"if(data && data.id && data.version){",
+											"    pm.environment.set(\"deployment-id\", data.id); ",
+											"    pm.environment.set(\"deployment-version\", data.version);",
+											"}",
+											"// if(data && data.key){",
+											"//     pm.environment.set(\"deployment-key\", data.key); ",
+											"// }",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/deployments/key={{deployment-key}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"deployments",
+										"key={{deployment-key}}"
+									]
+								},
+								"description": "Retrieves all deployments of a project key."
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									"pm.environment.set(\"host\", \"https://connect.europe-west1.gcp.commercetools.com\")"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Clean Up",
+					"item": [
+						{
+							"name": "01 Delete Deployment by key",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var data = pm.response.json();",
+											"",
+											"if(data.version){",
+											"    pm.environment.set(\"deployment-version\", data.version);",
+											"}",
+											"if(data.id){",
+											"    pm.environment.set(\"deployment-id\", data.id); ",
+											"}",
+											"if(data.key){",
+											"    pm.environment.set(\"deployment-key\", data.key);",
+											"}",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/deployments/key={{deployment-key}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"deployments",
+										"key={{deployment-key}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									"pm.environment.set(\"host\", \"https://connect.europe-west1.gcp.commercetools.com\")"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
 				}
-			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"auth": {
-					"type": "oauth2",
-					"oauth2": [
-						{
-							"key": "accessToken",
-							"value": "{{ctp_access_token}}",
-							"type": "string"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
-						},
-						{
-							"key": "tokenType",
-							"value": "Bearer",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "{{host}}/{{project-key}}/tax-categories",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"{{project-key}}",
-						"tax-categories"
-					],
-					"query": [
-						{
-							"key": "expand",
-							"value": "",
-							"disabled": true
-						}
-					]
-				},
-				"description": "Get TaxCategory by key"
-			},
-			"response": []
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{ctp-access-token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
 		},
 		{
-			"name": "00 Create Category - seeds",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
-							"var data = JSON.parse(responseBody);",
-							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
-							"    pm.environment.set(\"category-id-seeds\", data.results[0].id); ",
-							"    pm.environment.set(\"category-version-seeds\", data.results[0].version);",
-							"}",
-							"if(data.results && data.results[0] && data.results[0].key){",
-							"    pm.environment.set(\"category-key-seeds\", data.results[0].key); ",
-							"}",
-							"if(data.version){",
-							"    pm.environment.set(\"category-version-seeds\", data.version);",
-							"}",
-							"if(data.id){",
-							"    pm.environment.set(\"category-id-seeds\", data.id); ",
-							"}",
-							"if(data.key){",
-							"    pm.environment.set(\"category-key-seeds\", data.key);",
-							"}",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "oauth2",
-					"oauth2": [
-						{
-							"key": "accessToken",
-							"value": "{{ctp_access_token}}",
-							"type": "string"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
-						},
-						{
-							"key": "tokenType",
-							"value": "Bearer",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"key\":\"plant-seeds\",\n    \"name\" : {\n        \"en\" : \"Seeds\",\n        \"de\" : \"Seeds\"\n    },\n    \"slug\" : {\n        \"en\" : \"plant-seeds\",\n        \"de\" : \"plant-seeds\"\n    },\n    \"orderHint\" : \"0.1\"\n}"
-				},
-				"url": {
-					"raw": "{{host}}/{{project-key}}/categories",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"{{project-key}}",
-						"categories"
-					],
-					"query": [
-						{
-							"key": "expand",
-							"value": "",
-							"disabled": true
-						}
-					]
-				},
-				"description": "Creating a category produces the CategoryCreated message."
-			},
-			"response": []
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "subscription-created-notification",
+			"value": "{\n   \"notificationType\":\"ResourceCreated\",\n   \"projectKey\":\"training-team-poc\",\n   \"resource\":{\n      \"typeId\":\"subscription\",\n      \"id\":\"b9f82fd5-ddf5-446a-a39d-0966a4a744ea\"\n   },\n   \"version\":1,\n   \"modifiedAt\":\"2022-10-25T13:23:05.384Z\"\n}",
+			"type": "string"
 		},
 		{
-			"name": "00 Create Category - veg seeds",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
-							"var data = JSON.parse(responseBody);",
-							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
-							"    pm.environment.set(\"category-id-veg-seeds\", data.results[0].id); ",
-							"    pm.environment.set(\"category-version-veg-seeds\", data.results[0].version);",
-							"}",
-							"if(data.results && data.results[0] && data.results[0].key){",
-							"    pm.environment.set(\"category-key-veg-seeds\", data.results[0].key); ",
-							"}",
-							"if(data.version){",
-							"    pm.environment.set(\"category-version-veg-seeds\", data.version);",
-							"}",
-							"if(data.id){",
-							"    pm.environment.set(\"category-id-veg-seeds\", data.id); ",
-							"}",
-							"if(data.key){",
-							"    pm.environment.set(\"category-key-veg-seeds\", data.key);",
-							"}",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "oauth2",
-					"oauth2": [
-						{
-							"key": "accessToken",
-							"value": "{{ctp_access_token}}",
-							"type": "string"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
-						},
-						{
-							"key": "tokenType",
-							"value": "Bearer",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"key\":\"veg-seeds\",\n    \"name\" : {\n        \"en\" : \"Vegetable Seeds\",\n        \"de\" : \"Vegetable Seeds\"\n    },\n    \"slug\" : {\n        \"en\" : \"vegetable-seeds\",\n        \"de\" : \"vegetable-seeds\"\n    },\n    \"orderHint\" : \"0.2\"\n}"
-				},
-				"url": {
-					"raw": "{{host}}/{{project-key}}/categories",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"{{project-key}}",
-						"categories"
-					],
-					"query": [
-						{
-							"key": "expand",
-							"value": "",
-							"disabled": true
-						}
-					]
-				},
-				"description": "Creating a category produces the CategoryCreated message."
-			},
-			"response": []
+			"key": "connector-staged-key",
+			"value": "",
+			"type": "string"
 		},
 		{
-			"name": "01 Create ProductType - flower seeds",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
-							"var data = JSON.parse(responseBody);",
-							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
-							"    pm.environment.set(\"product-type-id-flower\", data.results[0].id); ",
-							"    pm.environment.set(\"product-type-version-flower\", data.results[0].version);",
-							"}",
-							"if(data.results && data.results[0] && data.results[0].key){",
-							"    pm.environment.set(\"product-type-key-flower\", data.results[0].key); ",
-							"}",
-							"if(data.version){",
-							"    pm.environment.set(\"product-type-version-flower\", data.version);",
-							"}",
-							"if(data.id){",
-							"    pm.environment.set(\"product-type-id-flower\", data.id); ",
-							"}",
-							"if(data.key){",
-							"    pm.environment.set(\"product-type-key-flower\", data.key);",
-							"}",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "oauth2",
-					"oauth2": [
-						{
-							"key": "accessToken",
-							"value": "{{ctp_access_token}}",
-							"type": "string"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
-						},
-						{
-							"key": "tokenType",
-							"value": "Bearer",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"name\": \"Flower seeds\",\n  \"description\": \"Flower seeds\",\n  \"key\": \"flower-seeds-producttype\",\n  \"attributes\": [\n    {\n      \"name\": \"size\",\n      \"label\": {\n        \"de\": \"Size\",\n        \"en\": \"Size\"\n      },\n      \"type\": {\n        \"name\": \"text\"\n      },\n      \"attributeConstraint\": \"CombinationUnique\",\n      \"isRequired\": true,\n      \"isSearchable\": true,\n      \"inputTip\": {\n        \"en\": \"\",\n        \"de\": \"\"\n      },\n      \"inputHint\": \"SingleLine\"\n    },\n    {\n      \"name\": \"weight_in_kg\",\n      \"label\": {\n        \"de\": \"Weight in Kg\",\n        \"en\": \"Weight in Kg\"\n      },\n      \"type\": {\n        \"name\": \"number\"\n      },\n      \"attributeConstraint\": \"CombinationUnique\",\n      \"isRequired\": true,\n      \"isSearchable\": true,\n      \"inputTip\": {\n        \"en\": \"\",\n        \"de\": \"\"\n      }\n    }\n  ]\n}"
-				},
-				"url": {
-					"raw": "{{host}}/{{project-key}}/product-types",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"{{project-key}}",
-						"product-types"
-					],
-					"query": [
-						{
-							"key": "expand",
-							"value": "",
-							"disabled": true
-						}
-					]
-				},
-				"description": "Create ProductType"
-			},
-			"response": []
+			"key": "repo-url",
+			"value": "",
+			"type": "string"
 		},
 		{
-			"name": "02 Create ProductType - veg seeds",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
-							"var data = JSON.parse(responseBody);",
-							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
-							"    pm.environment.set(\"product-type-id-veg\", data.results[0].id); ",
-							"    pm.environment.set(\"product-type-version-veg\", data.results[0].version);",
-							"}",
-							"if(data.results && data.results[0] && data.results[0].key){",
-							"    pm.environment.set(\"product-type-key-veg\", data.results[0].key); ",
-							"}",
-							"if(data.version){",
-							"    pm.environment.set(\"product-type-version-veg\", data.version);",
-							"}",
-							"if(data.id){",
-							"    pm.environment.set(\"product-type-id-veg\", data.id); ",
-							"}",
-							"if(data.key){",
-							"    pm.environment.set(\"product-type-key-veg\", data.key);",
-							"}",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "oauth2",
-					"oauth2": [
-						{
-							"key": "accessToken",
-							"value": "{{ctp_access_token}}",
-							"type": "string"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
-						},
-						{
-							"key": "tokenType",
-							"value": "Bearer",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"name\": \"Vegetable seeds\",\n  \"description\": \"Vegetable seeds\",\n  \"key\": \"veg-seeds-producttype\",\n  \"attributes\": [\n    {\n      \"name\": \"size\",\n      \"label\": {\n        \"de\": \"Size\",\n        \"en\": \"Size\"\n      },\n      \"type\": {\n        \"name\": \"text\"\n      },\n      \"attributeConstraint\": \"CombinationUnique\",\n      \"isRequired\": true,\n      \"isSearchable\": true,\n      \"inputTip\": {\n        \"en\": \"\",\n        \"de\": \"\"\n      },\n      \"inputHint\": \"SingleLine\"\n    },\n    {\n      \"name\": \"weight_in_kg\",\n      \"label\": {\n        \"de\": \"Weight in Kg\",\n        \"en\": \"Weight in Kg\"\n      },\n      \"type\": {\n        \"name\": \"number\"\n      },\n      \"attributeConstraint\": \"CombinationUnique\",\n      \"isRequired\": true,\n      \"isSearchable\": true,\n      \"inputTip\": {\n        \"en\": \"\",\n        \"de\": \"\"\n      }\n    }\n  ]\n}"
-				},
-				"url": {
-					"raw": "{{host}}/{{project-key}}/product-types",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"{{project-key}}",
-						"product-types"
-					],
-					"query": [
-						{
-							"key": "expand",
-							"value": "",
-							"disabled": true
-						}
-					]
-				},
-				"description": "Create ProductType"
-			},
-			"response": []
+			"key": "repo-tag",
+			"value": "v0.0.1",
+			"type": "string"
 		},
 		{
-			"name": "03 Create ProductType - herbs seeds",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
-							"var data = JSON.parse(responseBody);",
-							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
-							"    pm.environment.set(\"product-type-id-herb\", data.results[0].id); ",
-							"    pm.environment.set(\"product-type-version-herb\", data.results[0].version);",
-							"}",
-							"if(data.results && data.results[0] && data.results[0].key){",
-							"    pm.environment.set(\"product-type-key-herb\", data.results[0].key); ",
-							"}",
-							"if(data.version){",
-							"    pm.environment.set(\"product-type-version-herb\", data.version);",
-							"}",
-							"if(data.id){",
-							"    pm.environment.set(\"product-type-id-herb\", data.id); ",
-							"}",
-							"if(data.key){",
-							"    pm.environment.set(\"product-type-key-herb\", data.key);",
-							"}",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "oauth2",
-					"oauth2": [
-						{
-							"key": "accessToken",
-							"value": "{{ctp_access_token}}",
-							"type": "string"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
-						},
-						{
-							"key": "tokenType",
-							"value": "Bearer",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"name\": \"Herb seeds\",\n  \"description\": \"Herb seeds\",\n  \"key\": \"herb-seeds-producttype\",\n  \"attributes\": [\n    {\n      \"name\": \"size\",\n      \"label\": {\n        \"de\": \"Size\",\n        \"en\": \"Size\"\n      },\n      \"type\": {\n        \"name\": \"text\"\n      },\n      \"attributeConstraint\": \"CombinationUnique\",\n      \"isRequired\": true,\n      \"isSearchable\": true,\n      \"inputTip\": {\n        \"en\": \"\",\n        \"de\": \"\"\n      },\n      \"inputHint\": \"SingleLine\"\n    },\n    {\n      \"name\": \"weight_in_kg\",\n      \"label\": {\n        \"de\": \"Weight in Kg\",\n        \"en\": \"Weight in Kg\"\n      },\n      \"type\": {\n        \"name\": \"number\"\n      },\n      \"attributeConstraint\": \"CombinationUnique\",\n      \"isRequired\": true,\n      \"isSearchable\": true,\n      \"inputTip\": {\n        \"en\": \"\",\n        \"de\": \"\"\n      }\n    }\n  ]\n}"
-				},
-				"url": {
-					"raw": "{{host}}/{{project-key}}/product-types",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"{{project-key}}",
-						"product-types"
-					],
-					"query": [
-						{
-							"key": "expand",
-							"value": "",
-							"disabled": true
-						}
-					]
-				},
-				"description": "Create ProductType"
-			},
-			"response": []
+			"key": "deployment-key",
+			"value": "",
+			"type": "string"
 		},
 		{
-			"name": "04 Create Product - tulip",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
-							"var data = JSON.parse(responseBody);",
-							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
-							"    pm.environment.set(\"product-id\", data.results[0].id); ",
-							"    pm.environment.set(\"product-version\", data.results[0].version);",
-							"}",
-							"if(data.results && data.results[0] && data.results[0].key){",
-							"    pm.environment.set(\"product-key\", data.results[0].key); ",
-							"}",
-							"if(data.version){",
-							"    pm.environment.set(\"product-version\", data.version);",
-							"}",
-							"if(data.id){",
-							"    pm.environment.set(\"product-id\", data.id); ",
-							"}",
-							"if(data.key){",
-							"    pm.environment.set(\"product-key\", data.key);",
-							"}",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "oauth2",
-					"oauth2": [
-						{
-							"key": "accessToken",
-							"value": "{{ctp_access_token}}",
-							"type": "string"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
-						},
-						{
-							"key": "tokenType",
-							"value": "Bearer",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{product-type-id-flower}}\"\n    },\n    \"name\":{\n        \"en\":\"Tulip seeds\",\n        \"de\":\"Tulip seeds\"\n    },\n    \"description\":{\n        \"en\":\"Tulip seeds\"\n    },\n    \"categories\":[\n        {\n            \"typeId\":\"category\",\n            \"id\":\"{{category-id-seeds}}\"\n        }\n    ],\n    \"categoryOrderHints\":{\n        \n    },\n    \"slug\":{\n        \"en\":\"tulip-seeds\",\n        \"de\":\"tulip-seed\"\n    },\n    \"metaDescription\":{\n        \"en\":\"Tulip seeds\",\n        \"de\":\"Tulip seeds\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"TULIPSEED01\",\n        \"key\":\"TULIPSEED01\",\n        \"prices\":[\n            {\n            \"key\":\"TulipSeed01Price01\",\n            \"value\":{\n                \"type\":\"centPrecision\",\n                \"currencyCode\":\"EUR\",\n                \"centAmount\":2710,\n                \"fractionDigits\":2\n            },\n            \"country\":\"DE\"\n            },\n            {\n           \"key\":\"TulipSeed01Price02\",\n            \"value\":{\n                \"type\":\"centPrecision\",\n                \"currencyCode\":\"EUR\",\n                \"centAmount\":5900,\n                \"fractionDigits\":2\n            }\n            }\n        ],\n        \"images\":[\n            \n        ],\n        \"attributes\":[\n            {\n            \"name\":\"size\",\n            \"value\":\"package\"\n            },\n            {\n            \"name\":\"weight_in_kg\",\n            \"value\":0.5\n            }\n        ],\n        \"assets\":[\n            \n        ],\n        \"availability\":{\n            \"isOnStock\":true,\n            \"restockableInDays\":4,\n            \"availableQuantity\":10\n            }\n        },\n    \"variants\":[\n        {\n            \"id\":2,\n            \"sku\":\"TULIPSEED02\",\n            \"key\":\"TULIPSEED02\",\n            \"prices\":[\n            {\n                \"key\":\"TulipSeed02Price01\",\n               \"value\":{\n                    \"type\":\"centPrecision\",\n                    \"currencyCode\":\"EUR\",\n                    \"centAmount\":3000,\n                    \"fractionDigits\":2\n                },\n                \"country\":\"DE\"\n            }\n            ],\n            \"images\":[\n            \n            ],\n            \"attributes\":[\n            {\n                \"name\":\"size\",\n                \"value\":\"box\"\n            },\n            {\n                \"name\":\"weight_in_kg\",\n                \"value\":1.5\n            }\n            ],\n            \"assets\":[\n            \n            ],\n            \"availability\":{\n            \"isOnStock\":true,\n            \"restockableInDays\":2,\n            \"availableQuantity\":10\n            }\n        },\n        {\n            \"id\":3,\n            \"sku\":\"TULIPSEED03\",\n            \"key\":\"TULIPSEED03\",\n            \"prices\":[\n            {\n                \"key\":\"TulipSeed03Price01\",\n                \"value\":{\n                    \"type\":\"centPrecision\",\n                    \"currencyCode\":\"EUR\",\n                    \"centAmount\":1337,\n                    \"fractionDigits\":2\n                },\n                \"country\":\"DE\"\n            }\n            ],\n            \"images\":[\n            \n            ],\n            \"attributes\":[\n            {\n                \"name\":\"size\",\n                \"value\":\"sack\"\n            },\n            {\n                \"name\":\"weight_in_kg\",\n                \"value\":10\n            }\n            ],\n            \"assets\":[\n            \n            ]\n        }\n    ],\n    \"searchKeywords\":{\n        \"en\":[\n            {\n            \"text\":\"tulip\"\n            },\n            {\n            \"text\":\"flower\"\n            },\n            {\n            \"text\":\"seeds\"\n            }\n        ]\n    },\n    \"hasStagedChanges\":false,\n    \"published\":true,\n    \"key\":\"tulip-seed-product\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}\n"
-				},
-				"url": {
-					"raw": "{{host}}/{{project-key}}/products",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"{{project-key}}",
-						"products"
-					],
-					"query": [
-						{
-							"key": "priceCurrency",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "priceCountry",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "priceCustomerGroup",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "priceChannel",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "localeProjection",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "storeProjection",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "expand",
-							"value": "",
-							"disabled": true
-						}
-					]
-				},
-				"description": "To create a new product, send a representation that is going to become the initial staged representation\nof the new product in the master catalog. If price selection query parameters are provided,\nthe selected prices will be added to the response.\n"
-			},
-			"response": []
+			"key": "creator-email",
+			"value": "",
+			"type": "string"
 		},
 		{
-			"name": "04 Create Product - basil",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
-							"var data = JSON.parse(responseBody);",
-							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
-							"    pm.environment.set(\"product-id\", data.results[0].id); ",
-							"    pm.environment.set(\"product-version\", data.results[0].version);",
-							"}",
-							"if(data.results && data.results[0] && data.results[0].key){",
-							"    pm.environment.set(\"product-key\", data.results[0].key); ",
-							"}",
-							"if(data.version){",
-							"    pm.environment.set(\"product-version\", data.version);",
-							"}",
-							"if(data.id){",
-							"    pm.environment.set(\"product-id\", data.id); ",
-							"}",
-							"if(data.key){",
-							"    pm.environment.set(\"product-key\", data.key);",
-							"}",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "oauth2",
-					"oauth2": [
-						{
-							"key": "accessToken",
-							"value": "{{ctp_access_token}}",
-							"type": "string"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
-						},
-						{
-							"key": "tokenType",
-							"value": "Bearer",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{product-type-id-herb}}\"    },\n    \"name\":{\n        \"en\":\"Basil seeds\",\n        \"de\":\"Basil seeds\"\n    },\n    \"description\":{\n        \"en\":\"Basil seeds\",\n        \"de\":\"Basil seeds\"\n    },\n    \"categories\":[\n        {\n            \"typeId\":\"category\",\n            \"id\":\"{{category-id-seeds}}\"\n        }\n    ],\n    \"categoryOrderHints\":{\n        \n    },\n    \"slug\":{\n        \"en\":\"basil-seeds\",\n        \"de\":\"basil-seed\"\n    },\n    \"metaDescription\":{\n        \"en\":\"Basil seeds\",\n        \"de\":\"Basil seeds\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"BASILSEED01\",\n        \"key\":\"BASILSEED01\",\n        \"prices\":[\n            {\n           \"key\":\"BasilSeed01Price01\",\n           \"value\":{\n                \"type\":\"centPrecision\",\n                \"currencyCode\":\"EUR\",\n                \"centAmount\":2088,\n                \"fractionDigits\":2\n            },\n            \"country\":\"DE\"\n            }\n        ],\n        \"images\":[\n            \n        ],\n        \"attributes\":[\n            {\n            \"name\":\"size\",\n            \"value\":\"package\"\n            },\n            {\n            \"name\":\"weight_in_kg\",\n            \"value\":1\n            }\n        ],\n        \"assets\":[\n            \n        ]\n    },\n    \"variants\":[\n        {\n            \"id\":2,\n            \"sku\":\"BASILSEED02\",\n            \"key\":\"BASILSEED02\",\n            \"prices\":[\n            {\n                \"key\":\"BasilSeed02Price01\",\n                \"value\":{\n                    \"type\":\"centPrecision\",\n                    \"currencyCode\":\"EUR\",\n                    \"centAmount\":18000,\n                    \"fractionDigits\":2\n                },\n                \"country\":\"DE\"\n            }\n            ],\n            \"images\":[\n            \n            ],\n            \"attributes\":[\n            {\n                \"name\":\"size\",\n                \"value\":\"box\"\n            },\n            {\n                \"name\":\"weight_in_kg\",\n                \"value\":10\n            }\n            ],\n            \"assets\":[\n            \n            ]\n        }\n    ],\n    \"searchKeywords\":{\n        \"de\":[\n            \n        ],\n        \"en\":[\n            {\n            \"text\":\"basil\"\n            },\n            {\n            \"text\":\"seeds\"\n            },\n            {\n            \"text\":\"herbs\"\n            }\n        ]\n    },\n    \"hasStagedChanges\":false,\n    \"published\":true,\n    \"key\":\"basil-seed-product\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
-				},
-				"url": {
-					"raw": "{{host}}/{{project-key}}/products",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"{{project-key}}",
-						"products"
-					],
-					"query": [
-						{
-							"key": "priceCurrency",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "priceCountry",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "priceCustomerGroup",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "priceChannel",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "localeProjection",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "storeProjection",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "expand",
-							"value": "",
-							"disabled": true
-						}
-					]
-				},
-				"description": "To create a new product, send a representation that is going to become the initial staged representation\nof the new product in the master catalog. If price selection query parameters are provided,\nthe selected prices will be added to the response.\n"
-			},
-			"response": []
-		},
-		{
-			"name": "04 Create Product - carrot",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
-							"var data = JSON.parse(responseBody);",
-							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
-							"    pm.environment.set(\"product-id\", data.results[0].id); ",
-							"    pm.environment.set(\"product-version\", data.results[0].version);",
-							"}",
-							"if(data.results && data.results[0] && data.results[0].key){",
-							"    pm.environment.set(\"product-key\", data.results[0].key); ",
-							"}",
-							"if(data.version){",
-							"    pm.environment.set(\"product-version\", data.version);",
-							"}",
-							"if(data.id){",
-							"    pm.environment.set(\"product-id\", data.id); ",
-							"}",
-							"if(data.key){",
-							"    pm.environment.set(\"product-key\", data.key);",
-							"}",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "oauth2",
-					"oauth2": [
-						{
-							"key": "accessToken",
-							"value": "{{ctp_access_token}}",
-							"type": "string"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
-						},
-						{
-							"key": "tokenType",
-							"value": "Bearer",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"id\":\"caba3bb9-5a59-4a8d-85b2-80bb763b29da\",\n    \"version\":11,\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{product-type-id-veg}}\"\n    },\n    \"name\":{\n        \"en\":\"Carrot seeds\",\n        \"de\":\"Carrot seeds\"\n    },\n    \"description\":{\n        \"en\":\"Carrot seeds\",\n        \"de\":\"Carrot seeds\"\n    },\n    \"categories\":[\n        {\n            \"typeId\":\"category\",\n            \"id\":\"{{category-id-seeds}}\"\n        },\n        {\n            \"typeId\":\"category\",\n            \"id\":\"{{category-id-veg-seeds}}\"\n        }\n    ],\n    \"categoryOrderHints\":{\n        \n    },\n    \"slug\":{\n        \"en\":\"carrot-seeds\",\n        \"de\":\"carrot-seed\"\n    },\n    \"metaDescription\":{\n        \"en\":\"Carrot seeds\",\n        \"de\":\"Carrot seeds\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"CARROTSEEDS01\",\n        \"key\":\"CARROTSEEDS01\",\n        \"prices\":[\n            {\n            \"key\":\"CarrotSeed01Price01\",\n            \"value\":{\n                \"type\":\"centPrecision\",\n                \"currencyCode\":\"EUR\",\n                \"centAmount\":3200,\n                \"fractionDigits\":2\n            },\n            \"country\":\"DE\"\n            }\n        ],\n        \"images\":[\n            \n        ],\n        \"attributes\":[\n            {\n            \"name\":\"size\",\n            \"value\":\"package\"\n            },\n            {\n            \"name\":\"weight_in_kg\",\n            \"value\":1.5\n            }\n        ],\n        \"assets\":[\n            \n        ]\n    },\n    \"variants\":[\n        {\n            \"id\":2,\n            \"sku\":\"CARROTSEEDS02\",\n            \"key\":\"CARROTSEEDS02\",\n            \"prices\":[\n            {\n                \"key\":\"CarrotSeed02Price01\",\n                \"value\":{\n                    \"type\":\"centPrecision\",\n                    \"currencyCode\":\"EUR\",\n                    \"centAmount\":10000,\n                    \"fractionDigits\":2\n                },\n                \"country\":\"DE\"\n            }\n            ],\n            \"images\":[\n            \n            ],\n            \"attributes\":[\n            {\n                \"name\":\"size\",\n                \"value\":\"sack\"\n            },\n            {\n                \"name\":\"weight_in_kg\",\n                \"value\":5\n            }\n            ],\n            \"assets\":[\n            \n            ]\n        }\n    ],\n    \"searchKeywords\":{\n        \"en\":[\n            {\n            \"text\":\"seeds\"\n            },\n            {\n            \"text\":\"carrot\"\n            },\n            {\n            \"text\":\"vegetable\"\n            }\n        ]\n    },\n    \"hasStagedChanges\":false,\n    \"published\":true,\n    \"key\":\"carrot-seed-product\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
-				},
-				"url": {
-					"raw": "{{host}}/{{project-key}}/products",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"{{project-key}}",
-						"products"
-					],
-					"query": [
-						{
-							"key": "priceCurrency",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "priceCountry",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "priceCustomerGroup",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "priceChannel",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "localeProjection",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "storeProjection",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "expand",
-							"value": "",
-							"disabled": true
-						}
-					]
-				},
-				"description": "To create a new product, send a representation that is going to become the initial staged representation\nof the new product in the master catalog. If price selection query parameters are provided,\nthe selected prices will be added to the response.\n"
-			},
-			"response": []
-		},
-		{
-			"name": "04 Create Product - celery",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"tests[\"Status code \" + responseCode.code] = responseCode.code === 200 || responseCode.code === 201;",
-							"var data = JSON.parse(responseBody);",
-							"if(data.results && data.results[0] && data.results[0].id && data.results[0].version){",
-							"    pm.environment.set(\"product-id\", data.results[0].id); ",
-							"    pm.environment.set(\"product-version\", data.results[0].version);",
-							"}",
-							"if(data.results && data.results[0] && data.results[0].key){",
-							"    pm.environment.set(\"product-key\", data.results[0].key); ",
-							"}",
-							"if(data.version){",
-							"    pm.environment.set(\"product-version\", data.version);",
-							"}",
-							"if(data.id){",
-							"    pm.environment.set(\"product-id\", data.id); ",
-							"}",
-							"if(data.key){",
-							"    pm.environment.set(\"product-key\", data.key);",
-							"}",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "oauth2",
-					"oauth2": [
-						{
-							"key": "accessToken",
-							"value": "{{ctp_access_token}}",
-							"type": "string"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
-						},
-						{
-							"key": "tokenType",
-							"value": "Bearer",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"productType\":{\n        \"typeId\":\"product-type\",\n        \"id\":\"{{product-type-id-veg}}\"\n    },\n    \"name\":{\n        \"en\":\"Celery seeds\",\n        \"de\":\"Celery seeds\"\n    },\n    \"description\":{\n        \"en\":\"Celery seeds\",\n        \"de\":\"Celery seeds\"\n    },\n    \"categories\":[\n        {\n            \"typeId\":\"category\",\n            \"id\":\"{{category-id-seeds}}\"\n        },\n        {\n            \"typeId\":\"category\",\n            \"id\":\"{{category-id-veg-seeds}}\"\n        }\n    ],\n    \"categoryOrderHints\":{\n        \n    },\n    \"slug\":{\n        \"en\":\"celery-seeds\"\n    },\n    \"metaDescription\":{\n        \"en\":\"Celery seeds\",\n        \"de\":\"Celery seeds\"\n    },\n    \"masterVariant\":{\n        \"id\":1,\n        \"sku\":\"CELERYSEEDS01\",\n        \"key\":\"CELERYSEEDS01\",\n        \"prices\":[\n            {\n            \"key\":\"CelerySeed01Price01\",\n            \"value\":{\n                \"type\":\"centPrecision\",\n                \"currencyCode\":\"EUR\",\n                \"centAmount\":2800,\n                \"fractionDigits\":2\n            },\n            \"country\":\"DE\"\n            }\n        ],\n        \"images\":[\n            \n        ],\n        \"attributes\":[\n            {\n            \"name\":\"size\",\n            \"value\":\"box\"\n            },\n            {\n            \"name\":\"weight_in_kg\",\n            \"value\":3\n            }\n        ],\n        \"assets\":[\n            \n        ]\n    },\n    \"variants\":[\n        \n    ],\n    \"searchKeywords\":{\n        \"en\":[\n            {\n            \"text\":\"seeds\"\n            },\n            {\n            \"text\":\"celery\"\n            },\n            {\n            \"text\":\"vegetable\"\n            }\n        ]\n    },\n    \"hasStagedChanges\":false,\n    \"published\":true,\n    \"key\":\"celery-seed-product\",\n    \"taxCategory\":{\n        \"typeId\":\"tax-category\",\n        \"id\":\"{{tax-category-id}}\"\n    }\n}"
-				},
-				"url": {
-					"raw": "{{host}}/{{project-key}}/products",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"{{project-key}}",
-						"products"
-					],
-					"query": [
-						{
-							"key": "priceCurrency",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "priceCountry",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "priceCustomerGroup",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "priceChannel",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "localeProjection",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "storeProjection",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "expand",
-							"value": "",
-							"disabled": true
-						}
-					]
-				},
-				"description": "To create a new product, send a representation that is going to become the initial staged representation\nof the new product in the master catalog. If price selection query parameters are provided,\nthe selected prices will be added to the response.\n"
-			},
-			"response": []
+			"key": "customer-created-message",
+			"value": "{\n  \"notificationType\": \"Message\",\n  \"projectKey\": \"training-team-poc\",\n  \"id\": \"b9f82fd5-ddf5-446a-a39d-0966a4a744ea\",\n  \"version\": 1,\n  \"sequenceNumber\": 1,\n  \"resource\": { \"typeId\": \"customer\", \"id\": \"customer_id\" },\n  \"resourceVersion\": customer_version,\n  \"type\": \"CustomerCreated\",\n  \"customer\": customer_json\n}",
+			"type": "string"
 		}
 	]
 }
