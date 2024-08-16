@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "1757cae7-f285-4435-8b33-9d4b39d681b0",
+		"_postman_id": "b20a8544-c339-48df-9b69-bdab70d3db3b",
 		"name": "Dev_Java_JS_Training",
 		"description": "## How-to Use\n\nTo be used for quick data creation in the trainings.  \nBefore sending any request, please make sure that you have a valid token.\n\n- Create an api client (use admin template) for your project in the Merchant Center.\n    \n- Import API Client into Postman and set it as your current environment\n    \n- Send the request `Obtain access token`.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -1354,7 +1354,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"token\": \"g4293eqtFUEXNPytdkZZBHAapKoNjoOaOjpyOz-i\"\n}",
+									"raw": "{\n  \"token\": \"4yWPzYMS3Dk7Ghjbob49NBixKo6BdtEminTcDAXb\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1420,9 +1420,6 @@
 											"if(data.id){",
 											"    pm.environment.set(\"connector-staged-id\", data.id); ",
 											"}",
-											"if(data.key){",
-											"    pm.environment.set(\"connector-staged-key\", data.key);",
-											"}",
 											""
 										],
 										"type": "text/javascript",
@@ -1450,7 +1447,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"key\" : \"{{connector-staged-key}}\",\n  \"name\" : \"TT Customer connector\",\n  \"description\" : \"Customer number generator, email verifier\",\n  \"creator\" : {\n    \"email\" : \"{{creator-email}}\",\n    \"company\" : \"commercetools\",\n    \"noOfContributors\" : 1\n  },\n  \"repository\" : {\n    \"url\" : \"{{repo-url}}\",\n    \"tag\" : \"{{repo-tag}}\"\n  },\n  \"privateProjects\" : [ ],\n  \"supportedRegions\" : [\"europe-west1.gcp\" ],\n  \"integrationTypes\" : [\"crm\"]\n}"
+									"raw": "{\n  \"key\" : \"{{connector-staged-key}}\",\n  \"name\" : \"{{connector-name}}\",\n  \"description\" : \"Customer number generator, email verifier\",\n  \"creator\" : {\n    \"email\" : \"{{creator-email}}\",\n    \"company\" : \"commercetools\",\n    \"noOfContributors\" : 1\n  },\n  \"repository\" : {\n    \"url\" : \"{{repo-url}}\",\n    \"tag\" : \"{{repo-tag}}\"\n  },\n  \"privateProjects\" : [ ],\n  \"supportedRegions\" : [\"europe-west1.gcp\" ],\n  \"integrationTypes\" : [\"crm\"]\n}"
 								},
 								"url": {
 									"raw": "{{host}}/connectors/drafts",
@@ -1485,9 +1482,6 @@
 											"if(data.id){",
 											"    pm.environment.set(\"connector-staged-id\", data.id); ",
 											"}",
-											"// if(data.key){",
-											"//     pm.environment.set(\"connector-staged-key\", data.key);",
-											"// }",
 											""
 										],
 										"type": "text/javascript",
@@ -1555,9 +1549,6 @@
 											"if(data.id){",
 											"    pm.environment.set(\"connector-staged-id\", data.id); ",
 											"}",
-											"// if(data.key){",
-											"//     pm.environment.set(\"connector-staged-key\", data.key);",
-											"// }",
 											""
 										],
 										"type": "text/javascript",
@@ -1611,9 +1602,6 @@
 											"if(data.id){",
 											"    pm.environment.set(\"connector-staged-id\", data.id); ",
 											"}",
-											"// if(data.key){",
-											"//     pm.environment.set(\"connector-staged-key\", data.key);",
-											"// }",
 											""
 										],
 										"type": "text/javascript",
@@ -1661,7 +1649,7 @@
 											"",
 											"var data = pm.response.json();",
 											"",
-											"pm.test(\"Check isPreviewable is true or published\", function () {",
+											"pm.test(\"Check isPreviewable is true or status is Published\", function () {",
 											"  pm.expect(data.isPreviewable === \"true\" || data.status === \"Published\").to.be.true;",
 											"});",
 											"",
@@ -1672,9 +1660,6 @@
 											"if(data.id){",
 											"    pm.environment.set(\"connector-staged-id\", data.id); ",
 											"}",
-											"// if(data.key){",
-											"//     pm.environment.set(\"connector-staged-key\", data.key);",
-											"// }",
 											""
 										],
 										"type": "text/javascript",
@@ -1730,9 +1715,6 @@
 											"if(data.id){",
 											"    pm.environment.set(\"deployment-id\", data.id); ",
 											"}",
-											"// if(data.key){",
-											"//     pm.environment.set(\"deployment-key\", data.key);",
-											"// }",
 											""
 										],
 										"type": "text/javascript",
@@ -1787,9 +1769,6 @@
 											"    pm.environment.set(\"deployment-id\", data.id); ",
 											"    pm.environment.set(\"deployment-version\", data.version);",
 											"}",
-											"// if(data && data.key){",
-											"//     pm.environment.set(\"deployment-key\", data.key); ",
-											"// }",
 											""
 										],
 										"type": "text/javascript",
@@ -1855,7 +1834,59 @@
 					"name": "Clean Up",
 					"item": [
 						{
-							"name": "01 Get ConnectorStaged by key",
+							"name": "01 Delete Deployment by key",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var data = pm.response.json();",
+											"",
+											"if(data.version){",
+											"    pm.environment.set(\"deployment-version\", data.version);",
+											"}",
+											"if(data.id){",
+											"    pm.environment.set(\"deployment-id\", data.id); ",
+											"}",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/{{project-key}}/deployments/key={{deployment-key}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{project-key}}",
+										"deployments",
+										"key={{deployment-key}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "02 Get ConnectorStaged by key",
 							"event": [
 								{
 									"listen": "test",
@@ -1873,9 +1904,6 @@
 											"if(data.id){",
 											"    pm.environment.set(\"connector-staged-id\", data.id); ",
 											"}",
-											"// if(data.key){",
-											"//     pm.environment.set(\"connector-staged-key\", data.key);",
-											"// }",
 											""
 										],
 										"type": "text/javascript",
@@ -1925,7 +1953,7 @@
 							"response": []
 						},
 						{
-							"name": "02 Update ConnectorStaged by key (unpublish)",
+							"name": "03 Update ConnectorStaged by key (unpublish)",
 							"event": [
 								{
 									"listen": "test",
@@ -1943,9 +1971,6 @@
 											"if(data.id){",
 											"    pm.environment.set(\"connector-staged-id\", data.id); ",
 											"}",
-											"// if(data.key){",
-											"//     pm.environment.set(\"connector-staged-key\", data.key);",
-											"// }",
 											""
 										],
 										"type": "text/javascript",
@@ -1977,61 +2002,6 @@
 									]
 								},
 								"description": "null"
-							},
-							"response": []
-						},
-						{
-							"name": "03 Delete Deployment by key",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Response status code is 200\", function () {",
-											"  pm.response.to.have.status(200);",
-											"});",
-											"",
-											"var data = pm.response.json();",
-											"",
-											"if(data.version){",
-											"    pm.environment.set(\"deployment-version\", data.version);",
-											"}",
-											"if(data.id){",
-											"    pm.environment.set(\"deployment-id\", data.id); ",
-											"}",
-											"if(data.key){",
-											"    pm.environment.set(\"deployment-key\", data.key);",
-											"}",
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"method": "DELETE",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
-								"url": {
-									"raw": "{{host}}/{{project-key}}/deployments/key={{deployment-key}}",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{project-key}}",
-										"deployments",
-										"key={{deployment-key}}"
-									]
-								}
 							},
 							"response": []
 						}
@@ -2101,13 +2071,23 @@
 			"type": "string"
 		},
 		{
+			"key": "customer-created-message",
+			"value": "{\n  \"notificationType\": \"Message\",\n  \"projectKey\": \"training-team-poc\",\n  \"id\": \"b9f82fd5-ddf5-446a-a39d-0966a4a744ea\",\n  \"version\": 1,\n  \"sequenceNumber\": 1,\n  \"resource\": { \"typeId\": \"customer\", \"id\": \"customer_id\" },\n  \"resourceVersion\": customer_version,\n  \"type\": \"CustomerCreated\",\n  \"customer\": customer_json\n}",
+			"type": "string"
+		},
+		{
+			"key": "connector-name",
+			"value": "TT Customer Connector",
+			"type": "string"
+		},
+		{
 			"key": "connector-staged-key",
-			"value": "",
+			"value": "tt-connector-2024-08-15",
 			"type": "string"
 		},
 		{
 			"key": "repo-url",
-			"value": "",
+			"value": "git@github.com:tt/demo-connector-20240815.git",
 			"type": "string"
 		},
 		{
@@ -2116,18 +2096,13 @@
 			"type": "string"
 		},
 		{
-			"key": "deployment-key",
-			"value": "",
-			"type": "string"
-		},
-		{
 			"key": "creator-email",
-			"value": "",
+			"value": "tt@test.com",
 			"type": "string"
 		},
 		{
-			"key": "customer-created-message",
-			"value": "{\n  \"notificationType\": \"Message\",\n  \"projectKey\": \"training-team-poc\",\n  \"id\": \"b9f82fd5-ddf5-446a-a39d-0966a4a744ea\",\n  \"version\": 1,\n  \"sequenceNumber\": 1,\n  \"resource\": { \"typeId\": \"customer\", \"id\": \"customer_id\" },\n  \"resourceVersion\": customer_version,\n  \"type\": \"CustomerCreated\",\n  \"customer\": customer_json\n}",
+			"key": "deployment-key",
+			"value": "tt-deployment-2024-08-15",
 			"type": "string"
 		}
 	]
