@@ -1,0 +1,82 @@
+meta {
+  name: 07 Create Product - Gourmet Scented Candle Collection
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-decor}}"
+    },
+    "name": {
+      "de": "Gourmet Scented Candle Collection",
+      "en": "Gourmet Scented Candle Collection"
+    },
+    "slug": {
+      "de": "gourmet-scented-candle-collection",
+      "en": "gourmet-scented-candle-collection"
+    },
+    "metaTitle": {
+      "de": "Gourmet Scented Candle Collection",
+      "en": "Gourmet Scented Candle Collection"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "espresso-vanilla-bean-scented-candle",
+      "key": "espresso-vanilla-bean-scented-candle",
+      "images": [],
+      "attributes": [
+        {
+          "name": "description",
+          "value": "A scented candle with the rich aroma of espresso and the sweet undertones of vanilla bean. Adds a gourmet touch to home ambiance."
+        }
+      ],
+      "assets": []
+    },
+    "variants": [
+      {
+        "id": 2,
+        "sku": "lavender-early-grey-infused-candle",
+        "key": "lavender-early-grey-infused-candle",
+        "images": [],
+        "attributes": [
+          {
+            "name": "description",
+            "value": "Scented candle infused with the calming fragrance of lavender and the subtle notes of Earl Grey tea. Creates a relaxing and aromatic environment."
+          }
+        ],
+        "assets": []
+      }
+    ],
+    "searchKeywords": {},
+    "publish": true,
+    "key": "gourmet-scented-candle-collection",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-gourmet-scented-candle-collection: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

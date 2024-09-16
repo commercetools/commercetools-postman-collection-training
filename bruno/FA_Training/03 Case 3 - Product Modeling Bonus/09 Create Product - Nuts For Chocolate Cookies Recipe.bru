@@ -1,0 +1,146 @@
+meta {
+  name: 09 Create Product - Nuts For Chocolate Cookies Recipe
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-recipe}}"
+    },
+    "name": {
+      "de": "Nuts For Chocolate Cookies Recipe",
+      "en": "Nuts For Chocolate Cookies Recipe"
+    },
+    "slug": {
+      "de": "nuts-for-chocolate-cookies-recipe",
+      "en": "nuts-for-chocolate-cookies-recipe"
+    },
+    "metaTitle": {
+      "de": "Nuts For Chocolate Cookies Recipe",
+      "en": "Nuts For Chocolate Cookies Recipe"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "nuts-for-chocolate-cookies-recipe",
+      "key": "nuts-for-chocolate-cookies-recipe",
+      "prices": [
+        {
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 2000,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ],
+      "images": [],
+      "attributes": [
+        {
+          "name": "ingredient-info",
+          "value": [
+            [
+              {
+                "name": "Item",
+                "value": {
+                  "typeId": "product",
+                  "id": "{{product-id-sugar-cookie-mix}}"
+                }
+              },
+              {
+                "name": "SKU",
+                "value": "sugar-cookie-mix-01"
+              },
+              {
+                "name": "Quantity",
+                "value": 1
+              }
+            ],
+            [
+              {
+                "name": "Item",
+                "value": {
+                  "typeId": "product",
+                  "id": "{{product-id-walnut-pieces}}"
+                }
+              },
+              {
+                "name": "SKU",
+                "value": "walnut-pieces-01"
+              },
+              {
+                "name": "Quantity",
+                "value": 3
+              }
+            ],
+            [
+              {
+                "name": "Item",
+                "value": {
+                  "typeId": "product",
+                  "id": "{{product-id-semi-sweet-chocolate-pieces}}"
+                }
+              },
+              {
+                "name": "SKU",
+                "value": "semi-sweet-chocolate-chips-01"
+              },
+              {
+                "name": "Quantity",
+                "value": 3
+              }
+            ],
+            [
+              {
+                "name": "Item",
+                "value": {
+                  "typeId": "product",
+                  "id": "{{product-id-semi-sweet-chocolate-pieces}}"
+                }
+              },
+              {
+                "name": "SKU",
+                "value": "semi-sweet-chocolate-chips-02"
+              },
+              {
+                "name": "Quantity",
+                "value": 2
+              }
+            ]
+          ]
+        }
+      ],
+      "searchKeywords": {}
+    },
+    "publish": true,
+    "key": "nuts-for-chocolate-cookies-recip",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-nuts-for-chocolate-cookies-recipe: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

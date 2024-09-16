@@ -1,0 +1,89 @@
+meta {
+  name: 04 Create Product - Pocket Sized Nutrition Scale
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-equipment}}"
+    },
+    "categories": [
+      {
+        "typeId": "category",
+        "id": "{{category-id-gadgets}}"
+      }
+    ],
+    "name": {
+      "de": "Pocket Sized Nutrition Scale",
+      "en": "Pocket Sized Nutrition Scale"
+    },
+    "slug": {
+      "de": "pocket-sized-nutrition-scale",
+      "en": "pocket-sized-nutrition-scale"
+    },
+    "metaTitle": {
+      "de": "Pocket Sized Nutrition Scale",
+      "en": "Pocket Sized Nutrition Scale"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "pocket-sized-nutrition-scale",
+      "key": "pocket-sized-nutrition-scale",
+      "images": [],
+      "assets": [],
+      "prices": [
+        {
+          "key": "pocket-sized-nutrition-scale-USD-US",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 1000,
+            "fractionDigits": 2
+          },
+          "country": "US"
+        },
+        {
+          "key": "pocket-sized-nutrition-scale-EUR-DE",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 1000,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ]
+    },
+    "searchKeywords": {},
+    "publish": true,
+    "key": "pocket-sized-nutrition-scale",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-pocket-size-nutrition-scale: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

@@ -1,0 +1,31 @@
+meta {
+  name: 02 Verify Token Remote
+  type: http
+  seq: 2
+}
+
+post {
+  url: https://service-n1x87gjmfkvquvcn7qvgosc7.europe-west1.gcp.commercetools.app/verify-token
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "token": "{{token-value}}"
+  }
+}
+
+vars:pre-request {
+  token-value: 7Q46y4H8aapuXnxcZDewHs-VzQXekrSvHcR3vo7o
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+}

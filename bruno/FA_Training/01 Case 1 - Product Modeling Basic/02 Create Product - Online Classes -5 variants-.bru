@@ -1,0 +1,176 @@
+meta {
+  name: 02 Create Product - Online Classes -5 variants-
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-online-classes}}"
+    },
+    "name": {
+      "de": "Online Classes",
+      "en": "Online Classes"
+    },
+    "slug": {
+      "de": "online-classes",
+      "en": "online-classes"
+    },
+    "metaTitle": {
+      "de": "online-classes",
+      "en": "online-classes"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "french-cooking-class",
+      "key": "french-cooking-class",
+      "prices": [
+        {
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 3999,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ],
+      "images": [],
+      "attributes": [
+        {
+          "name": "name",
+          "value": "Online French Cooking Class"
+        }
+      ],
+      "assets": []
+    },
+    "variants": [
+      {
+        "id": 2,
+        "sku": "italian-cooking-class",
+        "key": "italian-cooking-class",
+        "prices": [
+          {
+            "value": {
+              "type": "centPrecision",
+              "currencyCode": "EUR",
+              "centAmount": 3999,
+              "fractionDigits": 2
+            },
+            "country": "DE"
+          }
+        ],
+        "images": [],
+        "attributes": [
+          {
+            "name": "name",
+            "value": "Online Italian Cooking Class"
+          }
+        ],
+        "assets": []
+      },
+      {
+        "id": 3,
+        "sku": "middle-eastern-cooking-class",
+        "key": "middle-eastern-cooking-class",
+        "prices": [
+          {
+            "value": {
+              "type": "centPrecision",
+              "currencyCode": "EUR",
+              "centAmount": 3999,
+              "fractionDigits": 2
+            },
+            "country": "DE"
+          }
+        ],
+        "images": [],
+        "attributes": [
+          {
+            "name": "name",
+            "value": "Middle Eastern Cooking Class"
+          }
+        ],
+        "assets": []
+      },
+      {
+        "id": 4,
+        "sku": "Soup cooking class",
+        "key": "Soup cooking class",
+        "prices": [
+          {
+            "value": {
+              "type": "centPrecision",
+              "currencyCode": "EUR",
+              "centAmount": 2599,
+              "fractionDigits": 2
+            },
+            "country": "DE"
+          }
+        ],
+        "images": [],
+        "attributes": [
+          {
+            "name": "name",
+            "value": "Online Soup Cooking Class"
+          }
+        ],
+        "assets": []
+      },
+      {
+        "id": 5,
+        "sku": "grilling-class",
+        "key": "grilling-class",
+        "prices": [
+          {
+            "value": {
+              "type": "centPrecision",
+              "currencyCode": "EUR",
+              "centAmount": 2299,
+              "fractionDigits": 2
+            },
+            "country": "DE"
+          }
+        ],
+        "images": [],
+        "attributes": [
+          {
+            "name": "name",
+            "value": "Online Grilling Class"
+          }
+        ],
+        "assets": []
+      }
+    ],
+    "searchKeywords": {},
+    "publish": true,
+    "key": "online-classes",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+  
+}

@@ -1,0 +1,50 @@
+meta {
+  name: 01 Create ProductType - Online Offerings
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/product-types
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "name": "Online Offerings",
+    "description": "Online Offerings",
+    "key": "online-offerings-product-type",
+    "attributes": [
+      {
+        "type": {
+          "name": "text"
+        },
+        "isSearchable": true,
+        "inputHint": "SingleLine",
+        "name": "name",
+        "label": {
+          "en": "Name of offering",
+          "de": "Name of offering"
+        },
+        "isRequired": true,
+        "attributeConstraint": "Unique"
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  product-type-id-online-classes: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+  
+}

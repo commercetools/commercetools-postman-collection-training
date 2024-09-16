@@ -1,0 +1,89 @@
+meta {
+  name: 02 Create Product - Pancakebot
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-equipment}}"
+    },
+    "categories": [
+      {
+        "typeId": "category",
+        "id": "{{category-id-gadgets}}"
+      }
+    ],
+    "name": {
+      "de": "Pancakebot",
+      "en": "Pancakebot"
+    },
+    "slug": {
+      "de": "pancakebot",
+      "en": "pancakebot"
+    },
+    "metaTitle": {
+      "de": "Pancakebot",
+      "en": "Pancakebot"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "pancakebot",
+      "key": "pancakebot",
+      "images": [],
+      "assets": [],
+      "prices": [
+        {
+          "key": "Pancakebot-USD-US",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 31200,
+            "fractionDigits": 2
+          },
+          "country": "US"
+        },
+        {
+          "key": "Pancakebot-EUR-DE",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 31200,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ]
+    },
+    "searchKeywords": {},
+    "publish": true,
+    "key": "pancakebot",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-pancakebot: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

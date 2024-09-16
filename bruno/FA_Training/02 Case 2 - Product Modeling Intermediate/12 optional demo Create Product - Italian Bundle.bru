@@ -1,0 +1,82 @@
+meta {
+  name: 12 optional demo Create Product - Italian Bundle
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-bundle}}"
+    },
+    "name": {
+      "en": "Italian Cooking Bundle"
+    },
+    "slug": {
+      "en": "italian-cooking-bundle"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "italian-industrial-cooking-bundle",
+      "key": "italian-industrial-cooking-bundle",
+      "prices": [
+        {
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 12900,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ],
+      "images": [],
+      "attributes": [
+        {
+          "name": "items",
+          "value": [
+            {
+              "typeId": "product",
+              "id": "{{product-id-italian-class}}"
+            },
+            {
+              "typeId": "product",
+              "id": "{{product-id-industrial-pasta-pot}}"
+            }
+          ]
+        }
+      ],
+      "assets": []
+    },
+    "variants": [],
+    "searchKeywords": {},
+    "publish": true,
+    "key": "italian-cooking-bundle",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-italian-bundle: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

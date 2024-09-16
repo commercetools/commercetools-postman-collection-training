@@ -1,0 +1,78 @@
+meta {
+  name: 06 Create Product - Steel Ramekins
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-dinnerware}}"
+    },
+    "name": {
+      "de": "Steel Ramekins",
+      "en": "Steel Ramekins"
+    },
+    "slug": {
+      "de": "steel-ramekins",
+      "en": "steel-ramekins"
+    },
+    "metaTitle": {
+      "de": "Steel Ramekins",
+      "en": "Steel Ramekins"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "ramekin-03",
+      "key": "ramekin-03",
+      "prices": [
+        {
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 1999,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ],
+      "images": [],
+      "attributes": [
+        {
+          "name": "material",
+          "value": "steel"
+        }
+      ],
+      "assets": []
+    },
+    "searchKeywords": {},
+    "publish": true,
+    "key": "steel-ramekins",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-steel-ramekins: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

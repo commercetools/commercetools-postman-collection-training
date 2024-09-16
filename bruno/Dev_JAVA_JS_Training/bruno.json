@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Dev_JAVA_JS_Training",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

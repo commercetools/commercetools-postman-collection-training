@@ -1,0 +1,33 @@
+meta {
+  name: 02 Create CustomerGroup - Platinum
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/customer-groups
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "groupName": "Platinum Customer Group",
+    "key": "platinum-group"
+  }
+}
+
+vars:post-response {
+  customer-group-id-02: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

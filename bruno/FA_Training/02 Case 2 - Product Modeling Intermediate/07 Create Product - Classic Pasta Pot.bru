@@ -1,0 +1,82 @@
+meta {
+  name: 07 Create Product - Classic Pasta Pot
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-equipment}}"
+    },
+    "name": {
+      "de": "Classic Pasta Pot",
+      "en": "Classic Pasta Pot"
+    },
+    "slug": {
+      "de": "classic-pasta-pot",
+      "en": "classic-pasta-pot"
+    },
+    "metaTitle": {
+      "de": "Classic Pasta Pot",
+      "en": "Classic Pasta Pot"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "pasta-pot-01",
+      "key": "pasta-pot-01",
+      "prices": [
+        {
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 1999,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ],
+      "images": [],
+      "attributes": [
+        {
+          "name": "size",
+          "value": "2 qt."
+        },
+        {
+          "name": "style",
+          "value": "classic"
+        }
+      ],
+      "assets": []
+    },
+    "searchKeywords": {},
+    "publish": true,
+    "key": "classic-pasta-pot",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-classic-pasta-pot: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

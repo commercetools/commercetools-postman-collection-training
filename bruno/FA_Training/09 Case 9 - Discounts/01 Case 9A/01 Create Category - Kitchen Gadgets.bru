@@ -1,0 +1,41 @@
+meta {
+  name: 01 Create Category - Kitchen Gadgets
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/categories
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "name": {
+      "en": "Kitchen Gadgets",
+      "de": "Kitchen Gadgets"
+    },
+    "slug": {
+      "en": "kitchen-gadgets",
+      "de": "kitchen-gadgets"
+    },
+    "key": "kitchen-gadgets",
+    "orderHint": "0.1"
+  }
+}
+
+vars:post-response {
+  category-id-gadgets: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

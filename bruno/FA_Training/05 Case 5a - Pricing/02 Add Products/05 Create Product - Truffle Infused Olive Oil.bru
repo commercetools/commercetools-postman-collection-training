@@ -1,0 +1,82 @@
+meta {
+  name: 05 Create Product - Truffle Infused Olive Oil
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-food}}"
+    },
+    "name": {
+      "de": "Truffle Infused Olive Oil",
+      "en": "Truffle Infused Olive Oil"
+    },
+    "slug": {
+      "de": "truffle-infused-olive-oil",
+      "en": "truffle-infused-olive-oil"
+    },
+    "metaTitle": {
+      "de": "Truffle Infused Olive Oil",
+      "en": "Truffle Infused Olive Oil"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "white-truffle-infused-olive-oil",
+      "key": "white-truffle-infused-olive-oil",
+      "images": [],
+      "attributes": [
+        {
+          "name": "description",
+          "value": "Premium extra virgin olive oil infused with the delicate and earthy flavor of white truffles. Suitable for enhancing the taste of salads, pasta, and other culinary creations."
+        }
+      ],
+      "assets": []
+    },
+    "variants": [
+      {
+        "id": 2,
+        "sku": "black-truffle-infused-olive-oil",
+        "key": "black-truffle-infused-olive-oil",
+        "images": [],
+        "attributes": [
+          {
+            "name": "description",
+            "value": "Cold-pressed extra virgin olive oil infused with the bold and rich flavor of black truffles. Ideal for drizzling over dishes to add a luxurious and aromatic touch."
+          }
+        ],
+        "assets": []
+      }
+    ],
+    "searchKeywords": {},
+    "publish": true,
+    "key": "truffle-infused-olive-oil",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-truffle-infused-olive-oil: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+  
+}

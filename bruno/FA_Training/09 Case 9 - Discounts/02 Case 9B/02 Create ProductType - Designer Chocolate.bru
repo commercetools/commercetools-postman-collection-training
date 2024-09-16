@@ -1,0 +1,49 @@
+meta {
+  name: 02 Create ProductType - Designer Chocolate
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/product-types
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "name": "Designer Chocolate",
+    "description": "Designer Chocolate",
+    "key": "designer-chocolate-product-type",
+    "attributes": [
+      {
+        "type": {
+          "name": "boolean"
+        },
+        "isSearchable": true,
+        "inputHint": "SingleLine",
+        "name": "limited_edition",
+        "label": {
+          "en": "Limited Edition",
+          "de": "Limited Edition"
+        },
+        "isRequired": true
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  product-type-id-chocolate: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

@@ -1,0 +1,82 @@
+meta {
+  name: 09 Create Product - Industrial Pasta Pot
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-equipment}}"
+    },
+    "name": {
+      "de": "Industrial Pasta Pot",
+      "en": "Industrial Pasta Pot"
+    },
+    "slug": {
+      "de": "industrial-pasta-pot",
+      "en": "industrial-pasta-pot"
+    },
+    "metaTitle": {
+      "de": "Industrial Pasta Pot",
+      "en": "Industrial Pasta Pot"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "pasta-pot-03",
+      "key": "pasta-pot-03",
+      "prices": [
+        {
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 1599,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ],
+      "images": [],
+      "attributes": [
+        {
+          "name": "size",
+          "value": "2 qt."
+        },
+        {
+          "name": "style",
+          "value": "industrial"
+        }
+      ],
+      "assets": []
+    },
+    "searchKeywords": {},
+    "publish": true,
+    "key": "industrial-pasta-pot",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-industrial-pasta-pot: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

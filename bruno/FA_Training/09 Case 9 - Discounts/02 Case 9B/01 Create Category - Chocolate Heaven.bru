@@ -1,0 +1,41 @@
+meta {
+  name: 01 Create Category - Chocolate Heaven
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/categories
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "name": {
+      "en": "Chocolate Heaven",
+      "de": "Chocolate Heaven"
+    },
+    "key": "chocolate-heaven",
+    "slug": {
+      "en": "chocolate-heaven",
+      "de": "chocolate-heaven"
+    },
+    "orderHint": "0.2"
+  }
+}
+
+vars:post-response {
+  category-id-heaven: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

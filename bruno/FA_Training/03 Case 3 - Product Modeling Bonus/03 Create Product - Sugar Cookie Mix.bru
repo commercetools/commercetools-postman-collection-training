@@ -1,0 +1,140 @@
+meta {
+  name: 03 Create Product - Sugar Cookie Mix
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-ingredient}}"
+    },
+    "name": {
+      "de": "Sugar Cookie Mix",
+      "en": "Sugar Cookie Mix"
+    },
+    "slug": {
+      "de": "sugar-cookie-mix",
+      "en": "sugar-cookie-mix"
+    },
+    "metaTitle": {
+      "de": "Sugar Cookie Mix",
+      "en": "Sugar Cookie Mix"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "sugar-cookie-mix-01",
+      "key": "sugar-cookie-mix-01",
+      "prices": [
+        {
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 299,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ],
+      "images": [],
+      "attributes": [
+        {
+          "name": "package",
+          "value": "bag"
+        },
+        {
+          "name": "weight_in_lb",
+          "value": 1
+        }
+      ],
+      "assets": []
+    },
+    "variants": [
+      {
+        "id": 2,
+        "sku": "sugar-cookie-mix-05",
+        "key": "sugar-cookie-mix-05",
+        "prices": [
+          {
+            "value": {
+              "type": "centPrecision",
+              "currencyCode": "EUR",
+              "centAmount": 1499,
+              "fractionDigits": 2
+            },
+            "country": "DE"
+          }
+        ],
+        "images": [],
+        "attributes": [
+          {
+            "name": "package",
+            "value": "bag"
+          },
+          {
+            "name": "weight_in_lb",
+            "value": 5
+          }
+        ],
+        "assets": []
+      },
+      {
+        "id": 3,
+        "sku": "sugar-cookie-mix-25",
+        "key": "sugar-cookie-mix-25",
+        "prices": [
+          {
+            "value": {
+              "type": "centPrecision",
+              "currencyCode": "EUR",
+              "centAmount": 4975,
+              "fractionDigits": 2
+            },
+            "country": "DE"
+          }
+        ],
+        "images": [],
+        "attributes": [
+          {
+            "name": "package",
+            "value": "case"
+          },
+          {
+            "name": "weight_in_lb",
+            "value": 25
+          }
+        ],
+        "assets": []
+      }
+    ],
+    "searchKeywords": {},
+    "publish": true,
+    "key": "sugar-cookie-mix",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-sugar-cookie-mix: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

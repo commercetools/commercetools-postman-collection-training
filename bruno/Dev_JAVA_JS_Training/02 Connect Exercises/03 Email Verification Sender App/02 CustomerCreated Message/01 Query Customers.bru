@@ -1,0 +1,32 @@
+meta {
+  name: 01 Query Customers
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{api-host}}/{{project-key}}/customers?limit=1
+  body: none
+  auth: bearer
+}
+
+params:query {
+  limit: 1
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+vars:post-response {
+  customer-id: res.body.results[0].id
+  customer-version: res.body.results[0].version
+  customer-json: JSON.stringify(res.body.results[0])
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  
+}

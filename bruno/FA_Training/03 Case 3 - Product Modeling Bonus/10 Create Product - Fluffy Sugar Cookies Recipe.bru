@@ -1,0 +1,95 @@
+meta {
+  name: 10 Create Product - Fluffy Sugar Cookies Recipe
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-recipe}}"
+    },
+    "name": {
+      "de": "Fluffy Sugar Cookies Recipe",
+      "en": "Fluffy Sugar Cookies Recipe"
+    },
+    "slug": {
+      "de": "fluffy-sugar-cookies-recipe",
+      "en": "fluffy-sugar-cookies-recipe"
+    },
+    "metaTitle": {
+      "de": "Fluffy Sugar Cookies Recipe",
+      "en": "Fluffy Sugar Cookies Recipe"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "fluffy-sugar-cookies-recipe",
+      "key": "fluffy-sugar-cookies-recipe",
+      "prices": [
+        {
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 2000,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ],
+      "images": [],
+      "attributes": [
+        {
+          "name": "ingredient-info",
+          "value": [
+            [
+              {
+                "name": "Item",
+                "value": {
+                  "typeId": "product",
+                  "id": "{{product-id-sugar-cookie-mix}}"
+                }
+              },
+              {
+                "name": "SKU",
+                "value": "sugar-cookie-mix-05"
+              },
+              {
+                "name": "Quantity",
+                "value": 1
+              }
+            ]
+          ]
+        }
+      ],
+      "searchKeywords": {}
+    },
+    "publish": true,
+    "key": "fluffy-sugar-cookies-recipe",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-fluffy-sugar-cookies-recipe: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

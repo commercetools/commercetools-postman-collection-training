@@ -1,0 +1,50 @@
+meta {
+  name: 02 Create CustomObject - External Prices 01
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/custom-objects
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "container": "ExternalPrices",
+    "key": "cust0001prod0001",
+    "value": [
+      {
+        "VariantID": "1",
+        "MinQuantity": "5",
+        "Price": "15.99 USD"
+      },
+      {
+        "VariantID": "1",
+        "MinQuantity": "10",
+        "Price": "14.99 USD"
+      },
+      {
+        "VariantID": "1",
+        "MinQuantity": "15",
+        "Price": "13.99 USD"
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  custom-object-id-01: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

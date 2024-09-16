@@ -1,0 +1,80 @@
+meta {
+  name: 06 Create ProductType - Ingredient Info
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/product-types
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "name": "Ingredient Info",
+    "description": "Ingredient info to be used as a nested type in recipe product type",
+    "classifier": "Complex",
+    "attributes": [
+      {
+        "name": "SKU",
+        "label": {
+          "de": "SKU",
+          "en": "SKU"
+        },
+        "isRequired": true,
+        "type": {
+          "name": "text"
+        },
+        "attributeConstraint": "None",
+        "isSearchable": false,
+        "inputHint": "SingleLine"
+      },
+      {
+        "name": "Quantity",
+        "label": {
+          "de": "",
+          "en": "quantity"
+        },
+        "isRequired": true,
+        "type": {
+          "name": "number"
+        },
+        "attributeConstraint": "None",
+        "isSearchable": false,
+        "inputHint": "SingleLine"
+      },
+      {
+        "name": "Item",
+        "label": {
+          "de": "",
+          "en": "item"
+        },
+        "isRequired": true,
+        "type": {
+          "name": "reference",
+          "referenceTypeId": "product"
+        },
+        "attributeConstraint": "None",
+        "isSearchable": false,
+        "inputHint": "SingleLine"
+      }
+    ],
+    "key": "ingredient-info"
+  }
+}
+
+vars:post-response {
+  product-type-id-ingredient-info: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

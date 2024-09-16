@@ -1,0 +1,72 @@
+meta {
+  name: 04 Create ProductType - Flower Seeds
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/product-types
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "name": "Flower seeds",
+    "description": "Flower seeds",
+    "key": "flower-seeds-producttype",
+    "attributes": [
+      {
+        "name": "size",
+        "label": {
+          "de": "Size",
+          "en": "Size"
+        },
+        "type": {
+          "name": "text"
+        },
+        "attributeConstraint": "CombinationUnique",
+        "isRequired": true,
+        "isSearchable": true,
+        "inputTip": {
+          "en": "",
+          "de": ""
+        },
+        "inputHint": "SingleLine"
+      },
+      {
+        "name": "weight_in_kg",
+        "label": {
+          "de": "Weight in Kg",
+          "en": "Weight in Kg"
+        },
+        "type": {
+          "name": "number"
+        },
+        "attributeConstraint": "CombinationUnique",
+        "isRequired": true,
+        "isSearchable": true,
+        "inputTip": {
+          "en": "",
+          "de": ""
+        }
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  flower-product-type-id: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+  
+  
+}

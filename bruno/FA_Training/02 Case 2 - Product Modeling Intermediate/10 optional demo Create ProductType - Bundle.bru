@@ -1,0 +1,59 @@
+meta {
+  name: 10 optional demo Create ProductType - Bundle
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/product-types
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "name": "Bundle ProductType",
+    "description": "AllForFoodies Bundle ProductType",
+    "classifier": "Complex",
+    "attributes": [
+      {
+        "name": "items",
+        "label": {
+          "de": "Items",
+          "en": "Items"
+        },
+        "inputTip": {
+          "de": "Bundle item",
+          "en": "Bundle item"
+        },
+        "isRequired": false,
+        "type": {
+          "name": "set",
+          "elementType": {
+            "name": "reference",
+            "referenceTypeId": "product"
+          }
+        },
+        "attributeConstraint": "None",
+        "isSearchable": true,
+        "inputHint": "SingleLine"
+      }
+    ],
+    "key": "bundle-producttype"
+  }
+}
+
+vars:post-response {
+  product-type-id-bundle: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

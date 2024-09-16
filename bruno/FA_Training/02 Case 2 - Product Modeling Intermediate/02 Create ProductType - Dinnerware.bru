@@ -1,0 +1,50 @@
+meta {
+  name: 02 Create ProductType - Dinnerware
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/product-types
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "name": "Dinnerware",
+    "description": "Dinnerware",
+    "key": "dinnerware-product-type",
+    "attributes": [
+      {
+        "type": {
+          "name": "text"
+        },
+        "isSearchable": true,
+        "inputHint": "SingleLine",
+        "name": "material",
+        "label": {
+          "en": "Material",
+          "de": "Material"
+        },
+        "isRequired": true,
+        "attributeConstraint": "Unique"
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  product-type-id-dinnerware: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

@@ -1,0 +1,41 @@
+meta {
+  name: 01 Obtain Access Token
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{auth-host}}/oauth/token?grant_type=client_credentials
+  body: none
+  auth: basic
+}
+
+params:query {
+  grant_type: client_credentials
+}
+
+auth:basic {
+  username: {{client-id}}
+  password: {{client-secret}}
+}
+
+vars:post-response {
+  ctp-access-token: res.body.access_token
+  ctp-scopes: res.body.scope
+}
+
+script:pre-request {
+  bru.setEnvVar("auth-host", bru.getEnvVar("authUrl"));
+  bru.setEnvVar("api-host", bru.getEnvVar("apiUrl"));
+  bru.setEnvVar("connect-host", "https://connect.europe-west1.gcp.commercetools.com");
+  bru.setEnvVar("project-key", bru.getEnvVar("project-key"));
+  bru.setEnvVar("client-id", bru.getEnvVar("ctp_client_id"));
+  bru.setEnvVar("client-secret", bru.getEnvVar("ctp_client_secret"));
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  
+}

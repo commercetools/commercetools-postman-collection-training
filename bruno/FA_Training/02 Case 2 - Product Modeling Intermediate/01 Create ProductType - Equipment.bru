@@ -1,0 +1,64 @@
+meta {
+  name: 01 Create ProductType - Equipment
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/product-types
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "name": "Equipment",
+    "description": "Equipment",
+    "key": "equipment-product-type",
+    "attributes": [
+      {
+        "type": {
+          "name": "text"
+        },
+        "isSearchable": true,
+        "inputHint": "SingleLine",
+        "name": "size",
+        "label": {
+          "en": "Size",
+          "de": "Size"
+        },
+        "isRequired": false,
+        "attributeConstraint": "Unique"
+      },
+      {
+        "type": {
+          "name": "text"
+        },
+        "isSearchable": true,
+        "inputHint": "SingleLine",
+        "name": "style",
+        "label": {
+          "en": "Style",
+          "de": "Style"
+        },
+        "isRequired": false,
+        "attributeConstraint": "Unique"
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  product-type-id-equipment: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

@@ -1,0 +1,140 @@
+meta {
+  name: 09 Create Product - Carrot
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "id": "caba3bb9-5a59-4a8d-85b2-80bb763b29da",
+    "version": 11,
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{veg-product-type-id}}"
+    },
+    "name": {
+      "en": "Carrot Seeds",
+      "de": "Carrot Seeds"
+    },
+    "description": {
+      "en": "Carrot seeds",
+      "de": "Carrot seeds"
+    },
+    "categories": [
+      {
+        "typeId": "category",
+        "id": "{{seeds-category-id}}"
+      },
+      {
+        "typeId": "category",
+        "id": "{{veg-seeds-category-id}}"
+      }
+    ],
+    "categoryOrderHints": {},
+    "slug": {
+      "en": "carrot-seeds",
+      "de": "carrot-seed"
+    },
+    "metaDescription": {
+      "en": "Carrot seeds",
+      "de": "Carrot seeds"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "CARROTSEEDS01",
+      "key": "CARROTSEEDS01",
+      "prices": [
+        {
+          "key": "CarrotSeed01Price01",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 3200,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ],
+      "images": [],
+      "attributes": [
+        {
+          "name": "size",
+          "value": "package"
+        },
+        {
+          "name": "weight_in_kg",
+          "value": 1.5
+        }
+      ],
+      "assets": []
+    },
+    "variants": [
+      {
+        "id": 2,
+        "sku": "CARROTSEEDS02",
+        "key": "CARROTSEEDS02",
+        "prices": [
+          {
+            "key": "CarrotSeed02Price01",
+            "value": {
+              "type": "centPrecision",
+              "currencyCode": "EUR",
+              "centAmount": 10000,
+              "fractionDigits": 2
+            },
+            "country": "DE"
+          }
+        ],
+        "images": [],
+        "attributes": [
+          {
+            "name": "size",
+            "value": "sack"
+          },
+          {
+            "name": "weight_in_kg",
+            "value": 5
+          }
+        ],
+        "assets": []
+      }
+    ],
+    "searchKeywords": {
+      "en": [
+        {
+          "text": "seeds"
+        },
+        {
+          "text": "carrot"
+        },
+        {
+          "text": "vegetable"
+        }
+      ]
+    },
+    "hasStagedChanges": false,
+    "publish": true,
+    "key": "carrot-seed-product",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+  
+}

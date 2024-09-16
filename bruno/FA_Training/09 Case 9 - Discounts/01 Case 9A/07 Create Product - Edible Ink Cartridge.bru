@@ -1,0 +1,89 @@
+meta {
+  name: 07 Create Product - Edible Ink Cartridge
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-equipment}}"
+    },
+    "categories": [
+      {
+        "typeId": "category",
+        "id": "{{category-id-gadgets}}"
+      }
+    ],
+    "name": {
+      "de": "Edible Ink Cartridge",
+      "en": "Edible Ink Cartridge"
+    },
+    "slug": {
+      "de": "edible-ink-cartridge",
+      "en": "edible-ink-cartridge"
+    },
+    "metaTitle": {
+      "de": "Edible Ink Cartridge",
+      "en": "Edible Ink Cartridge"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "edible-ink-cartridge",
+      "key": "edible-ink-cartridge",
+      "images": [],
+      "assets": [],
+      "prices": [
+        {
+          "key": "edible-ink-cartridge-USD-US",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 3750,
+            "fractionDigits": 2
+          },
+          "country": "US"
+        },
+        {
+          "key": "edible-ink-cartridge-EUR-DE",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 3750,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ]
+    },
+    "searchKeywords": {},
+    "publish": true,
+    "key": "edible-ink-cartridge",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-edible-ink-cartrige: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

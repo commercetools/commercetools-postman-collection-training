@@ -1,0 +1,62 @@
+meta {
+  name: 01 Create ProductType - Ingredient
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/product-types
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "name": "Ingredients",
+    "description": "Ingredients",
+    "key": "ingredient-product-type",
+    "attributes": [
+      {
+        "type": {
+          "name": "text"
+        },
+        "isSearchable": true,
+        "inputHint": "SingleLine",
+        "name": "package",
+        "label": {
+          "en": "Package Type",
+          "de": "Package Type"
+        },
+        "isRequired": true,
+        "attributeConstraint": "CombinationUnique"
+      },
+      {
+        "type": {
+          "name": "number"
+        },
+        "name": "weight_in_lb",
+        "label": {
+          "en": "Weight in lb",
+          "de": "Weight in lb"
+        },
+        "isRequired": true,
+        "attributeConstraint": "CombinationUnique"
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  product-type-id-ingredient: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

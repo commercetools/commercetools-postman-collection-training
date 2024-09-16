@@ -1,0 +1,41 @@
+meta {
+  name: 02 Create Category - Seeds
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/categories
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "key": "plant-seeds",
+    "name": {
+      "en": "Seeds",
+      "de": "Seeds"
+    },
+    "slug": {
+      "en": "plant-seeds",
+      "de": "plant-seeds"
+    },
+    "orderHint": "0.1"
+  }
+}
+
+vars:post-response {
+  seeds-category-id: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+  
+}

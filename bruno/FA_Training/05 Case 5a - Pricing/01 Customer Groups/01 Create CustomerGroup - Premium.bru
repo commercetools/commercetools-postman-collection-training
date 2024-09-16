@@ -1,0 +1,33 @@
+meta {
+  name: 01 Create CustomerGroup - Premium
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/customer-groups
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "groupName": "Premium Customer Group",
+    "key": "premium-group"
+  }
+}
+
+vars:post-response {
+  customer-group-id-01: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

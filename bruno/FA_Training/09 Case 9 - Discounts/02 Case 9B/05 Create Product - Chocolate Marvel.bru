@@ -1,0 +1,95 @@
+meta {
+  name: 05 Create Product - Chocolate Marvel
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-chocolate}}"
+    },
+    "categories": [
+      {
+        "typeId": "category",
+        "id": "{{category-id-heaven}}"
+      }
+    ],
+    "name": {
+      "de": "Chocolate Marvel",
+      "en": "Chocolate Marvel"
+    },
+    "slug": {
+      "de": "chocolate-marvel",
+      "en": "chocolate-marvel"
+    },
+    "metaTitle": {
+      "de": "Chocolate Marvel",
+      "en": "Chocolate Marvel"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "chocolate-marvel",
+      "key": "chocolate-marvel",
+      "images": [],
+      "assets": [],
+      "attributes": [
+        {
+          "name": "limited_edition",
+          "value": false
+        }
+      ],
+      "prices": [
+        {
+          "key": "chocolate-marvel-USD-US",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 2750,
+            "fractionDigits": 2
+          },
+          "country": "US"
+        },
+        {
+          "key": "chocolate-marvel-EUR-DE",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 2750,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ]
+    },
+    "searchKeywords": {},
+    "publish": true,
+    "key": "chocolate-marvel",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-chocolate-marvel: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

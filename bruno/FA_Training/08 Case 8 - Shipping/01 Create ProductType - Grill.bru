@@ -1,0 +1,91 @@
+meta {
+  name: 01 Create ProductType - Grill
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/product-types
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "name": "Grill",
+    "description": "Grill",
+    "key": "grill-product-type",
+    "attributes": [
+      {
+        "type": {
+          "name": "text"
+        },
+        "isSearchable": true,
+        "inputHint": "SingleLine",
+        "name": "brand",
+        "label": {
+          "en": "Brand",
+          "de": "Brand"
+        },
+        "isRequired": true,
+        "sameForAll": true
+      },
+      {
+        "type": {
+          "name": "text"
+        },
+        "isSearchable": true,
+        "inputHint": "SingleLine",
+        "name": "model",
+        "label": {
+          "en": "Model",
+          "de": "Model"
+        },
+        "isRequired": true,
+        "sameForAll": true
+      },
+      {
+        "type": {
+          "name": "text"
+        },
+        "isSearchable": true,
+        "inputHint": "SingleLine",
+        "name": "submodel",
+        "label": {
+          "en": "Sub Model",
+          "de": "Sub Model"
+        },
+        "isRequired": true,
+        "attributeConstraint": "Unique"
+      },
+      {
+        "type": {
+          "name": "boolean"
+        },
+        "isSearchable": true,
+        "inputHint": "SingleLine",
+        "name": "heavy_weight",
+        "label": {
+          "en": "Heavy weight",
+          "de": "Heavy weight"
+        },
+        "isRequired": true
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  product-type-id-grill: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

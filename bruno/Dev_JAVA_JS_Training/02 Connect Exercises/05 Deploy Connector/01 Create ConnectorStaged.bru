@@ -1,0 +1,51 @@
+meta {
+  name: 01 Create ConnectorStaged
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{connect-host}}/connectors/drafts
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "key": "{{connector-staged-key}}",
+    "name": "{{connector-name}}",
+    "description": "Handles a new customer account by assigning a unique customer number and sends and verifies the email verification token",
+    "creator": {
+      "email": "{{creator-email}}",
+      "company": "{{company-name}}",
+      "noOfContributors": 1
+    },
+    "repository": {
+      "url": "{{repo-url}}",
+      "tag": "{{repo-tag}}"
+    },
+    "privateProjects": [],
+    "supportedRegions": [
+      "europe-west1.gcp"
+    ],
+    "integrationTypes": [
+      "crm"
+    ]
+  }
+}
+
+vars:post-response {
+  connector-staged-id: res.body.id
+  connector-staged-version: res.body.version
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+  
+}

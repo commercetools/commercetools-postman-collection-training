@@ -1,0 +1,96 @@
+meta {
+  name: 04 Create Product - Chocolate Elegant
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  
+  {
+      "productType":{
+          "typeId":"product-type",
+          "id":"{{product-type-id-chocolate}}"
+      },
+      "categories" : [ {
+        "typeId" : "category",
+        "id" : "{{category-id-heaven}}"
+      } ],
+      "name":{
+          "de":"Chocolate Elegant",
+          "en":"Chocolate Elegant"
+      },
+      "slug":{
+          "de":"chocolate-elegant",
+          "en":"chocolate-elegant"
+      },
+      "metaTitle":{
+          "de":"Chocolate Elegant",
+          "en":"Chocolate Elegant"
+      },
+      "masterVariant":{
+          "id":1,
+          "sku":"chocolate-elegant",
+          "key":"chocolate-elegant",
+          "images":[],
+         "assets":[],
+          "attributes":[
+              {
+              "name":"limited_edition",
+              "value":false
+              }
+          ],
+       "prices": [
+                {
+                  "key": "chocolate-elegant-USD-US",
+                  "value": {
+                    "type": "centPrecision",
+                    "currencyCode": "USD",
+                    "centAmount": 2750,
+                    "fractionDigits": 2
+                  },
+                  "country": "US"
+                },
+                {
+                  "key": "chocolate-elegant-EUR-DE",
+                  "value": {
+                    "type": "centPrecision",
+                    "currencyCode": "EUR",
+                    "centAmount": 2750,
+                    "fractionDigits": 2
+                  },
+                  "country": "DE"
+                }
+              ]
+      },
+      "searchKeywords":{
+          
+      },
+      "publish": true,
+      "key":"chocolate-elegant",
+      "taxCategory":{
+          "typeId":"tax-category",
+          "id":"{{tax-category-id}}"
+      }
+  }
+}
+
+vars:post-response {
+  product-id-chocolate-elegant: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

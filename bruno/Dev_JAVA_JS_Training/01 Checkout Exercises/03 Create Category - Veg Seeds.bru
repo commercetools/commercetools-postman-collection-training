@@ -1,0 +1,41 @@
+meta {
+  name: 03 Create Category - Veg Seeds
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/categories
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "key": "veg-seeds",
+    "name": {
+      "en": "Vegetable Seeds",
+      "de": "Vegetable Seeds"
+    },
+    "slug": {
+      "en": "vegetable-seeds",
+      "de": "vegetable-seeds"
+    },
+    "orderHint": "0.2"
+  }
+}
+
+vars:post-response {
+  veg-seeds-category-id: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+  
+}

@@ -1,0 +1,39 @@
+meta {
+  name: 03 Update ConnectorStaged - tag -optional-
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{connect-host}}/connectors/drafts/{{connector-staged-id}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "version": {{connector-staged-version}},
+    "actions": [
+      {
+        "action": "setRepository",
+        "url": "{{repo-url}}",
+        "tag": "{{repo-tag}}"
+      }
+    ]
+  }
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  
+  const res = res.getBody();
+  
+  bru.setEnvVar("connector-staged-version", res.version);
+  
+}

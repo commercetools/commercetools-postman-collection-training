@@ -1,0 +1,86 @@
+meta {
+  name: 11 optional demo Create Product - French Bundle
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-bundle}}"
+    },
+    "name": {
+      "en": "French Cooking Bundle"
+    },
+    "slug": {
+      "en": "french-cooking-bundle"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "french-ceramic-cooking-bundle",
+      "key": "french-ceramic-cooking-bundle",
+      "prices": [
+        {
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 12900,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ],
+      "images": [],
+      "attributes": [
+        {
+          "name": "items",
+          "value": [
+            {
+              "typeId": "product",
+              "id": "{{product-id-french-class}}"
+            },
+            {
+              "typeId": "product",
+              "id": "{{product-id-torch}}"
+            },
+            {
+              "typeId": "product",
+              "id": "{{product-id-ceramic-ramekins}}"
+            }
+          ]
+        }
+      ],
+      "assets": []
+    },
+    "variants": [],
+    "searchKeywords": {},
+    "publish": true,
+    "key": "french-cooking-bundle",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-french-bundle: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

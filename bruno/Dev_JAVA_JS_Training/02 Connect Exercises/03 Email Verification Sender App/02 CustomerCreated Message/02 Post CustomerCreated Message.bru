@@ -1,0 +1,66 @@
+meta {
+  name: 02 Post CustomerCreated Message
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/send-email-verification
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "message": {
+      "data": "{{customer-created-message}}",
+      "messageId": "2070443601311540",
+      "message_id": "2070443601311540",
+      "publishTime": "2024-02-26T19:13:55.749Z",
+      "publish_time": "2024-02-26T19:13:55.749Z"
+    },
+    "subscription": "projects/myproject/subscriptions/mysubscription"
+  }
+}
+
+script:pre-request {
+  const btoa = require("btoa");
+  
+  const projectKey = bru.getEnvVar("project-key");
+  const customerId = bru.getVar("customer-id");
+  const customerVersion = bru.getVar("customer-version");
+  const customerJson = bru.getVar("customer-json");
+  
+  const data = `{
+    "notificationType": "Message",
+    "projectKey": "${projectKey}",
+    "id": "b9f82fd5-ddf5-446a-a39d-0966a4a744ea",
+    "version": 1,
+    "sequenceNumber": 1,
+    "resource": {
+      "typeId": "customer",
+      "id": "${customerId}"
+    },
+    "resourceVersion": ${customerVersion},
+    "type": "CustomerCreated",
+    "customer": ${customerJson}
+  }`;
+  console.log(data);
+  const encodedData = btoa(data);
+  console.log(encodedData)
+  
+  bru.setVar("customer-created-message", encodedData);
+  
+  
+  
+}
+
+tests {
+  test("Status code is 202", function () {
+      expect(res.getStatus()).to.equal(202);
+  });
+}

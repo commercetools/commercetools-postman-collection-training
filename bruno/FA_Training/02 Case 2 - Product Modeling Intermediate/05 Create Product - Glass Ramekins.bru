@@ -1,0 +1,78 @@
+meta {
+  name: 05 Create Product - Glass Ramekins
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-dinnerware}}"
+    },
+    "name": {
+      "de": "Glass Ramekins",
+      "en": "Glass Ramekins"
+    },
+    "slug": {
+      "de": "glass-ramekins",
+      "en": "glass-ramekins"
+    },
+    "metaTitle": {
+      "de": "Glass Ramekins",
+      "en": "Glass Ramekins"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "ramekin-02",
+      "key": "ramekin-02",
+      "prices": [
+        {
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 2999,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ],
+      "images": [],
+      "attributes": [
+        {
+          "name": "material",
+          "value": "glass"
+        }
+      ],
+      "assets": []
+    },
+    "searchKeywords": {},
+    "publish": true,
+    "key": "glass-ramekins",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-glass-ramekins: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

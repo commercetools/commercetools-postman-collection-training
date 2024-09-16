@@ -1,0 +1,31 @@
+meta {
+  name: 01 Verify Token
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/verify-token
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "token": "{{token-value}}"
+  }
+}
+
+vars:pre-request {
+  token-value: XlOPm_o6aPgdaLgSgQWzHPRYQZnoNXYByk0MvcA8
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+}

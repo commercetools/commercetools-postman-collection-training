@@ -1,0 +1,72 @@
+meta {
+  name: 03 Create Product - Creme Brule Torch
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-equipment}}"
+    },
+    "name": {
+      "de": "Crème Brûlée Torch",
+      "en": "Crème Brûlée Torch"
+    },
+    "slug": {
+      "de": "creme-brulee-torch",
+      "en": "creme-brulee-torch"
+    },
+    "metaTitle": {
+      "de": "Crème Brûlée Torch",
+      "en": "Crème Brûlée Torch"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "creme-brulee-torch",
+      "key": "creme-brulee-torch",
+      "prices": [
+        {
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 12900,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ],
+      "images": [],
+      "assets": []
+    },
+    "searchKeywords": {},
+    "publish": true,
+    "key": "creme-brulee-torch",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-torch: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

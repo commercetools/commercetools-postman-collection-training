@@ -1,0 +1,78 @@
+meta {
+  name: 04 Create Product - Italian Cooking Class
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-online-classes}}"
+    },
+    "name": {
+      "de": "Italian Cooking Class",
+      "en": "Italian Cooking Class"
+    },
+    "slug": {
+      "de": "italian-cooking-online-class",
+      "en": "italian-cooking-online-class"
+    },
+    "metaTitle": {
+      "de": "italian-cooking-online-class",
+      "en": "italian-cooking-online-class"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "italian-cooking-online-class",
+      "key": "italian-cooking-online-class",
+      "prices": [
+        {
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 3999,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ],
+      "images": [],
+      "attributes": [
+        {
+          "name": "name",
+          "value": "Italian cooking class"
+        }
+      ],
+      "assets": []
+    },
+    "searchKeywords": {},
+    "publish": true,
+    "key": "italian-cooking-online-class",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-italian-class: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+  
+}

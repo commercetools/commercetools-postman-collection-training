@@ -1,0 +1,182 @@
+meta {
+  name: 07 Create Product - Tulip
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{flower-product-type-id}}"
+    },
+    "name": {
+      "en": "Tulip Seeds",
+      "de": "Tulip Seeds"
+    },
+    "description": {
+      "en": "Tulip seeds",
+      "de": "Tulip seeds"
+    },
+    "categories": [
+      {
+        "typeId": "category",
+        "id": "{{seeds-category-id}}"
+      }
+    ],
+    "categoryOrderHints": {},
+    "slug": {
+      "en": "tulip-seeds",
+      "de": "tulip-seed"
+    },
+    "metaDescription": {
+      "en": "Tulip seeds",
+      "de": "Tulip seeds"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "TULIPSEED01",
+      "key": "TULIPSEED01",
+      "prices": [
+        {
+          "key": "TulipSeed01Price01",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 2710,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        },
+        {
+          "key": "TulipSeed01Price02",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 5900,
+            "fractionDigits": 2
+          }
+        }
+      ],
+      "images": [],
+      "attributes": [
+        {
+          "name": "size",
+          "value": "package"
+        },
+        {
+          "name": "weight_in_kg",
+          "value": 0.5
+        }
+      ],
+      "assets": [],
+      "availability": {
+        "isOnStock": true,
+        "restockableInDays": 4,
+        "availableQuantity": 10
+      }
+    },
+    "variants": [
+      {
+        "id": 2,
+        "sku": "TULIPSEED02",
+        "key": "TULIPSEED02",
+        "prices": [
+          {
+            "key": "TulipSeed02Price01",
+            "value": {
+              "type": "centPrecision",
+              "currencyCode": "EUR",
+              "centAmount": 3000,
+              "fractionDigits": 2
+            },
+            "country": "DE"
+          }
+        ],
+        "images": [],
+        "attributes": [
+          {
+            "name": "size",
+            "value": "box"
+          },
+          {
+            "name": "weight_in_kg",
+            "value": 1.5
+          }
+        ],
+        "assets": [],
+        "availability": {
+          "isOnStock": true,
+          "restockableInDays": 2,
+          "availableQuantity": 10
+        }
+      },
+      {
+        "id": 3,
+        "sku": "TULIPSEED03",
+        "key": "TULIPSEED03",
+        "prices": [
+          {
+            "key": "TulipSeed03Price01",
+            "value": {
+              "type": "centPrecision",
+              "currencyCode": "EUR",
+              "centAmount": 1337,
+              "fractionDigits": 2
+            },
+            "country": "DE"
+          }
+        ],
+        "images": [],
+        "attributes": [
+          {
+            "name": "size",
+            "value": "sack"
+          },
+          {
+            "name": "weight_in_kg",
+            "value": 10
+          }
+        ],
+        "assets": []
+      }
+    ],
+    "searchKeywords": {
+      "en": [
+        {
+          "text": "tulip"
+        },
+        {
+          "text": "flower"
+        },
+        {
+          "text": "seeds"
+        }
+      ]
+    },
+    "hasStagedChanges": false,
+    "publish": true,
+    "key": "tulip-seed-product",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+  
+}

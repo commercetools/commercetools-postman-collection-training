@@ -1,0 +1,49 @@
+meta {
+  name: 03 Create ProductType - Kitchen Utensil
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/product-types
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "name": "Kitchen Utensil",
+    "description": "Kitchen utensil",
+    "key": "kitchen-utensil-product-type",
+    "attributes": [
+      {
+        "type": {
+          "name": "text"
+        },
+        "isSearchable": true,
+        "name": "description",
+        "label": {
+          "en": "Description",
+          "de": "Description"
+        },
+        "isRequired": true,
+        "inputHint": "MultiLine"
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  product-type-id-utensil: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

@@ -1,0 +1,82 @@
+meta {
+  name: 06 Create Product - Premium Copper Kitchen Utensil Set
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-utensil}}"
+    },
+    "name": {
+      "de": "Premium Copper Kitchen Utensil Set",
+      "en": "Premium Copper Kitchen Utensil Set"
+    },
+    "slug": {
+      "de": "premium-copper-kitchen-utensil-set",
+      "en": "premium-copper-kitchen-utensil-set"
+    },
+    "metaTitle": {
+      "de": "Premium Copper Kitchen Utensil Set",
+      "en": "Premium Copper Kitchen Utensil Set"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "copper-coated-stainless-steel-cooking-spoons",
+      "key": "copper-coated-stainless-steel-cooking-spoons",
+      "images": [],
+      "attributes": [
+        {
+          "name": "description",
+          "value": "A set of cooking spoons made from durable stainless steel with a copper coating. Adds a touch of elegance to the kitchen and provides high-quality utensils for cooking."
+        }
+      ],
+      "assets": []
+    },
+    "variants": [
+      {
+        "id": 2,
+        "sku": "copper-handled-silicone-cooking-utensils",
+        "key": "copper-handled-silicone-cooking-utensils",
+        "images": [],
+        "attributes": [
+          {
+            "name": "description",
+            "value": "Cooking utensils with copper-handled design for a stylish and ergonomic grip. Features silicone heads for non-stick cookware and versatility in the kitchen."
+          }
+        ],
+        "assets": []
+      }
+    ],
+    "searchKeywords": {},
+    "publish": true,
+    "key": "premium-copper-kitchen-utensil-set",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-premium-copper-kitchen-utensil-set: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

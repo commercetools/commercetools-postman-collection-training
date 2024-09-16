@@ -1,0 +1,31 @@
+meta {
+  name: 01 Create Customer
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/customers
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "email": "jane@email.com",
+    "password": "pwd"
+  }
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+  
+}

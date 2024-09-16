@@ -1,0 +1,57 @@
+meta {
+  name: 07 Create ProductType - Recipe
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/product-types
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "name": "Recipe",
+    "key": "recipe-product-type",
+    "description": "Nested recipe product type.",
+    "attributes": [
+      {
+        "type": {
+          "name": "set",
+          "elementType": {
+            "name": "nested",
+            "typeReference": {
+              "typeId": "product-type",
+              "id": "{{product-type-id-ingredient-info}}"
+            }
+          }
+        },
+        "isSearchable": false,
+        "name": "ingredient-info",
+        "label": {
+          "en": "Ingredient Info",
+          "de": "Ingredient Info"
+        },
+        "isRequired": false,
+        "attributeConstraint": "None",
+        "displayGroup": "Other"
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  product-type-id-recipe: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

@@ -1,0 +1,32 @@
+meta {
+  name: 02 Post CustomerCreated Input
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/assign-customer-number
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "action": "Create",
+    "resource": {
+      "typeId": "customer",
+      "id": "{{customer-id}}",
+      "obj": {{customer-json}}
+    }
+  }
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+}

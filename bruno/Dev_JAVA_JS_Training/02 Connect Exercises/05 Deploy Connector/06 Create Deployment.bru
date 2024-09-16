@@ -1,0 +1,122 @@
+meta {
+  name: 06 Create Deployment
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{connect-host}}/{{project-key}}/deployments
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "key": "{{deployment-key}}",
+    "connector": {
+      "id": "{{connector-staged-id}}" //,
+      // "staged": true
+    },
+    "region": "europe-west1.gcp",
+    "configurations": [
+      {
+        "applicationName": "customer-number-generator-app",
+        "securedConfiguration": [
+          {
+            "key": "CTP_CLIENT_ID",
+            "value": "{{client-id}}"
+          },
+          {
+            "key": "CTP_CLIENT_SECRET",
+            "value": "{{client-secret}}"
+          },
+          {
+            "key": "CTP_PROJECT_KEY",
+            "value": "{{project-key}}"
+          },
+          {
+            "key": "CTP_SCOPES",
+            "value": "{{ctp-scopes}}"
+          }
+        ],
+        "standardConfiguration": [
+          {
+            "key": "CTP_REGION",
+            "value": "europe-west1.gcp"
+          }
+        ]
+      },
+      {
+        "applicationName": "email-verification-sender-app",
+        "securedConfiguration": [
+          {
+            "key": "CTP_CLIENT_ID",
+            "value": "{{client-id}}"
+          },
+          {
+            "key": "CTP_CLIENT_SECRET",
+            "value": "{{client-secret}}"
+          },
+          {
+            "key": "CTP_PROJECT_KEY",
+            "value": "{{project-key}}"
+          },
+          {
+            "key": "CTP_SCOPES",
+            "value": "{{ctp-scopes}}"
+          }
+        ],
+        "standardConfiguration": [
+          {
+            "key": "CTP_REGION",
+            "value": "europe-west1.gcp"
+          }
+        ]
+      },
+      {
+        "applicationName": "email-verification-receiver-app",
+        "securedConfiguration": [
+          {
+            "key": "CTP_CLIENT_ID",
+            "value": "{{client-id}}"
+          },
+          {
+            "key": "CTP_CLIENT_SECRET",
+            "value": "{{client-secret}}"
+          },
+          {
+            "key": "CTP_PROJECT_KEY",
+            "value": "{{project-key}}"
+          },
+          {
+            "key": "CTP_SCOPES",
+            "value": "{{ctp-scopes}}"
+          }
+        ],
+        "standardConfiguration": [
+          {
+            "key": "CTP_REGION",
+            "value": "europe-west1.gcp"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  deployment-id: res.body.id
+  deployment-version: res.body.version
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+  
+  
+}

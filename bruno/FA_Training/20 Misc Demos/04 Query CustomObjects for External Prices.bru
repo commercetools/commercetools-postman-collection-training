@@ -1,0 +1,22 @@
+meta {
+  name: 04 Query CustomObjects for External Prices
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{api-host}}/{{project-key}}/custom-objects/ExternalPrices
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  
+}

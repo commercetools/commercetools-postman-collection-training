@@ -1,0 +1,82 @@
+meta {
+  name: 06 Create Product - Premium Coffee Beans
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-coffee}}"
+    },
+    "name": {
+      "de": "Premium Coffee Beans",
+      "en": "Premium Coffee Beans"
+    },
+    "slug": {
+      "de": "premium-coffee-beans",
+      "en": "premium-coffee-beans"
+    },
+    "metaTitle": {
+      "de": "Premium Coffee Beans",
+      "en": "Premium Coffee Beans"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "single-origin-arabica-coffee-beans",
+      "key": "single-origin-arabica-coffee-beans",
+      "images": [],
+      "attributes": [
+        {
+          "name": "description",
+          "value": "High-quality Arabica coffee beans sourced from a specific region, offering a distinct flavor profile. Suitable for coffee connoisseurs who appreciate the unique characteristics of single-origin beans."
+        }
+      ],
+      "assets": []
+    },
+    "variants": [
+      {
+        "id": 2,
+        "sku": "limited-edition-espresso-blend",
+        "key": "limited-edition-espresso-blend",
+        "images": [],
+        "attributes": [
+          {
+            "name": "description",
+            "value": "A carefully crafted blend of premium coffee beans, specifically designed for espresso enthusiasts. Limited edition to provide a special and exclusive coffee experience."
+          }
+        ],
+        "assets": []
+      }
+    ],
+    "searchKeywords": {},
+    "publish": true,
+    "key": "premium-coffee-beans",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-premium-coffee-beans: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+  
+}

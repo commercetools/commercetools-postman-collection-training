@@ -1,0 +1,135 @@
+meta {
+  name: 08 Create Product - Basil
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{herb-product-type-id}}"
+    },
+    "name": {
+      "en": "Basil Seeds",
+      "de": "Basil Seeds"
+    },
+    "description": {
+      "en": "Basil seeds",
+      "de": "Basil seeds"
+    },
+    "categories": [
+      {
+        "typeId": "category",
+        "id": "{{seeds-category-id}}"
+      }
+    ],
+    "categoryOrderHints": {},
+    "slug": {
+      "en": "basil-seeds",
+      "de": "basil-seed"
+    },
+    "metaDescription": {
+      "en": "Basil seeds",
+      "de": "Basil seeds"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "BASILSEED01",
+      "key": "BASILSEED01",
+      "prices": [
+        {
+          "key": "BasilSeed01Price01",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 2088,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ],
+      "images": [],
+      "attributes": [
+        {
+          "name": "size",
+          "value": "package"
+        },
+        {
+          "name": "weight_in_kg",
+          "value": 1
+        }
+      ],
+      "assets": []
+    },
+    "variants": [
+      {
+        "id": 2,
+        "sku": "BASILSEED02",
+        "key": "BASILSEED02",
+        "prices": [
+          {
+            "key": "BasilSeed02Price01",
+            "value": {
+              "type": "centPrecision",
+              "currencyCode": "EUR",
+              "centAmount": 18000,
+              "fractionDigits": 2
+            },
+            "country": "DE"
+          }
+        ],
+        "images": [],
+        "attributes": [
+          {
+            "name": "size",
+            "value": "box"
+          },
+          {
+            "name": "weight_in_kg",
+            "value": 10
+          }
+        ],
+        "assets": []
+      }
+    ],
+    "searchKeywords": {
+      "de": [],
+      "en": [
+        {
+          "text": "basil"
+        },
+        {
+          "text": "seeds"
+        },
+        {
+          "text": "herbs"
+        }
+      ]
+    },
+    "hasStagedChanges": false,
+    "publish": true,
+    "key": "basil-seed-product",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+  
+}

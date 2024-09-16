@@ -1,0 +1,164 @@
+meta {
+  name: 02 Create Product - Grill
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{product-type-id-grill}}"
+    },
+    "name": {
+      "de": "Weber 502",
+      "en": "Weber 502"
+    },
+    "slug": {
+      "de": "weber-502",
+      "en": "weber-502"
+    },
+    "metaTitle": {
+      "de": "weber-502",
+      "en": "weber-502"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "weber-502-x21",
+      "key": "weber-502-x21",
+      "attributes": [
+        {
+          "name": "brand",
+          "value": "Weber"
+        },
+        {
+          "name": "model",
+          "value": "502"
+        },
+        {
+          "name": "submodel",
+          "value": "X21"
+        },
+        {
+          "name": "heavy_weight",
+          "value": false
+        }
+      ],
+      "prices": [
+        {
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 12900,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ],
+      "images": [],
+      "assets": []
+    },
+    "variants": [
+      {
+        "id": 2,
+        "sku": "weber-502-x22",
+        "key": "weber-502-x22",
+        "prices": [
+          {
+            "value": {
+              "type": "centPrecision",
+              "currencyCode": "EUR",
+              "centAmount": 14999,
+              "fractionDigits": 2
+            },
+            "country": "DE"
+          }
+        ],
+        "images": [],
+        "attributes": [
+          {
+            "name": "brand",
+            "value": "Weber"
+          },
+          {
+            "name": "model",
+            "value": "502"
+          },
+          {
+            "name": "submodel",
+            "value": "X22"
+          },
+          {
+            "name": "heavy_weight",
+            "value": false
+          }
+        ],
+        "assets": []
+      },
+      {
+        "id": 3,
+        "sku": "weber-502-x23",
+        "key": "weber-502-x23",
+        "prices": [
+          {
+            "value": {
+              "type": "centPrecision",
+              "currencyCode": "EUR",
+              "centAmount": 16999,
+              "fractionDigits": 2
+            },
+            "country": "DE"
+          }
+        ],
+        "images": [],
+        "attributes": [
+          {
+            "name": "brand",
+            "value": "Weber"
+          },
+          {
+            "name": "model",
+            "value": "502"
+          },
+          {
+            "name": "submodel",
+            "value": "X23"
+          },
+          {
+            "name": "heavy_weight",
+            "value": true
+          }
+        ],
+        "assets": []
+      }
+    ],
+    "searchKeywords": {},
+    "publish": true,
+    "key": "weber-502",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+vars:post-response {
+  product-id-grill: res.body.id
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+
+}

@@ -1,0 +1,107 @@
+meta {
+  name: 10 Create Product - Celery
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{api-host}}/{{project-key}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+body:json {
+  {
+    "productType": {
+      "typeId": "product-type",
+      "id": "{{veg-product-type-id}}"
+    },
+    "name": {
+      "en": "Celery Seeds",
+      "de": "Celery Seeds"
+    },
+    "description": {
+      "en": "Celery seeds",
+      "de": "Celery seeds"
+    },
+    "categories": [
+      {
+        "typeId": "category",
+        "id": "{{seeds-category-id}}"
+      },
+      {
+        "typeId": "category",
+        "id": "{{veg-seeds-category-id}}"
+      }
+    ],
+    "categoryOrderHints": {},
+    "slug": {
+      "en": "celery-seeds"
+    },
+    "metaDescription": {
+      "en": "Celery seeds",
+      "de": "Celery seeds"
+    },
+    "masterVariant": {
+      "id": 1,
+      "sku": "CELERYSEEDS01",
+      "key": "CELERYSEEDS01",
+      "prices": [
+        {
+          "key": "CelerySeed01Price01",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 2800,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ],
+      "images": [],
+      "attributes": [
+        {
+          "name": "size",
+          "value": "box"
+        },
+        {
+          "name": "weight_in_kg",
+          "value": 3
+        }
+      ],
+      "assets": []
+    },
+    "variants": [],
+    "searchKeywords": {
+      "en": [
+        {
+          "text": "seeds"
+        },
+        {
+          "text": "celery"
+        },
+        {
+          "text": "vegetable"
+        }
+      ]
+    },
+    "hasStagedChanges": false,
+    "publish": true,
+    "key": "celery-seed-product",
+    "taxCategory": {
+      "typeId": "tax-category",
+      "id": "{{tax-category-id}}"
+    }
+  }
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+  
+}

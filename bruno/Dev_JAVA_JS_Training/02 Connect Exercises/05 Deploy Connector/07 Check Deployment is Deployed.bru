@@ -1,0 +1,28 @@
+meta {
+  name: 07 Check Deployment is Deployed
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{connect-host}}/{{project-key}}/deployments/{{deployment-id}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ctp-access-token}}
+}
+
+vars:post-response {
+  deployment-version: res.body.version
+}
+
+tests {
+  test("Status code is 200 and status is Deployed", function () {
+      expect(res.getStatus()).to.equal(200);
+      expect(res.getBody().status).to.equal("Deployed");
+  });
+  
+  
+}
