@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "6681ca4b-bec9-43e3-b6c7-459407768f6c",
+		"_postman_id": "5cec0e2f-d505-4fc0-bcbc-39a289af40d0",
 		"name": "Dev_JAVA_JS_Training",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "11897687"
@@ -1454,12 +1454,12 @@
 	"variable": [
 		{
 			"key": "connector-staged-key",
-			"value": "tt-connector-2024-09-02",
+			"value": "tt-connector-2025-01-31",
 			"type": "string"
 		},
 		{
 			"key": "connector-name",
-			"value": "Customer Data Manager 2024-09-02",
+			"value": "TT Customer Data Manager 2025-01-31",
 			"type": "string"
 		},
 		{
@@ -1474,7 +1474,7 @@
 		},
 		{
 			"key": "repo-url",
-			"value": "git@github.com:tt/dev-training-connector-20240902.git",
+			"value": "git@github.com:tt/dev-training-connector-20250131.git",
 			"type": "string"
 		},
 		{
@@ -1484,7 +1484,7 @@
 		},
 		{
 			"key": "deployment-key",
-			"value": "tt-deployment-2024-09-02",
+			"value": "tt-deployment-2025-01-31",
 			"type": "string"
 		}
 	]
