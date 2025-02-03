@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "8123e33d-9f4d-4504-a19d-8b7590811411",
+		"_postman_id": "6681ca4b-bec9-43e3-b6c7-459407768f6c",
 		"name": "Dev_JAVA_JS_Training",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "11897687"
@@ -953,7 +953,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"token\": \"enter_token_value_here\"\n}",
+									"raw": "{\n  \"token\": \"YNboeEXZOjn0FFiFcZtEgvxROhJu1Z9GKXAzABv1\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -961,12 +961,13 @@
 									}
 								},
 								"url": {
-									"raw": "https://service-0l6khksz6410l7w8w9gfymv9.europe-west1.gcp.commercetools.app/verify-token",
+									"raw": "https://service-n5vdp0gtkjgoq33o9jwfjqjm.europe-west1.gcp.3.commercetools.app/verify-token",
 									"protocol": "https",
 									"host": [
-										"service-0l6khksz6410l7w8w9gfymv9",
+										"service-n5vdp0gtkjgoq33o9jwfjqjm",
 										"europe-west1",
 										"gcp",
+										"3",
 										"commercetools",
 										"app"
 									],
@@ -1233,7 +1234,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"key\": \"{{deployment-key}}\",\n  \"connector\": {\n    \"id\": \"{{connector-staged-id}}\" //,\n    // \"staged\": true\n  },\n  \"region\": \"europe-west1.gcp\",\n  \"configurations\": [\n    {\n      \"applicationName\": \"customer-number-generator-app\",\n      \"securedConfiguration\": [\n        {\n          \"key\": \"CTP_CLIENT_ID\",\n          \"value\": \"{{client-id}}\"\n        },\n        {\n          \"key\": \"CTP_CLIENT_SECRET\",\n          \"value\": \"{{client-secret}}\"\n        },\n        {\n          \"key\": \"CTP_PROJECT_KEY\",\n          \"value\": \"{{project-key}}\"\n        },\n        {\n          \"key\": \"CTP_SCOPES\",\n          \"value\": \"{{ctp-scopes}}\"\n        }\n      ],\n      \"standardConfiguration\": [\n        {\n          \"key\": \"CTP_REGION\",\n          \"value\": \"europe-west1.gcp\"\n        }\n      ]\n    },\n    {\n      \"applicationName\": \"email-verification-sender-app\",\n      \"securedConfiguration\": [\n        {\n          \"key\": \"CTP_CLIENT_ID\",\n          \"value\": \"{{client-id}}\"\n        },\n        {\n          \"key\": \"CTP_CLIENT_SECRET\",\n          \"value\": \"{{client-secret}}\"\n        },\n        {\n          \"key\": \"CTP_PROJECT_KEY\",\n          \"value\": \"{{project-key}}\"\n        },\n        {\n          \"key\": \"CTP_SCOPES\",\n          \"value\": \"{{ctp-scopes}}\"\n        }\n      ],\n      \"standardConfiguration\": [\n        {\n          \"key\": \"CTP_REGION\",\n          \"value\": \"europe-west1.gcp\"\n        }\n      ]\n    },\n    {\n      \"applicationName\": \"email-verification-receiver-app\",\n      \"securedConfiguration\": [\n        {\n          \"key\": \"CTP_CLIENT_ID\",\n          \"value\": \"{{client-id}}\"\n        },\n        {\n          \"key\": \"CTP_CLIENT_SECRET\",\n          \"value\": \"{{client-secret}}\"\n        },\n        {\n          \"key\": \"CTP_PROJECT_KEY\",\n          \"value\": \"{{project-key}}\"\n        },\n        {\n          \"key\": \"CTP_SCOPES\",\n          \"value\": \"{{ctp-scopes}}\"\n        }\n      ],\n      \"standardConfiguration\": [\n        {\n          \"key\": \"CTP_REGION\",\n          \"value\": \"europe-west1.gcp\"\n        }\n      ]\n    }\n  ]\n}",
+									"raw": "{\n  \"key\": \"{{deployment-key}}\",\n  \"connector\": {\n    \"id\": \"{{connector-staged-id}}\" //,\n    // \"staged\": true\n  },\n  \"region\": \"europe-west1.gcp\",\n  \"configurations\": [\n    {\n      \"applicationName\": \"customer-number-generator-app\",\n      \"standardConfiguration\": [\n        {\n          \"key\": \"CTP_TEST\",\n          \"value\": \"anything\"\n        }\n      ]\n    },\n    {\n      \"applicationName\": \"email-verification-sender-app\",\n      \"standardConfiguration\": [\n        {\n          \"key\": \"CTP_TEST\",\n          \"value\": \"anything\"\n        }\n      ]\n    },\n    {\n      \"applicationName\": \"email-verification-receiver-app\",\n      \"standardConfiguration\": [\n        {\n          \"key\": \"CTP_TEST\",\n          \"value\": \"anything\"\n        }\n      ]\n    }\n  ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
