@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "017a8bf9-a49d-42c4-87eb-ac304baf05e2",
+		"_postman_id": "56a8f307-ff06-4864-823f-8aa15d2a6ccd",
 		"name": "Dev_JAVA_JS_Training",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "11897687"
@@ -1234,7 +1234,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"key\": \"{{deployment-key}}\",\n  \"connector\": {\n    \"id\": \"{{connector-staged-id}}\" //,\n    // \"staged\": true\n    // \"type\": \"preview\"\n  },\n  \"region\": \"europe-west1.gcp\",\n  \"configurations\": [\n    {\n      \"applicationName\": \"customer-number-generator-app\"\n    },\n    {\n      \"applicationName\": \"email-verification-sender-app\"\n    },\n    {\n      \"applicationName\": \"email-verification-receiver-app\"\n    }\n  ]\n}",
+									"raw": "{\n    \"key\": \"{{deployment-key}}\",\n    // \"type\": \"preview\",\n    \"connector\": {\n        \"id\": \"{{connector-staged-id}}\" //,\n        // \"staged\": true\n    },\n    \"region\": \"europe-west1.gcp\",\n    \"configurations\": [\n        {\n            \"applicationName\": \"customer-number-generator-app\"\n        },\n        {\n            \"applicationName\": \"email-verification-sender-app\"\n        },\n        {\n            \"applicationName\": \"email-verification-receiver-app\"\n        }\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
