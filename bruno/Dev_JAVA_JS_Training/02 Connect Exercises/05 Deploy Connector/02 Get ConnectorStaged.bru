@@ -19,9 +19,9 @@ tests {
       expect(res.getStatus()).to.equal(200);
   });
   
-  const res = res.getBody();
+  const response = res.getBody();
   
-  bru.setEnvVar("connector-staged-id", res.id);
-  bru.setEnvVar("connector-staged-version", res.version);
+  bru.setEnvVar("connector-staged-id", response.id);
+  bru.setEnvVar("connector-staged-version", response.version);
   
 }

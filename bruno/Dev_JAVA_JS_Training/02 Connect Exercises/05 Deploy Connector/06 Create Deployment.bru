@@ -17,6 +17,7 @@ auth:bearer {
 body:json {
   {
     "key": "{{deployment-key}}",
+    // "type": "preview",
     "connector": {
       "id": "{{connector-staged-id}}" //,
       // "staged": true
@@ -24,31 +25,13 @@ body:json {
     "region": "europe-west1.gcp",
     "configurations": [
       {
-        "applicationName": "customer-number-generator-app",
-        "standardConfiguration": [
-          {
-            "key": "CTP_TEST",
-            "value": "anything"
-          }
-        ]
+        "applicationName": "customer-number-generator-app"
       },
       {
-        "applicationName": "email-verification-sender-app",
-        "standardConfiguration": [
-          {
-            "key": "CTP_TEST",
-            "value": "anything"
-          }
-        ]
+        "applicationName": "email-verification-sender-app"
       },
       {
-        "applicationName": "email-verification-receiver-app",
-        "standardConfiguration": [
-          {
-            "key": "CTP_TEST",
-            "value": "anything"
-          }
-        ]
+        "applicationName": "email-verification-receiver-app"
       }
     ]
   }
